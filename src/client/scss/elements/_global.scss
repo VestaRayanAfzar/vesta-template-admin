@@ -1,0 +1,25 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: url("../img/bg-main.jpg") no-repeat fixed center;
+    background-size: cover;
+}
+
+html, body {
+    font-family: $baseFontFamily;
+    direction: $direction;
+    text-overflow: clip;
+}
+
+body {
+    color: $dark;
+}
+
+.en {
+    font-family: Verdana, Geneva, sans-serif;
+    direction: ltr;
+}

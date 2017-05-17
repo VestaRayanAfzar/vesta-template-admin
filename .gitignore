@@ -1,0 +1,16 @@
+.idea
+/node_modules
+npm-debug*
+/src/client/app/config/setting.var.ts
+tsd-debug*
+/vesta/client/cordova/platforms/*
+!/vesta/client/cordova/platforms/platforms.json
+/vesta/client/cordova/plugins/*
+!/vesta/client/cordova/plugins/fetch.json
+/vesta/client/cordova/www
+/vesta/client/electron/www
+/vesta/client/web/www
+/vesta/tmp
+/vesta/server/*
+!/vesta/server/docker-compose.yml
+yarn-error*

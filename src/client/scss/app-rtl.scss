@@ -1,0 +1,11 @@
+$float: right;
+$opposite-float: left;
+$direction: rtl;
+$opposite-direction: ltr;
+$directionEq: -1;
+$font-path: '../fonts';
+
+@import 'fonts/iransans';
+$baseFontFamily: "Iranian Sans", Tahoma, Geneva, sans-serif;
+
+@import "common";
