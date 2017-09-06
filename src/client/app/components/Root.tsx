@@ -26,7 +26,7 @@ export class Root extends Component<RootProps, RootState> {
         Dispatcher.getInstance().register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
             this.setState({user: payload.user});
         });
-        this.api.get<IQueryResult<IUser>>('account')
+        this.api.get<IQueryResult<IUser>>('me')
             .then(response => {
                 if (response) {
                     this.auth.login(response.items[0]);
