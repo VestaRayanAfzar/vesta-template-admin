@@ -5,7 +5,28 @@
 ///<vesta:scssFont/>
 ///<vesta:scssLibrary/>
 @import "elements/global";
+@import "elements/form";
+@import "elements/button";
+@import "elements/frame";
 ///<vesta:scssElement/>
-@import "components/frame";
+@import "components/page";
+@import "components/general/toast";
+@import "components/general/dataTable";
+@import "components/general/floatingBtn";
+@import "components/general/preloader";
+@import "components/general/dialog";
+@import "components/general/modal";
+@import "components/general/crudMenu";
+@import "components/general/form/formError";
+@import "components/general/form/formSelect";
+@import "components/general/form/formTextInput";
+@import "components/general/form/formTextArea";
+@import "components/general/form/formMultichoice";
+@import "components/general/form/formWrapper";
+@import "components/general/menu";
+// page components
+@import "components/root/login";
+@import "components/root/signup";
+@import "components/root/logout";
 ///<vesta:scssComponent/>
 ///<vesta:scssPage/>

@@ -1,8 +1,8 @@
+.DS_Store
 .idea
 /node_modules
-npm-debug*
-/src/client/app/config/setting.var.ts
-tsd-debug*
+npm-debug.log
+/src/client/app/config/config.var.ts
 /vesta/client/cordova/platforms/*
 !/vesta/client/cordova/platforms/platforms.json
 /vesta/client/cordova/plugins/*
@@ -11,6 +11,5 @@ tsd-debug*
 /vesta/client/electron/www
 /vesta/client/web/www
 /vesta/tmp
-/vesta/server/*
-!/vesta/server/docker-compose.yml
-yarn-error*
+/vesta/server/
+yarn-error.log

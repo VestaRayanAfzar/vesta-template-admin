@@ -1,11 +1,14 @@
-import React from "react";
-import {PageComponent} from "../PageComponent";
+import * as React from "react";
+import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
 import {AuthService} from "../../service/AuthService";
 
-export interface AboutProps {
+export interface AboutParams {
 }
 
-export interface AboutState {
+export interface AboutProps extends PageComponentProps<AboutParams> {
+}
+
+export interface AboutState extends PageComponentState {
 }
 
 export class About extends PageComponent<AboutProps, AboutState> {
@@ -14,9 +17,5 @@ export class About extends PageComponent<AboutProps, AboutState> {
         return (
             <div className="page"><h1>About Component</h1></div>
         );
-    }
-
-    static registerPermission(id) {
-        AuthService.getInstance().registerPermissions(id);
     }
 }

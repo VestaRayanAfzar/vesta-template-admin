@@ -1,35 +1,26 @@
-import {IClientAppSetting} from "../config/setting";
-import {ILocale} from "vesta-lib/ILocale";
-import {I18N} from "vesta-lib/I18N";
-import {Dictionary} from "vesta-lib/Dictionary";
-import {faIR} from "vesta-locale-fa-ir/fa-IR";
-import {enUS} from "vesta-locale-en-us/en-US";
-import {ApiService} from "./ApiService";
-import {DateTimeFactory} from "vesta-datetime/DateTimeFactory";
-import {PersianDate} from "vesta-datetime-persian/PersianDate";
-import {GregorianDate} from "vesta-datetime-gregorian/GregorianDate";
+import {DateTimeFactory, Dictionary, GregorianDate, I18N, ILocale, IR, PersianDate, US} from "../medium";
 
 export class I18nService {
     private i18nLocale: ILocale;
     private dictionary: Dictionary;
-    public static $inject = ['Setting', 'apiService'];
+    private static instance;
 
-    constructor(private Setting: IClientAppSetting, private apiService: ApiService) {
+    constructor(private locale: string) {
         this.initLocales();
     }
 
     private initLocales() {
-        I18N.registerLocale(faIR);
-        I18N.registerLocale(enUS);
-        I18N.registerDictionary(faIR.code);
-        I18N.registerDictionary(enUS.code);
-        DateTimeFactory.register(faIR.code, PersianDate);
-        DateTimeFactory.register(enUS.code, GregorianDate);
+        I18N.registerLocale(IR);
+        I18N.registerLocale(US);
+        I18N.registerDictionary(IR.code);
+        I18N.registerDictionary(US.code);
+        DateTimeFactory.register(IR.code, PersianDate);
+        DateTimeFactory.register(US.code, GregorianDate);
         //
-        this.i18nLocale = I18N.getLocale(this.Setting.locale);
-        this.dictionary = I18N.getDictionary(this.Setting.locale);
+        this.i18nLocale = I18N.getLocale(this.locale);
+        this.dictionary = I18N.getDictionary(this.locale);
         //
-        // this.apiService.get<any, IVocabs>(`vocabs/${this.Setting.locale}`)
+        // this.apiService.get<any, IVocabs>(`vocabs/${this.locale}`)
         //     .then(vocabs=>this.dictionary.inject(vocabs));
     }
 
@@ -40,5 +31,12 @@ export class I18nService {
 
     public getDictionary(): Dictionary {
         return this.dictionary;
+    }
+
+    public static getInstance(locale: string): I18nService {
+        if (!I18nService.instance) {
+            I18nService.instance = new I18nService(locale);
+        }
+        return I18nService.instance;
     }
 }

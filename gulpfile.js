@@ -1,5 +1,6 @@
 let gulp = require('gulp');
 let path = require('path');
+let fs = require('fs-extra');
 let config = require('./resources/gulp/config');
 
 let setting = Object.assign({target: 'web', production: false}, config);
@@ -17,8 +18,8 @@ gulp.task('production', () => {
     setting.production = true;
 });
 
-let [tasks, watches] = loadTasks(['asset', 'sass', 'client', 'server']);
-createTasks();
+createTasks(...loadTasks(['server']), true);
+createTasks(...loadTasks(['asset', 'sass', 'client']), false);
 
 function loadTasks(modules) {
     let tasks = [],
@@ -36,7 +37,11 @@ function loadTasks(modules) {
     return [tasks, watches];
 }
 
-function createTasks() {
+function createTasks(tasks, watches, isServerTasks) {
+    if (isServerTasks) {
+        gulp.task(`dev:server`, tasks.concat(watches));
+        gulp.task(`deploy:server`, ['production'].concat(tasks));
+    } else {
     Object.keys(targets).forEach(target => {
         let targetSpec = targets[target];
         if (targetSpec.elimination) {
@@ -44,4 +49,5 @@ function createTasks() {
             gulp.task(`deploy:${target}`, ['production', target].concat(tasks));
         }
     });
+    }
 }

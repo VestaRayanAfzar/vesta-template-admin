@@ -1,0 +1,66 @@
+$dt-border-color: $border-color;
+$dt-border-radius: $border-radius;
+$dt-header-cell-padding: 14px 7px 5px 7px;
+$dt-data-cell-padding: 7px;
+
+@mixin style-table() {
+    width: 100%;
+    table-layout: auto;
+    background: transparentize($color-light, .5);
+
+    thead {
+        th {
+            position: relative;
+            text-align: start;
+            padding: $dt-header-cell-padding;
+            background: $color-light;
+            border: 1px solid $dt-border-color;
+            border-bottom: 2px solid $color-dark;
+        }
+    }
+    tbody {
+        > tr {
+            //cursor: pointer;
+            transition: all 200ms linear;
+            //&:nth-child(odd) {
+            //}
+            //&:nth-child(even) {
+            //    background: transparentize($light, .5);
+            //}
+            //&:hover {
+            //    background: transparentize($color-dark, .7);
+            //    color: $color-light;
+            //}
+        }
+        td, th {
+            position: relative;
+            padding: $dt-data-cell-padding;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid $dt-border-color;
+        }
+        th {
+            text-align: start;
+        }
+    }
+}
+
+.dataTable-component {
+    overflow: hidden;
+    border: 1px solid $dt-border-color;
+    border-radius: $dt-border-radius;
+    > table {
+        @include style-table();
+    }
+}
+
+.dt-operation-cell {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.spec-table {
+    @include style-table();
+}

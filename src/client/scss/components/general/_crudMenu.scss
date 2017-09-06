@@ -1,0 +1,15 @@
+$crud-menu-top-offset: 5px;
+$crud-menu-side-offset: 10px;
+$crud-menu-z-index: $z-index-content;
+
+.crudMenu-component {
+    text-align: end;
+    position: absolute;
+    top: $crud-menu-top-offset;
+    #{$opposite-float}: $crud-menu-side-offset;
+    z-index: $crud-menu-z-index;
+    li {
+        display: inline-block;
+        margin: 5px 10px;
+    }
+}

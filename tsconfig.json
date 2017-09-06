@@ -7,6 +7,5 @@
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true
-  },
-  "compileOnSave": true
+  }
 }

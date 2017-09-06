@@ -1,0 +1,10 @@
+$form-select-padding: 7px;
+.formSelect-component {
+    > select {
+        min-width: 50vw;
+        padding: $form-select-padding;
+    }
+    @include mediaQuerySmall() {
+        min-width: 90vw;
+    }
+}

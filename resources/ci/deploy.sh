@@ -17,7 +17,7 @@ print_status(){
 cd "$CLONE_PATH"
 git checkout master
 
-mv resources/gitignore/client.setting.var.ts src/client/app/config/setting.var.ts
+mv resources/gitignore/config.var.ts src/client/app/config/config.var.ts
 
 print_status "Installing Node Packages"
 yarn install

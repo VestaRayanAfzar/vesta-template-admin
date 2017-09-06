@@ -1,0 +1,10 @@
+$form-text-input-padding: 7px;
+.formTextInput-component {
+    > input {
+        min-width: 50vw;
+        padding: $form-text-input-padding;
+        @include mediaQuerySmall() {
+            min-width: 90vw;
+        }
+    }
+}

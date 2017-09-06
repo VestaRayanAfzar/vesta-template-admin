@@ -1,0 +1,11 @@
+.formMultichoice-component {
+    li {
+        list-style: none;
+        margin-#{$float}: 20px;
+        label, input {
+            display: inline-block;
+            vertical-align: middle;
+            margin: auto 5px;
+        }
+    }
+}

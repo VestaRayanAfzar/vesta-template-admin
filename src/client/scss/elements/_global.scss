@@ -16,10 +16,22 @@ html, body {
 }
 
 body {
-    color: $dark;
+    color: $color-dark;
 }
 
 .en {
     font-family: Verdana, Geneva, sans-serif;
     direction: ltr;
+}
+
+input, textarea, select, button {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+table {
+    border-collapse: collapse;
 }

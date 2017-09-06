@@ -1,56 +1,52 @@
-import React from "react";
-import ReactRouterDOM from "react-router-dom";
+import * as React from "react";
+import {Component} from "react";
+import {Link} from "react-router-dom";
 import {ApiService} from "../service/ApiService";
 import {AuthService} from "../service/AuthService";
 import {Dispatcher} from "../service/Dispatcher";
-import {IUser, User} from "../cmn/models/User";
-import {IQueryResult} from "vesta-lib";
+import {IQueryResult} from "../medium";
+import {Menu} from "./general/Menu";
+import {ToastMessage} from "./general/ToastMessage";
+import {RouteItem} from "../config/route";
+import {IUser} from "../cmn/models/User";
 
 export interface RootProps {
+    routeItems: Array<RouteItem>;
 }
 
 interface RootState {
-    user?: IUser;
+    user: IUser;
 }
 
-export class Root extends React.Component<RootProps, RootState> {
-    private apiService = ApiService.getInstance();
-    private authService = AuthService.getInstance();
+export class Root extends Component<RootProps, RootState> {
+    private api = ApiService.getInstance();
+    private auth = AuthService.getInstance();
 
-    constructor(props: RootProps) {
-        super(props);
-        this.state = {user: new User()};
-    }
-
-    componentWillMount() {
-        Dispatcher.getInstance().register(AuthService.Events.Update, (payload) => {
+    public componentDidMount() {
+        Dispatcher.getInstance().register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
             this.setState({user: payload.user});
         });
-        this.apiService.get<any, IQueryResult<IUser>>('me')
+        this.api.get<IQueryResult<IUser>>('account')
             .then(response => {
-                this.authService.login(response.items[0]);
+                if (response) {
+                    this.auth.login(response.items[0]);
+                }
             })
             .catch(err => {
                 console.error(err);
             });
     }
 
-    static willTransitionTo(transition) {
-        console.log(transition);
-    }
-
-    render() {
-        let {Link} = ReactRouterDOM;
+    public render() {
         return (
             <div id="main-wrapper">
+                <ToastMessage/>
                 <header id="main-header">
-                    <Link to="/">Home</Link>
-                    <Link to="/about">About</Link>
+                    <Menu name="app-menu" items={this.props.routeItems}/>
                 </header>
                 <main id="main-content">
                     <div id="content-wrapper">
                         {this.props.children}
-                        <footer id="main-footer">FOOTER</footer>
                     </div>
                 </main>
             </div>

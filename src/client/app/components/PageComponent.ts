@@ -1,15 +1,32 @@
-import React from "react";
+import {Component, ReactNode} from "react";
 import {ApiService} from "../service/ApiService";
-import {AuthService} from "../service/AuthService";
+import {match} from "react-router";
+import {History, Location} from "history";
+import {NotificationService} from "../service/NotificationService";
+import {TransitionService} from "../service/TransitionService";
 
-interface PageComponentProps {
+export interface FetchById {
+    (id: number): void;
 }
-interface PageComponentState {
+
+export interface Filter {
+    (): void;
 }
 
-export class PageComponent<P, S> extends React.Component<PageComponentProps, PageComponentState> {
+export interface PageComponentProps<T> {
+    match?: match<T>;
+    location?: Location;
+    history?: History;
+    children?: ReactNode;
+}
 
-    protected apiService: ApiService = ApiService.getInstance();
-    protected authService: AuthService = AuthService.getInstance();
+export interface PageComponentState {
+}
+
+export abstract class PageComponent<P, S> extends Component<P, S> {
+
+    protected tz: TransitionService = TransitionService.getInstance();
+    protected api: ApiService = ApiService.getInstance();
+    protected notification: NotificationService = NotificationService.getInstance();
 
 }

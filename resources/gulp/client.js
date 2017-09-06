@@ -1,13 +1,6 @@
 let gulp = require('gulp');
 let fs = require('fs');
-let spawn = require('child_process').spawn;
-let rollup = require('rollup');
-let rollupTypescript = require('rollup-plugin-typescript2');
-let rollupResolve = require('rollup-plugin-node-resolve');
-let rollupCommon = require('rollup-plugin-commonjs');
-let rollupReplace = require('rollup-plugin-replace');
-let rollupUglify = require('rollup-plugin-uglify');
-let rollupProgress = require('rollup-plugin-progress');
+let webpack = require('webpack');
 let webConnect = require('gulp-connect');
 let open = require('open');
 let electronServer = require('electron-connect').server;
@@ -25,16 +18,35 @@ module.exports = function (setting) {
             .pipe(eliminator(setting, setting.target))
             .pipe(gulp.dest(tmpClient))
     });
-    gulp.task('client:build', [`client:preBuild`], () => {
-        let rollupConfig = getRollupConfig();
-        let bundleConfig = getBundleConfig();
-
-        return rollup.rollup(rollupConfig).then(bundle => bundle.write(bundleConfig))
+    
+    gulp.task('client:build', ['client:preBuild'], () => {
+        let webpackConfig = getWebpackConfig();
+        const compiler = webpack(webpackConfig);
+        return new Promise((resolve, reject) => {
+            compiler.run((err, stats) => {
+                if (err) {
+                    console.error(err);
+                    // if (err.details) {
+                    //     console.error(err.details);
+                    // }
+                    return reject(false);
+                }
+                const info = stats.toJson();
+                if (stats.hasErrors()) {
+                    process.stderr.write(info.errors.join('\n\n'));
+                }
+                // if (stats.hasWarnings()) {
+                //     console.warn(info.warnings)
+                // }
+                resolve(true);
+            });
+        })
     });
+    
     gulp.task('client:run', function () {
+        if (setting.production) return;
         let target = setting.buildPath(setting.target);
         let root = `${dir.buildClient}/${target}`;
-
         switch (setting.target) {
             case 'web':
                 runWebServer(root);
@@ -50,6 +62,7 @@ module.exports = function (setting) {
                 process.stderr.write(`${setting.target} Develop server is not supported`);
         }
     });
+    
     gulp.task(`client:watch`, () => {
         gulp.watch([`${dir.srcClient}/**/*.ts*`, `${dir.src}/cmn/**/*`], [`client:build`]);
     });
@@ -59,58 +72,50 @@ module.exports = function (setting) {
         tasks: ['client:build', 'client:run']
     };
 
-    /**
-     * RollUp
-     * Documentation: https://github.com/rollup/rollup/wiki/JavaScript-API
-     * Plugins: https://github.com/rollup/rollup/wiki/Plugins
-     */
-    function getRollupConfig() {
-
-        let rollupConfig = {
-            entry: getEntry(`${tmpClient}/client/app`),
-            treeshake: true
-        };
-        // Bundle libraries only in case of production, otherwise separate lib file to reduce build time
-        if (!setting.production) {
-            rollupConfig.external = ['react', 'react-dom', 'react-router-dom'];
-            rollupConfig.globals = {
-                'react': 'React',
-                'react-dom': 'ReactDOM',
-                'react-router-dom': 'ReactRouterDOM'
-            };
+    function getWebpackConfig() {
+        let plugins = [
+            new webpack.optimize.CommonsChunkPlugin({
+                name: "lib",
+                minChunks: function (module) {
+                    // console.log(module.context);
+                    return module.context && module.context.indexOf("node_modules") !== -1;
         }
-        // configuring plugins
-        rollupConfig.plugins = [
-            (setting.production && rollupProgress()),
-            rollupTypescript({
-                check: false,
-                clean: true,
-                cacheRoot: `${dir.build}/tmp/rpt2_cache`,
-                abortOnError: false
-            }),
-            rollupReplace({
-                'process.env.NODE_ENV': setting.production ? '"production"' : '"development"'
-            }),
-            rollupResolve({jsnext: true, main: true}),
-            rollupCommon({
-                include: ['node_modules/**'],
-            }),
-            (setting.production && rollupUglify())
+            })
         ];
-
-        return rollupConfig;
+        if (setting.production) {
+            plugins = plugins.concat([
+                new webpack.DefinePlugin({
+                    'process.env.NODE_ENV': JSON.stringify('production')
+            }),
+                new webpack.LoaderOptionsPlugin({
+                    minimize: true,
+                    debug: false
+            }),
+                new webpack.optimize.UglifyJsPlugin()
+            ]);
     }
-
-    function getBundleConfig() {
         let target = setting.buildPath(setting.target);
-        let bundleConfig = {
-            format: "iife",
-            dest: `${dir.buildClient}/${target}/js/app.js`
-        };
-        if (!setting.production) {
-            bundleConfig.sourceMap = true;
+        return {
+            entry: {
+                app: getEntry(`${tmpClient}/client/app`)
+            },
+            output: {
+                filename: "[name].js",
+                path: `${dir.buildClient}/${target}/js`
+            },
+            devtool: "source-map",
+            resolve: {
+                extensions: [".ts", ".tsx", ".js", ".json"]
+            },
+            module: {
+                rules: [
+                    {test: /\.tsx?$/, loader: `awesome-typescript-loader?sourceMap=${!setting.production}`},
+                    {enforce: "pre", test: /\.js$/, loader: "source-map-loader"}
+                ]
+            },
+            plugins,
+            externals: {},
         }
-        return bundleConfig;
     }
 
     function getEntry(baseDirectory) {
@@ -121,9 +126,7 @@ module.exports = function (setting) {
             if (fs.existsSync(entry)) return entry;
         }
         entry = `${baseDirectory}/app.ts`;
-        if (fs.existsSync(entry)) return entry;
-        process.stderr.write(`Entry not found ${entry}`);
-        process.exit(1);
+        return entry;
     }
 
     function runWebServer(wwwRoot) {

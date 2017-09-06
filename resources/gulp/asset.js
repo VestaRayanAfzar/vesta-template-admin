@@ -1,9 +1,8 @@
 let gulp = require('gulp');
 let uglify = require('gulp-uglify');
-let concat = require('gulp-concat');
 let htmlMin = require('gulp-htmlmin');
 let replace = require('gulp-replace');
-let imgOptimize = require('gulp-image-optimization');
+// let imgOptimize = require('gulp-image-optimization');
 
 module.exports = function (setting) {
     let dir = setting.dir;
@@ -26,28 +25,6 @@ module.exports = function (setting) {
             .pipe(gulp.dest(`${dir.buildClient}/${target}`));
     });
 
-    gulp.task('asset:lib', function () {
-        let target = setting.buildPath(setting.target);
-        let libs = [
-            `${dir.npm}/jquery-param/jquery-param.js`
-        ];
-        if (setting.is(setting.target, 'cordova')) {
-            libs.push(`${dir.npm}/whatwg-fetch/fetch.js`)
-        }
-        if (!setting.production) {
-            libs = libs.concat([
-                `${dir.npm}/react/dist/react.js`,
-                `${dir.npm}/react-dom/dist/react-dom.js`,
-                `${dir.npm}/react-router-dom/umd/react-router-dom.js`
-            ]);
-        }
-        let stream = gulp.src(libs).pipe(concat('lib.js'));
-        if (setting.production) {
-            stream = stream.pipe(uglify());
-        }
-        return stream.pipe(gulp.dest(`${dir.buildClient}/${target}/js`));
-    });
-
     gulp.task('asset:font', function () {
         let target = setting.buildPath(setting.target);
         return gulp.src([`${dir.srcClient}/fonts/**/*`])
@@ -57,13 +34,13 @@ module.exports = function (setting) {
     gulp.task('asset:image', function () {
         let target = setting.buildPath(setting.target);
         let stream = gulp.src(`${dir.srcClient}/images/**/*`);
-        if (setting.production) {
-            stream = stream.pipe(imgOptimize({
-                optimizationLevel: 5,
-                progressive: true,
-                interlaced: true
-            })).on('error', setting.error);
-        }
+        // if (setting.production) {
+        //     stream = stream.pipe(imgOptimize({
+        //         optimizationLevel: 5,
+        //         progressive: true,
+        //         interlaced: true
+        //     })).on('error', setting.error);
+        // }
         return stream.pipe(gulp.dest(`${dir.buildClient}/${target}/img`));
     });
 
@@ -74,7 +51,7 @@ module.exports = function (setting) {
 
     return {
         watch: ['asset:watch'],
-        tasks: ['asset:etc', 'asset:lib', 'asset:font', 'asset:image']
+        tasks: ['asset:etc', 'asset:font', 'asset:image']
     };
 
     function minifyHtml(stream) {

@@ -1,11 +1,13 @@
-import React from "react";
-import {PageComponent} from "../PageComponent";
-import {AuthService} from "../../service/AuthService";
+import * as React from "react";
+import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
 
-export interface SignupProps {
+export interface SignupParams {
 }
 
-export interface SignupState {
+export interface SignupProps extends PageComponentProps<SignupParams> {
+}
+
+export interface SignupState extends PageComponentState {
 }
 
 export class Signup extends PageComponent<SignupProps, SignupState> {
@@ -14,9 +16,5 @@ export class Signup extends PageComponent<SignupProps, SignupState> {
         return (
             <div><h1>Signup Component</h1></div>
         );
-    }
-
-    static registerPermission(id) {
-        AuthService.getInstance().registerPermissions(id);
     }
 }

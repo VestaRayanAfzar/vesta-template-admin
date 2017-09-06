@@ -5,8 +5,6 @@ let postCss = require('gulp-postcss');
 let autoPrefixer = require('autoprefixer');
 let csswring = require('csswring');
 let mqpacker = require('css-mqpacker');
-let reporter = require('postcss-reporter');
-let doiuse = require('doiuse');
 let fs = require('fs');
 let eliminator = require('./plugins/eliminator');
 
@@ -50,21 +48,6 @@ module.exports = function (setting) {
                 .on('error', setting.error)
                 .pipe(gulp.dest(`${dir.buildClient}/${target}/css`))
         }
-    });
-
-    gulp.task('sass:analyse', ['sass:compile'], () => {
-        let target = setting.buildPath(setting.target);
-        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.buildClient}/${target}/css`;
-
-        let preprocessors = [
-            autoPrefixer({browsers: browsersToSupport}),
-            doiuse({browsers: browsersToSupport}),
-            reporter()
-        ];
-        return gulp.src(tmpDirectory + '/*.css')
-            .pipe(postCss(preprocessors))
-            .on('error', setting.error)
-            .pipe(gulp.dest(tmpDirectory + '/analyze'))
     });
 
     gulp.task('sass:watch', () => {

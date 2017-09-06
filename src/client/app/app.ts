@@ -1,8 +1,8 @@
 import {ClientApp} from "./ClientApp";
-import {setting} from "./config/setting";
 import {ConfigService} from "./service/ConfigService";
+import {Config} from "./config/config";
 
-ConfigService.init(setting);
+ConfigService.init(Config);
 
 //<cordova>
 document.addEventListener('deviceready', startApp, false);
@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', startApp, false);
 //</cordova>
 
 function startApp() {
-    let client = new ClientApp(setting);
+    let client = new ClientApp();
     client.init();
     client.run();
 }

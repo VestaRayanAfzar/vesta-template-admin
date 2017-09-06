@@ -1,5 +1,6 @@
 export class StorageService {
     private storage: Storage = localStorage;
+    private static instance: StorageService;
 
     public set<T>(key: string, value: T) {
         try {
@@ -8,6 +9,7 @@ export class StorageService {
             // QUOTA_EXCEEDED_ERR
             // localStorage is full
         }
+        StorageService.instance = this;
     }
 
     public get<T>(key: string): T {
@@ -24,5 +26,12 @@ export class StorageService {
     public remove(key: string): boolean {
         this.storage.removeItem(key);
         return true;
+    }
+
+    public static getInstance(): StorageService {
+        if (!StorageService.instance) {
+            StorageService.instance = new StorageService();
+        }
+        return StorageService.instance;
     }
 }

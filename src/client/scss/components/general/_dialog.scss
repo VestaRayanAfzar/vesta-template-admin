@@ -1,0 +1,22 @@
+$dialog-background-color: $color-light;
+$dialog-titlebar-height: $header-height;
+$dialog-border-radius: $border-radius;
+
+.dialog-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: $z-index-dialog;
+    > .dialog-header {
+        min-height: $dialog-titlebar-height;
+    }
+    > .dialog-content {
+        border: 2px solid white;
+        position: absolute;
+        flex: 1;
+        background: $dialog-background-color;
+        min-height: $dialog-titlebar-height;
+        border-radius: $dialog-border-radius;
+    }
+}

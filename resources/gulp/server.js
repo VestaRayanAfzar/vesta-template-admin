@@ -5,23 +5,20 @@ let chalk = require('chalk');
 let path = require('path');
 let ts = require('gulp-typescript');
 let map = require('gulp-sourcemaps');
-let {dir, debug} = require('./config');
-let eliminator = require('./plugins/eliminator');
-let bundler = require('./plugins/bundler');
+
 
 module.exports = function (setting) {
     let dir = setting.dir;
 
-    gulp.task('server:build', () => {
+    gulp.task('server:ts', () => {
         let tsFiles = [`${dir.srcServer}/**/*.ts`];
         let genSourceMap = !setting.production;
         let stream = gulp.src(tsFiles);
         if (genSourceMap) stream = stream.pipe(map.init());
         let tsResult = stream.pipe(ts({
-            target: 'es5',
+            target: 'es2015',
             module: 'commonjs',
-            moduleResolution: 'node',
-            removeComments: true
+            removeComments: setting.production
         }));
         return genSourceMap ?
             tsResult.js.pipe(map.write()).pipe(gulp.dest(dir.buildServer)) :
@@ -29,11 +26,11 @@ module.exports = function (setting) {
     });
 
     gulp.task('server:watch', function () {
-        return gulp.watch([`${dir.srcServer}/**/*`], ['server:build']);
+        return gulp.watch([`${dir.srcServer}/**/*`], ['dev:server']);
     });
 
     return {
-        tasks: ['server:build'],
+        tasks: ['server:ts'],
         watch: ['server:watch']
     };
 };
@@ -42,6 +39,7 @@ module.exports = function (setting) {
  * This tasks is called by npm script for starting api server in docker env
  */
 gulp.task('server:run', function () {
+    let {dir, debug} = require('./config');
     // let composeFile = `${dir.buildServer}/docker-compose.yml`;
     let delay = 500, debuggerDelay = 500, timer, debuggerTimer;
     let port = debug.ports[debug.type];

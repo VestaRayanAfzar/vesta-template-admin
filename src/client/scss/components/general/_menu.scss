@@ -1,0 +1,15 @@
+$menu-z-index: $z-index-header;
+$menu-item-padding: 3px 5px;
+
+.menu-component {
+    position: relative;
+    z-index: $menu-z-index;
+    li {
+        display: inline-block;
+    }
+    a {
+        padding: $menu-item-padding;
+        display: inline-block;
+        width: 100%;
+    }
+}

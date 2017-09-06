@@ -1,5 +1,5 @@
 export interface IDispatcherCallBack<T> {
-    (payload: T): boolean;
+    (payload: T): boolean | void;
 }
 
 interface IDispatcherRegistry<T> {
@@ -43,7 +43,7 @@ export class Dispatcher {
         }
     }
 
-    public static getInstance(name: string = 'main') {
+    public static getInstance(name: string = 'main'): Dispatcher {
         if (!Dispatcher.instances[name]) {
             Dispatcher.instances[name] = new Dispatcher(name);
         }

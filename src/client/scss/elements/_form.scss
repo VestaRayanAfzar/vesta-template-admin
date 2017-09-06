@@ -1,0 +1,20 @@
+$form-group-margin: 10px;
+$form-group-padding: 5px;
+$form-label-margin: 10px 0 5px 0;
+$form-control-padding: 5px;
+
+.form-group {
+    margin: $form-group-margin;
+    padding: $form-group-padding;
+    label {
+        display: block;
+        margin: $form-label-margin;
+    }
+}
+
+.form-control {
+    padding: $form-control-padding;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    outline: 0;
+}

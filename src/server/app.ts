@@ -7,16 +7,23 @@ export interface IStaticServerSetting {
         html: string;
         upload: string;
     };
+    http2?: boolean;
+    ssl?: { key: string, cert: string }
     port: number;
     env: string;
 }
 
 const setting: IStaticServerSetting = {
     dir: {
-        html: path.join(__dirname, '../html'),
+        html: path.join('/app/client/web/www'),
         upload: '/upload'
     },
-    port: process.env.PORT,
+    http2: true,
+    ssl: {
+        key: '/ssl/server.key',
+        cert: '/ssl/server.crt'
+    },
+    port: process.env.PORT || 80,
     env: process.env.NODE_ENV
 };
 

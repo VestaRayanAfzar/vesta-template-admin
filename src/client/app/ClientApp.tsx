@@ -1,40 +1,32 @@
-import React, {ComponentClass} from "react";
-import ReactDOM from "react-dom";
-import ReactRouterDOM from "react-router-dom";
+import React from "react";
+import {render} from "react-dom";
+import {Route, Switch} from "react-router";
+import {DynamicRouter} from "./medium";
 import {AuthService} from "./service/AuthService";
 import {AclPolicy} from "./cmn/enum/Acl";
+import {Dispatcher} from "./service/Dispatcher";
 import {NotFound} from "./components/root/NotFound";
-import {About} from "./components/root/About";
-import {Signup} from "./components/root/Signup";
-import {Login} from "./components/root/Login";
-import {Home} from "./components/root/Home";
 import {Root} from "./components/Root";
-import {IClientAppSetting} from "./config/setting";
-import {Forbidden} from "./components/root/Forbidden";
+import {IUser} from "./cmn/models/User";
+import {TransitionService} from "./service/TransitionService";
+import {getRoutes, RouteItem} from "./config/route";
 
-interface ExtComponentClass extends ComponentClass<any> {
-    registerPermission: (id: number) => void;
-}
 
 export class ClientApp {
-
-    static Setting;
-    private idCounter = 1;
-
-    constructor(private setting: IClientAppSetting) {
-    }
+    private tz = TransitionService.getInstance();
+    private auth = AuthService.getInstance();
 
     public init() {
         this.registerServiceWorker();
-        //<web>
-        AuthService.getInstance().setDefaultPolicy(AclPolicy.Allow);
-        //</web>
+        this.auth.setDefaultPolicy(AclPolicy.Deny);
         //<cordova>
         Keyboard.hideFormAccessoryBar(true);
         Keyboard.disableScrollingInShrinkView(true);
         Keyboard.shrinkView(true);
         StatusBar.styleDefault();
         //</cordova>
+        // auth event registration
+        Dispatcher.getInstance().register<{ user: IUser }>(AuthService.Events.Update, this.run.bind(this));
     }
 
     private registerServiceWorker() {
@@ -47,30 +39,25 @@ export class ClientApp {
         // }
     }
 
-    protected willTransitionTo(Component: ExtComponentClass) {
-        let id = this.idCounter++;
-        Component.registerPermission(id);
-        return (props) => {
-            return AuthService.getInstance().hasAccessToState(id) ? React.createElement(Component, props) :
-                React.createElement(Forbidden, props);
-        }
+    private getRoutes(routeItems: Array<RouteItem>) {
+        return routeItems.map((item, index) => {
+            return <Route path={`/${item.link}`} key={index} exact={item.exact}
+                          render={this.tz.willTransitionTo(item.component, item.permissions)}/>;
+        });
     }
 
     public run() {
-        let {HashRouter, Route, Switch} = ReactRouterDOM;
-        let Router = HashRouter;
-        ReactDOM.render(
-            <Router>
-                <Root>
+        const routeItems = getRoutes(!this.auth.isGuest());
+        let routes = this.getRoutes(routeItems);
+        render(
+            <DynamicRouter>
+                <Root routeItems={routeItems}>
                     <Switch>
-                        <Route path="/" render={this.willTransitionTo(Home)} exact/>
-                        <Route path="/login" render={this.willTransitionTo(Login)}/>
-                        <Route path="/signup" render={this.willTransitionTo(Signup)}/>
-                        <Route path="/about" render={this.willTransitionTo(About)}/>
+                        {routes}
                         <Route component={NotFound}/>
                     </Switch>
                 </Root>
-            </Router>,
+            </DynamicRouter>,
             document.getElementById("root")
         );
     }

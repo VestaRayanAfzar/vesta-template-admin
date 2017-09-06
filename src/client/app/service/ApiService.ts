@@ -1,141 +1,111 @@
-import {Err} from "vesta-lib/Err";
 import {AuthService} from "./AuthService";
-import {ConfigService} from "./ConfigService";
-declare let param: (any) => string;
+import {ConfigService, IClientAppConfig} from "./ConfigService";
+import {IModelValues} from "../medium";
+
+declare let param: (data: any) => string;
+
+type PostData = string | ArrayBuffer | Blob | Document | FormData | IModelValues;
 
 export interface IFileKeyValue {
     [key: string]: File | Blob | Array<File | Blob>;
+}
+
+export interface ApiServiceRequest<T> extends Promise<T> {
+    xhr?: XMLHttpRequest;
+    abort?: () => void;
 }
 
 export class ApiService {
     private static instance: ApiService;
     private endPoint: string = '';
     private enableCache: boolean;
-    private isDev = ConfigService.getInstance().get<string>('env') != 'production';
-
-    public static getInstance(): ApiService {
-        if (!ApiService.instance) {
-            return new ApiService(AuthService.getInstance());
-        }
-        return ApiService.instance;
-    }
+    private tokenHeaderKeyName = 'X-Auth-Token';
 
     constructor(private authService: AuthService) {
-        let cfg: ConfigService = ConfigService.getInstance();
-        this.endPoint = cfg.get<string>('api');
-        this.enableCache = !!cfg.get<{ api: string }>('cache').api;
-        this.endPoint += '/';
-        ApiService.instance = this;
+        let cfg: IClientAppConfig = ConfigService.getConfig();
+        this.endPoint = cfg.api;
+        this.enableCache = !!cfg.cache.api;
     }
 
-    private errorHandler(error): Err {
-        if (!error) {
-            error = new Err(Err.Code.NoDataConnection);
-        }
-        error.message = error.message || 'Something goes wrong!';
-        error.code = error.code || Err.Code.Unknown;
-        if (this.isDev) {
-            console.error('ApiServer', error);
-        }
-        return error;
-    }
-
-    private requestHandler<T>(req: Request): Promise<T> {
-        // fetch method won't reject even if status code is 5xx
-        return fetch(req)
-            .then((response: Response) => {
-                if (!response) throw null;
-                this.extractToken(response.headers);
-                return <Promise<T>>response.json();
-            })
-            .then((response) => {
-                if (response['error']) {
-                    throw response['error'];
-                }
-                return response;
-            })
-            .catch(response => {
-                // for reject handlers inside caller method
-                throw this.errorHandler(response);
-            });
-    }
-
-    private onBeforeSend(request: Request) {
-        // token
+    private onBeforeSend(xhr: XMLHttpRequest) {
         let token = this.authService.getToken();
         if (token) {
-            request.headers.set('X-Auth-Token', token);
+            xhr.setRequestHeader(this.tokenHeaderKeyName, token);
         }
     }
 
-    private extractToken(headers: Headers) {
-        let tkn = headers.get('X-Auth-Token');
-        if (tkn) {
-            this.authService.setToken(tkn);
-        }
-    }
-
-    public get<T, U>(edge: string, data?: T): Promise<U> {
-        let urlData = data ? `?${param(data)}` : '';
-        let request = new Request(`${this.endPoint}${edge}${urlData}`);
-        this.onBeforeSend(request);
-        return this.requestHandler<U>(request);
-    }
-
-    public post<T, U>(edge: string, data?: T): Promise<U> {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let request = new Request(`${this.endPoint}${edge}`, {
-            method: 'post',
-            body: JSON.stringify(data) || '',
-            headers
-        });
-        this.onBeforeSend(request);
-        return this.requestHandler<U>(request);
-    }
-
-    public upload<T, U>(edge: string, files: IFileKeyValue, data?: T): Promise<U> {
-        let fd = new FormData();
-        data && fd.append('data', JSON.stringify(data));
-        for (let i = 0, keys = Object.keys(files), il = keys.length; i < il; i++) {
-            let fileName = keys[i];
-            if (files[fileName] instanceof Array) {
-                let fileList = <Array<File>> files[fileName];
-                for (let j = fileList.length; j--;) {
-                    fd.append(fileName, fileList[j]);
+    private onAfterReceive(xhr: XMLHttpRequest) {
+        let token = xhr.getResponseHeader(this.tokenHeaderKeyName);
+        if (token) {
+            this.authService.setToken(token);
                 }
-            } else {
-                fd.append(fileName, files[fileName]);
-            }
+    }
+
+    private xhr<T>(method: string, edge: string, data: PostData, headers: any): ApiServiceRequest<T> {
+        let xhr = new XMLHttpRequest();
+        let promise: ApiServiceRequest<T> = new Promise<T>((resolve, reject) => {
+            xhr.open(method, `${this.endPoint}/${edge}`, true);
+            this.onBeforeSend(xhr);
+            if (headers) {
+                for (let headerKeys = Object.keys(headers), i = headerKeys.length; i--;) {
+                    let header = headerKeys[i];
+                    xhr.setRequestHeader(header, headers[header]);
+                }
         }
-        let request = new Request(`${this.endPoint}${edge}`, {method: 'post', body: fd});
-        this.onBeforeSend(request);
-        // config.reqConfig.transformRequest = angular.identity;
-        // config.reqConfig.headers['content-type'] = undefined;
-        return this.requestHandler<U>(request);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        this.onAfterReceive(xhr);
+        }
+                        try {
+                            let data = JSON.parse(xhr.responseText);
+                        data && data.error ? reject(data.error) : resolve(<T>data);
+                        } catch (e) {
+                        reject(new Error(`${xhr.responseText} [${e.message}]`));
+    }
+                }
+            };
+            xhr.send(data);
+            });
+        promise.xhr = xhr;
+        promise.abort = () => {
+            xhr.abort();
+        };
+        return promise;
     }
 
-    public put<T, U>(edge: string, data?: T): Promise<U> {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let request = new Request(`${this.endPoint}${edge}`, {
-            method: 'put',
-            body: JSON.stringify(data) || '',
-            headers
-        });
-        this.onBeforeSend(request);
-        return this.requestHandler<U>(request);
+    public get<T>(edge: string): ApiServiceRequest<T> {
+        return this.xhr<T>('GET', edge, null, null);
     }
 
-    public delete<T, U>(edge: string, data?: T): Promise<U> {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let request = new Request(`${this.endPoint}${edge}`, {
-            method: 'delete',
-            body: JSON.stringify(data) || '',
-            headers
-        });
-        this.onBeforeSend(request);
-        return this.requestHandler<U>(request);
+    public post<T>(edge: string, data: PostData): ApiServiceRequest<T> {
+        let headers = {};
+        if (typeof data === 'string') {
+            headers['Content-Type'] = 'application/json';
+        }
+        return this.xhr<T>('POST', edge, data, headers);
+    }
+
+    public put<T>(edge: string, data: PostData): ApiServiceRequest<T> {
+        let headers = {};
+        if (typeof data === 'string') {
+            headers['Content-Type'] = 'application/json';
+    }
+        return this.xhr<T>('PUT', edge, data, headers);
+    }
+
+    public static toFormData(data: Object): FormData {
+        let fd = new FormData();
+        for (let keys = Object.keys(data), i = keys.length; i--;) {
+            fd.append(keys[i], data[keys[i]]);
+        }
+        return fd;
+    }
+
+    public static getInstance(authService: AuthService = AuthService.getInstance()): ApiService {
+        if (!ApiService.instance) {
+            ApiService.instance = new ApiService(authService);
+    }
+        return ApiService.instance;
     }
 }

@@ -1,0 +1,58 @@
+$btn-padding: 7px;
+$btn-border-darken-ratio: 5%;
+$btn-height: 32px;
+$btn-min-width: 64px;
+$btn-border-radius: $border-radius;
+$btn-group-padding: 7px 10px;
+
+@mixin btn-style($color) {
+    color: $white;
+    //text-shadow: 1px 1px 2px $dark;
+    background: $color;
+    border: 1px solid lighten($color, $btn-border-darken-ratio);
+    &:hover {
+        transition: all $transition-duration-short;
+        background: darken($color, $btn-border-darken-ratio/2);
+        border-color: darken($color, $btn-border-darken-ratio);
+    }
+}
+
+.btn {
+    display: inline-block;
+    height: $btn-height;
+    min-width: $btn-min-width;
+    padding: $btn-padding;
+    border-radius: $btn-border-radius;
+    cursor: pointer;
+    user-select: none;
+    outline: 0;
+    @include btn-style($color-default);
+    //box-shadow: 1px 1px 2px $dark;
+    &:hover {
+        //transition: all $transitionShortDuration;
+        //box-shadow: 0 0 2px $dark inset;
+    }
+    &:disabled {
+        cursor: not-allowed;
+    }
+    @each $class in $color-classes {
+        &.btn-#{$class} {
+            @include btn-style(nth($color-list, index($color-classes, $class)));
+        }
+    }
+}
+
+.btn-group {
+    padding: $btn-group-padding;
+    > .btn {
+        border-radius: 0;
+        &:first-child {
+            border-top-#{$float}-radius: $border-radius;
+            border-bottom-#{$float}-radius: $border-radius;
+        }
+        &:last-child {
+            border-top-#{$opposite-float}-radius: $border-radius;
+            border-bottom-#{$opposite-float}-radius: $border-radius;
+        }
+    }
+}
