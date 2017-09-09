@@ -1,6 +1,6 @@
 import * as React from "react";
+import {Link} from "react-router-dom";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
-import {AuthService} from "../../service/AuthService";
 
 export interface AboutParams {
 }
@@ -13,9 +13,18 @@ export interface AboutState extends PageComponentState {
 
 export class About extends PageComponent<AboutProps, AboutState> {
 
+    constructor(props: AboutProps) {
+        super(props);
+        this.state = {};
+    }
+
     public render() {
         return (
-            <div className="page"><h1>About Component</h1></div>
+            <div className="page">
+                <h1>About Component</h1>
+                <br/>
+                <Link to='/'>Home</Link>
+            </div>
         );
     }
 }

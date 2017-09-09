@@ -7,7 +7,6 @@ export class LogService {
 
 
     constructor() {
-        LogService.instance = this;
         this.isProduction = ConfigService.getConfig().env === 'production';
     }
 

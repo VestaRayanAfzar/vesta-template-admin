@@ -1,0 +1,15 @@
+.navbar-component {
+    height: 100%;
+    padding: $header-padding;
+    display: flex;
+    align-items: center;
+    background: transparentize($color-dark, .25);
+    color: $color-light;
+    .nav-title {
+        flex: 1;
+    }
+    .nav-btn {
+        font-size: $font-size-xlarge;
+        cursor: pointer;
+    }
+}

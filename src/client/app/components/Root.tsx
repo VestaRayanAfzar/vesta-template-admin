@@ -5,10 +5,10 @@ import {ApiService} from "../service/ApiService";
 import {AuthService} from "../service/AuthService";
 import {Dispatcher} from "../service/Dispatcher";
 import {IQueryResult} from "../medium";
-import {Menu} from "./general/Menu";
 import {ToastMessage} from "./general/ToastMessage";
 import {RouteItem} from "../config/route";
 import {IUser} from "../cmn/models/User";
+import Navbar from "./general/Navbar";
 
 export interface RootProps {
     routeItems: Array<RouteItem>;
@@ -21,9 +21,15 @@ interface RootState {
 export class Root extends Component<RootProps, RootState> {
     private api = ApiService.getInstance();
     private auth = AuthService.getInstance();
+    private dispatcher = Dispatcher.getInstance();
+
+    constructor(props: RootProps) {
+        super(props);
+        this.state = {user: null};
+    }
 
     public componentDidMount() {
-        Dispatcher.getInstance().register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
+        this.dispatcher.register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
             this.setState({user: payload.user});
         });
         this.api.get<IQueryResult<IUser>>('me')
@@ -42,7 +48,7 @@ export class Root extends Component<RootProps, RootState> {
             <div id="main-wrapper">
                 <ToastMessage/>
                 <header id="main-header">
-                    <Menu name="app-menu" items={this.props.routeItems}/>
+                    <Navbar routeItems={this.props.routeItems}/>
                 </header>
                 <main id="main-content">
                     <div id="content-wrapper">
