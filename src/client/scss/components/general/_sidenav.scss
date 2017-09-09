@@ -1,0 +1,47 @@
+.sidenav-component {
+}
+
+.sidenav {
+    position: fixed;
+    #{$float}: 0;
+    z-index: $z-index-sidenav;
+    top: -100px;
+    padding-top: 100px;
+    bottom: 0;
+    width: $sidenav-width;
+    max-width: $sidenav-width;
+    background: white;
+    transition: all $transition-duration-medium;
+    overflow: auto;
+
+    @include translate3d(-1 * $directionEq *100%, 0, 0);
+
+    &.sidenav-open {
+        @include translate3d(0, 0, 0);
+    }
+
+    @include mediaQueryBelow {
+        width: 75vw;
+    }
+
+    @include mediaQuery(0, $layout-small-min - 1px) {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+.sidenav-backdrop {
+    position: fixed;
+    background: transparentize($black, 0.5);
+    top: -100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: $z-index-sidenav - 1;
+    @include mediaQueryAbove() {
+        transition: opacity 0.2s;
+        display: block;
+    }
+}
+
+

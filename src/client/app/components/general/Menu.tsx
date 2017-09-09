@@ -13,17 +13,21 @@ export interface MenuParams {
 export interface MenuProps extends PageComponentProps<MenuParams> {
     name: string;
     items: Array<MenuItem>;
+    itemClick?: (e: MouseEvent) => boolean;
+    horizontal?: boolean;
 }
 
 export const Menu = (props: MenuProps) => {
+    let clickHandler = props.itemClick || null;
     const menuItems = (props.items || [])
-        .map((item: MenuItem, i) => <li key={i}><Link to={`/${item.link}`}>{item.title}</Link></li>);
-    const className = `menu-component ${props.name}`;
+        .map((item: MenuItem, i) => <li key={i}>
+            <Link to={`/${item.link}`} onClick={clickHandler}>{item.title}</Link>
+        </li>);
+    const className = `menu-component ${props.name} ${props.horizontal ? 'horizontal' : 'vertical'}`;
 
     return (
-        <div className={className}>
+        <nav className={className}>
             <ul>{menuItems}</ul>
-        </div>
+        </nav>
     )
-
 };

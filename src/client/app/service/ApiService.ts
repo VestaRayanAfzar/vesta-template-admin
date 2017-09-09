@@ -38,7 +38,7 @@ export class ApiService {
         let token = xhr.getResponseHeader(this.tokenHeaderKeyName);
         if (token) {
             this.authService.setToken(token);
-                }
+        }
     }
 
     private xhr<T>(method: string, edge: string, data: PostData, headers: any): ApiServiceRequest<T> {
@@ -51,22 +51,22 @@ export class ApiService {
                     let header = headerKeys[i];
                     xhr.setRequestHeader(header, headers[header]);
                 }
-        }
+            }
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         this.onAfterReceive(xhr);
-        }
-                        try {
-                            let data = JSON.parse(xhr.responseText);
+                    }
+                    try {
+                        let data = JSON.parse(xhr.responseText);
                         data && data.error ? reject(data.error) : resolve(<T>data);
-                        } catch (e) {
+                    } catch (e) {
                         reject(new Error(`${xhr.responseText} [${e.message}]`));
-    }
+                    }
                 }
             };
             xhr.send(data);
-            });
+        });
         promise.xhr = xhr;
         promise.abort = () => {
             xhr.abort();
@@ -90,7 +90,7 @@ export class ApiService {
         let headers = {};
         if (typeof data === 'string') {
             headers['Content-Type'] = 'application/json';
-    }
+        }
         return this.xhr<T>('PUT', edge, data, headers);
     }
 
@@ -105,7 +105,7 @@ export class ApiService {
     public static getInstance(authService: AuthService = AuthService.getInstance()): ApiService {
         if (!ApiService.instance) {
             ApiService.instance = new ApiService(authService);
-    }
+        }
         return ApiService.instance;
     }
 }

@@ -27,8 +27,8 @@ $transition-duration-default: $transition-duration-short;
 // zIndex
 $z-index-base: 1;
 $z-index-content: 2;
-$z-index-sidenav: 10;
-$z-index-header: 11;
+$z-index-header: 10;
+$z-index-sidenav: 11;
 $z-index-dialog: 12;
 $z-index-date-picker: 12;
 $z-index-notification: 99;
@@ -39,7 +39,7 @@ $header-height: 56px; // from google
 $header-padding: 16px; // from google
 $breadcrumb-height: 45px;
 $footer-height: 32px;
-$sidenav-width: 256px;
+$sidenav-width: 300px;
 
 // colors
 $color-primary: $orange;

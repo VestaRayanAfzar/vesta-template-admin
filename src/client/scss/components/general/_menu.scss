@@ -1,15 +1,35 @@
 $menu-z-index: $z-index-header;
-$menu-item-padding: 3px 5px;
+$menu-item-padding-horizontal: 3px 5px;
+$menu-item-padding-vertical: 10px;
 
 .menu-component {
     position: relative;
     z-index: $menu-z-index;
     li {
-        display: inline-block;
+        list-style: none;
+        margin: 0;
     }
     a {
-        padding: $menu-item-padding;
-        display: inline-block;
+        display: block;
         width: 100%;
+    }
+    &.horizontal {
+        li {
+            display: inline-block;
+            a {
+                padding: $menu-item-padding-horizontal;
+            }
+        }
+    }
+    &.vertical {
+        li {
+            border-top: 1px solid $border-color;
+            &:last-child{
+                border-bottom: 1px solid $border-color;
+            }
+            a {
+                padding: $menu-item-padding-vertical;
+            }
+        }
     }
 }

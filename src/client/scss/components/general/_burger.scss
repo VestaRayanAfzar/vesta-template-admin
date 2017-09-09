@@ -1,0 +1,12 @@
+.burger-component {
+    $burger-width: $header-height - ( 2 * $header-padding);
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: $burger-width + ($header-padding/2);
+    height: $burger-width - 1;
+    > span {
+        height: 3px;
+        background: $color-light;
+    }
+}

@@ -3,6 +3,8 @@ import {RouteItem} from "../../config/route";
 import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import {PageComponentProps} from "../PageComponent";
+import {Dispatcher} from "../../service/Dispatcher";
+import {Burger} from "./Burger";
 
 export interface NavbarProps extends PageComponentProps<any> {
     routeItems: Array<RouteItem>;
@@ -13,6 +15,7 @@ export interface NavbarState {
 }
 
 class Navbar extends React.Component<NavbarProps, NavbarState> {
+    private dispatcher = Dispatcher.getInstance();
 
     constructor(props: NavbarProps) {
         super(props);
@@ -39,11 +42,16 @@ class Navbar extends React.Component<NavbarProps, NavbarState> {
 
     public render() {
         let routeItem = this.findRoute();
-        let title = routeItem && routeItem.title;
-        let backBtn = routeItem.link ? <span className="nav-btn" onClick={this.props.history.goBack}>&gt;</span> : null;
+        let title = '';
+        let backBtn = null;
+        if (routeItem) {
+            title = routeItem.title;
+            backBtn = routeItem.link ? <span className="nav-btn" onClick={this.props.history.goBack}>&gt;</span> : null;
+        }
         return (
             <div className="page navbar-component">
-                <h3 className="nav-title">{title}</h3>
+                <Burger className="nav-btn" event="main-sidenav-toggle" />
+                <p className="nav-title">{title}</p>
                 {backBtn}
             </div>
         );

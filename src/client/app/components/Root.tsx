@@ -9,6 +9,8 @@ import {ToastMessage} from "./general/ToastMessage";
 import {RouteItem} from "../config/route";
 import {IUser} from "../cmn/models/User";
 import Navbar from "./general/Navbar";
+import {Sidenav} from "./general/Sidenav";
+import {SidenavContent} from "./general/SidenavContent";
 
 export interface RootProps {
     routeItems: Array<RouteItem>;
@@ -55,6 +57,9 @@ export class Root extends Component<RootProps, RootState> {
                         {this.props.children}
                     </div>
                 </main>
+                <Sidenav name="main-sidenav">
+                    <SidenavContent name="main-sidenav" user={this.state.user} menuItems={this.props.routeItems}/>
+                </Sidenav>
             </div>
         );
     }
