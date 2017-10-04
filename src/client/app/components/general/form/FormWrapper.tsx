@@ -1,12 +1,13 @@
 import React from "react";
 import {PageComponentProps} from "../../PageComponent";
+import {IModelValues} from "../../../medium";
 
 export interface ChangeEventHandler {
     (name: string, value: any): void;
 }
 
 export interface SubmitEventHandler {
-    (isUpdate?: boolean): void;
+    (model: IModelValues): void;
 }
 
 export interface FormOption {
@@ -21,6 +22,7 @@ export interface FormWrapperProps extends PageComponentProps<FormWrapperParams> 
     name?: string;
     isUpdate?: boolean;
     onSubmit: SubmitEventHandler;
+    model?: IModelValues;
 }
 
 export const FormWrapper = (props: FormWrapperProps) => {
@@ -34,6 +36,6 @@ export const FormWrapper = (props: FormWrapperProps) => {
 
     function onSubmit(e) {
         e.preventDefault();
-        props.onSubmit(props.isUpdate);
+        props.onSubmit(props.model);
     }
 };

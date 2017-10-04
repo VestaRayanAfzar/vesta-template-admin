@@ -19,6 +19,7 @@ $btn-group-padding: 7px 10px;
 
 .btn {
     display: inline-block;
+    text-align: center;
     height: $btn-height;
     min-width: $btn-min-width;
     padding: $btn-padding;
@@ -26,6 +27,8 @@ $btn-group-padding: 7px 10px;
     cursor: pointer;
     user-select: none;
     outline: 0;
+    vertical-align: middle;
+    font-size: $font-size-small;
     @include btn-style($color-default);
     //box-shadow: 1px 1px 2px $dark;
     &:hover {

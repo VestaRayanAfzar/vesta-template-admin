@@ -12,14 +12,15 @@ export interface FormTextInputProps extends PageComponentProps<FormTextInputPara
     value?: string;
     onChange?: ChangeEventHandler;
     error?: string;
-    secret?: boolean;
+    type?: string;
 }
 
 export const FormTextInput = (props: FormTextInputProps) => {
+    const type = props.type || 'text';
     return <div className="form-group">
         <div className="formTextInput-component">
             <label htmlFor={props.name}>{props.label}</label>
-            <input className="form-control" type={props.secret ? 'password' : 'text'} name={props.name} id={props.name}
+            <input className="form-control" type={type} name={props.name} id={props.name}
                    value={props.value || ''} onChange={e => props.onChange(props.name, e.target.value)}/>
         </div>
         <FormError error={props.error}/>

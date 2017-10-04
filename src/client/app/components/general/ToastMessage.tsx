@@ -52,9 +52,8 @@ export class ToastMessage extends React.Component<ToastMessageProps, ToastMessag
             this.timer = setTimeout(() => {
                 this.setState({message: null});
             }, this.delay);
+            return <div className="toast-wrapper">{message}</div>;
         }
-        return (
-            <div className="toast-wrapper">{message}</div>
-        );
+        return null;
     }
 }

@@ -1,13 +1,8 @@
 import {IUser} from "../cmn/models/User";
-import {IPermission, Permission} from "../cmn/models/Permission";
-import {IRoleGroup} from "../cmn/models/RoleGroup";
+import {IPermission} from "../cmn/models/Permission";
 import {IRole} from "../cmn/models/Role";
 import {Dispatcher} from "./Dispatcher";
 import {AclPolicy} from "../cmn/enum/Acl";
-
-export interface IAclActions {
-    [action: string]: boolean;
-}
 
 export interface IPermissionCollection {
     [resource: string]: Array<string>;
@@ -50,12 +45,8 @@ export class AuthService {
 
     private updatePermissions() {
         this.permissions = {};
-        if (this.user.roleGroups) {
-            for (let i = this.user.roleGroups.length; i--;) {
-                let roleGroup = <IRoleGroup>this.user.roleGroups[i];
-                if (!roleGroup) continue;
-                for (let j = roleGroup.roles.length; j--;) {
-                    let role = <IRole>roleGroup.roles[j];
+        let role = <IRole>this.user.role;
+        if (!role) return;
                     for (let k = role.permissions.length; k--;) {
                         let permission = <IPermission>role.permissions[k];
                         if (!(permission.resource in this.permissions)) {
@@ -63,9 +54,6 @@ export class AuthService {
                         }
                         this.permissions[permission.resource].push(permission.action);
                     }
-                }
-            }
-        }
         Dispatcher.getInstance().dispatch(AuthService.Events.Update, {user: this.user});
     }
 
@@ -116,31 +104,7 @@ export class AuthService {
     }
 
     /**
-     Returns an object containing the actions which user has access to execute them.
-     In case of * action, the CRUD actions will be added by default.
-     Developer must take care of other actions (other than CRUD), in case of *
-     */
-    public getActionsOn(resource: string): IAclActions {
-        let userPermissions = this.permissions;
-        let userActions = userPermissions[resource] || userPermissions['*'];
-        if (!userActions || !userActions.length) return <IAclActions>{};
-        let granted: IAclActions = {};
-        if (userActions.indexOf('*') >= 0) {
-            granted = {
-                [Permission.Action.Read]: true,
-                [Permission.Action.Add]: true,
-                [Permission.Action.Edit]: true,
-                [Permission.Action.Delete]: true
-            };
-        }
-        for (let i = userActions.length; i--;) {
-            granted[userActions[i]] = true;
-        }
-        return granted;
-    }
-
-    /**
-     Same states will overwrite each others
+     * Same states will overwrite each others
      */
     public registerPermissions(state: number, permissions?: IPermissionCollection) {
         this.stateResourceMap[state] = permissions || {};

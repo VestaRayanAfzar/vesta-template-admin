@@ -7,5 +7,9 @@
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true
-  }
+  },
+  "include": [
+    "src/client/app/**/*.ts",
+    "src/client/app/**/*.tsx"
+  ]
 }

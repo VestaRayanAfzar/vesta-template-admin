@@ -1,0 +1,19 @@
+.role-component {
+    li {
+        list-style: none;
+    }
+    .permission-list {
+        margin: 20px 10px;
+        .formMultichoice-component {
+            > label {
+                font-weight: bold;
+            }
+            ul {
+                white-space: nowrap;
+            }
+            li {
+                display: inline-block;
+            }
+        }
+    }
+}

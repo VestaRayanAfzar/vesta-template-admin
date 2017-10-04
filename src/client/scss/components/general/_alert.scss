@@ -1,0 +1,24 @@
+$alert-padding: 7px 10px;
+$alert-margin: 5px 10px;
+$alert-lighten-ratio: 50%;
+
+.alert-component {
+    padding: $alert-padding;
+    margin: $alert-margin;
+    border: 1px solid $color-default;
+    border-radius: $border-radius;
+    color: $color-default;
+    background-color: lighten($color-default, $alert-lighten-ratio);
+}
+
+.alert-error {
+    border: 1px solid $color-error;
+    color: $color-error;
+    background-color: lighten($color-error, $alert-lighten-ratio);
+}
+
+.alert-info {
+    border: 1px solid $color-info;
+    color: $color-info;
+    background-color: lighten($color-info, $alert-lighten-ratio);
+}

@@ -1,7 +1,6 @@
 import React from "react";
 import {PageComponentProps} from "../../PageComponent";
 import {ChangeEventHandler} from "./FormWrapper";
-import {FieldValidationMessage} from "../../../util/Util";
 import {FormError} from "./FormError";
 
 export interface FormTextAreaParams {

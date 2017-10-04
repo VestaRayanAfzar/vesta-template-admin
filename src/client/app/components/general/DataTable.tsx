@@ -41,7 +41,8 @@ export class DataTable<T> extends PageComponent<DataTableProps<T>, DataTableStat
     }
 
     private createRows() {
-        return this.props.records.map((r, i) => {
+        let rows = this.props.records || [];
+        return rows.map((r, i) => {
             const cells = this.props.columns.map((c, j) => (<td key={j + 1}>{c.render ? c.render(r) : r[c.name]}</td>));
             return <tr key={i + 1}>{cells}</tr>;
         });

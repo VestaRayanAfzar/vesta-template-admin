@@ -1,6 +1,5 @@
 import {I18nService} from "./I18nService";
-import {Dictionary as persian} from "../cmn/locale/fa-IR/Dictionary";
-import {Dictionary, IVocabs} from "../medium";
+import {Dictionary} from "../medium";
 import {ConfigService} from "./ConfigService";
 
 export class TranslateService {
@@ -9,11 +8,9 @@ export class TranslateService {
 
     constructor(i18nService: I18nService) {
         this.dictionary = i18nService.getDictionary();
-        this.dictionary.inject(<IVocabs>persian);
-        TranslateService.instance = this;
     }
 
-    public translate(key: string, ...placeholders: Array<string>): string {
+    public translate = (key: string, ...placeholders: Array<any>): string => {
         if (!key) return '';
         let tr = this.dictionary.lookup(key);
         if (!tr) return key;

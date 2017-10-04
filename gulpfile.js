@@ -19,7 +19,7 @@ gulp.task('production', () => {
 });
 
 createTasks(...loadTasks(['server']), true);
-createTasks(...loadTasks(['asset', 'sass', 'client']), false);
+createTasks(...loadTasks(['asset', 'sass', 'client', 'model']), false);
 
 function loadTasks(modules) {
     let tasks = [],

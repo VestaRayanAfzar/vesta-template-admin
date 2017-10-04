@@ -6,7 +6,7 @@
   },
   "config": {
     "name": "vesta-template-client",
-    "pkgManager": "yarn",
+    "type": 2,
     "client": {},
     "repository": {}
   }

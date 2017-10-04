@@ -1,7 +1,7 @@
 import {Dispatcher} from "./Dispatcher";
 import {ConfigService} from "./ConfigService";
 
-export const enum MessageType{Info = 1, Success, Warning, Error}
+export const enum MessageType {Info = 1, Success, Warning, Error}
 
 export interface IToastData {
     message: string;
@@ -32,7 +32,7 @@ export class NotificationService {
     public toast(message: string, type: MessageType = MessageType.Info) {
         this.dispatcher.dispatch<IToastData>('toast', {message, type});
         if (!this.isProduction) {
-            console[type] ? console[type](message) : console.log(message);
+            console.log(message);
         }
     }
 

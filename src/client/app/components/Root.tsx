@@ -4,13 +4,15 @@ import {Link} from "react-router-dom";
 import {ApiService} from "../service/ApiService";
 import {AuthService} from "../service/AuthService";
 import {Dispatcher} from "../service/Dispatcher";
-import {IQueryResult} from "../medium";
 import {ToastMessage} from "./general/ToastMessage";
 import {RouteItem} from "../config/route";
 import {IUser} from "../cmn/models/User";
 import Navbar from "./general/Navbar";
 import {Sidenav} from "./general/Sidenav";
 import {SidenavContent} from "./general/SidenavContent";
+import {Html} from "./general/Html";
+import {I18nService} from "../service/I18nService";
+import {ConfigService} from "../service/ConfigService";
 
 export interface RootProps {
     routeItems: Array<RouteItem>;
@@ -34,11 +36,9 @@ export class Root extends Component<RootProps, RootState> {
         this.dispatcher.register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
             this.setState({user: payload.user});
         });
-        this.api.get<IQueryResult<IUser>>('me')
+        this.api.get<IUser>('me')
             .then(response => {
-                if (response) {
                     this.auth.login(response.items[0]);
-                }
             })
             .catch(err => {
                 console.error(err);
@@ -46,8 +46,10 @@ export class Root extends Component<RootProps, RootState> {
     }
 
     public render() {
-        return (
-            <div id="main-wrapper">
+        const i18n = I18nService.getInstance(ConfigService.getConfig().locale);
+
+        return <div id="main-wrapper">
+            <Html lang={i18n.get('code')} dir={i18n.get('dir')}/>
                 <ToastMessage/>
                 <header id="main-header">
                     <Navbar routeItems={this.props.routeItems}/>
@@ -60,7 +62,6 @@ export class Root extends Component<RootProps, RootState> {
                 <Sidenav name="main-sidenav">
                     <SidenavContent name="main-sidenav" user={this.state.user} menuItems={this.props.routeItems}/>
                 </Sidenav>
-            </div>
-        );
+        </div>;
     }
 }

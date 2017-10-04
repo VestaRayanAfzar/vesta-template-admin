@@ -1,4 +1,6 @@
-import {DateTimeFactory, Dictionary, GregorianDate, I18N, ILocale, IR, PersianDate, US} from "../medium";
+import {DateTimeFactory, Dictionary, GregorianDate, I18N, IDateTime, ILocale, IR, PersianDate, US} from "../medium";
+import {Dictionary as persian} from "../cmn/locale/fa-IR/Dictionary";
+import {Dictionary as english} from "../cmn/locale/en-US/Dictionary";
 
 export class I18nService {
     private i18nLocale: ILocale;
@@ -10,17 +12,15 @@ export class I18nService {
     }
 
     private initLocales() {
-        I18N.registerLocale(IR);
-        I18N.registerLocale(US);
-        I18N.registerDictionary(IR.code);
-        I18N.registerDictionary(US.code);
-        DateTimeFactory.register(IR.code, PersianDate);
-        DateTimeFactory.register(US.code, GregorianDate);
-        //
-        this.i18nLocale = I18N.getLocale(this.locale);
+        this.i18nLocale = this.locale == IR.code ? IR : US;
+        const dateTime: IDateTime = this.locale == IR.code ? PersianDate : GregorianDate;
+        I18N.registerLocale(this.i18nLocale);
+        I18N.registerDictionary(this.i18nLocale.code);
+        DateTimeFactory.register(this.i18nLocale.code, dateTime);
         this.dictionary = I18N.getDictionary(this.locale);
+        this.dictionary.inject(this.locale == IR.code ? persian : english);
         //
-        // this.apiService.get<any, IVocabs>(`vocabs/${this.locale}`)
+        // this.apiService.get<any, IVocabs>(`lang/${this.locale}`)
         //     .then(vocabs=>this.dictionary.inject(vocabs));
     }
 

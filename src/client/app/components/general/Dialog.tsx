@@ -30,10 +30,10 @@ export const Dialog = (props: DialogProps) => {
     function renderHeader() {
         const titlebar = options.title ? <h1>{options.title}</h1> : null;
         const closeBtn = options.showCloseBtn ? <button type="button" onClick={options.close}>X</button> : null;
-        return <div className="dialog-header">
+        return titlebar ? <div className="dialog-header">
             {titlebar}
             {closeBtn}
-        </div>
+        </div> : null;
     }
 
     function renderFooter() {

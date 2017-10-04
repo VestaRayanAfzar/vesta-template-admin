@@ -2,7 +2,7 @@ import {VariantConfig} from "./config.var";
 import {IClientAppConfig} from "../service/ConfigService";
 
 export const Config: IClientAppConfig = {
-    name: 'materialCPanelTemplate',
+    name: 'vestaTemplateCpanel',
     version: {
         app: '0.1.0',
         api: 'v1'

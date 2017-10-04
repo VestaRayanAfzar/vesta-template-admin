@@ -1,8 +1,6 @@
 import {AuthService} from "./AuthService";
 import {ConfigService, IClientAppConfig} from "./ConfigService";
-import {IModelValues} from "../medium";
-
-declare let param: (data: any) => string;
+import {IModelValues, IQueryRequest, IQueryResult} from "../medium";
 
 type PostData = string | ArrayBuffer | Blob | Document | FormData | IModelValues;
 
@@ -41,7 +39,7 @@ export class ApiService {
         }
     }
 
-    private xhr<T>(method: string, edge: string, data: PostData, headers: any): ApiServiceRequest<T> {
+    private xhr<T, U>(method: string, edge: string, data: U, headers: any): ApiServiceRequest<T> {
         let xhr = new XMLHttpRequest();
         let promise: ApiServiceRequest<T> = new Promise<T>((resolve, reject) => {
             xhr.open(method, `${this.endPoint}/${edge}`, true);
@@ -65,7 +63,7 @@ export class ApiService {
                     }
                 }
             };
-            xhr.send(data);
+            xhr.send(data ? JSON.stringify(data) : null);
         });
         promise.xhr = xhr;
         promise.abort = () => {
@@ -74,24 +72,23 @@ export class ApiService {
         return promise;
     }
 
-    public get<T>(edge: string): ApiServiceRequest<T> {
-        return this.xhr<T>('GET', edge, null, null);
+    public get<T>(edge: string, data?: IQueryRequest<T>) {
+        let queryString = data ? `?${this.param(data)}` : '';
+        return this.xhr<IQueryResult<T>, T>('GET', `${edge}${queryString}`, null, null);
     }
 
-    public post<T>(edge: string, data: PostData): ApiServiceRequest<T> {
-        let headers = {};
-        if (typeof data === 'string') {
-            headers['Content-Type'] = 'application/json';
+    public post<T>(edge: string, data: T) {
+        let headers = {'Content-Type': 'application/json'};
+        return this.xhr<IQueryResult<T>, T>('POST', edge, data, headers);
         }
-        return this.xhr<T>('POST', edge, data, headers);
+
+    public put<T>(edge: string, data: T) {
+        let headers = {'Content-Type': 'application/json'};
+        return this.xhr<IQueryResult<T>, T>('PUT', edge, data, headers);
     }
 
-    public put<T>(edge: string, data: PostData): ApiServiceRequest<T> {
-        let headers = {};
-        if (typeof data === 'string') {
-            headers['Content-Type'] = 'application/json';
-        }
-        return this.xhr<T>('PUT', edge, data, headers);
+    public del<T>(edge: string, id: number) {
+        return this.xhr<IQueryResult<T>, T>('DELETE', `${edge}/${id}`, null, null);
     }
 
     public static toFormData(data: Object): FormData {
@@ -107,5 +104,49 @@ export class ApiService {
             ApiService.instance = new ApiService(authService);
         }
         return ApiService.instance;
+    }
+
+    /**
+     * jquery-param
+     */
+    private param(data) {
+        let s = [];
+        let rbracket = /\[\]$/;
+
+        return buildParams('', data).join('&').replace(/%20/g, '+');
+
+        function isArray(obj) {
+            return Object.prototype.toString.call(obj) === '[object Array]';
+        }
+
+        function add(k: string, v) {
+            v = typeof v === 'function' ? v() : v === null ? '' : v === undefined ? '' : v;
+            s[s.length] = `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+        }
+
+        function buildParams(prefix: string, obj) {
+            if (prefix) {
+                if (isArray(obj)) {
+                    for (let i = 0, len = obj.length; i < len; i++) {
+                        if (rbracket.test(prefix)) {
+                            add(prefix, obj[i]);
+                        } else {
+                            buildParams(`${prefix}[${typeof obj[i] === 'object' ? i : ''}]`, obj[i]);
+                        }
+                    }
+                } else if (obj && String(obj) === '[object Object]') {
+                    for (let keys = Object.keys(obj), i = keys.length; --i;) {
+                        buildParams(`${prefix}[${keys[i]}]`, obj[keys[i]]);
+                    }
+                } else {
+                    add(prefix, obj);
+                }
+            } else {
+                for (let keys = Object.keys(obj), i = keys.length; --i;) {
+                    buildParams(keys[i], obj[keys[i]]);
+                }
+            }
+            return s;
+        }
     }
 }

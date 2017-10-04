@@ -18,7 +18,7 @@ const setting: IStaticServerSetting = {
         html: path.join('/app/client/web/www'),
         upload: '/upload'
     },
-    http2: true,
+    http2: false,
     ssl: {
         key: '/ssl/server.key',
         cert: '/ssl/server.crt'

@@ -9,7 +9,7 @@ export interface FormSelectParams {
 export interface FormSelectProps extends PageComponentProps<FormSelectParams> {
     name: string;
     label: string;
-    value?: number | string;
+    value?: any;
     onChange?: ChangeEventHandler;
     options: Array<FormOption>;
     error?: string;
