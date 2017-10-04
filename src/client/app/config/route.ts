@@ -24,7 +24,6 @@ export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
         {link: '', title: tr('dashboard'), component: Home, exact: true},
         {link: 'about', title: tr('about'), component: About, exact: true},
         {link: 'role', title: tr('role'), component: Role,  permissions: {role: ['read']}},
-        {link: 'contact', title: tr('contactus'), component: ContactUs, permissions: {contact: ['read']}},
         {link: 'logout', title: tr('logout'), component: Logout, permissions: {account: ['logout']}}
     ] : [
         {link: '', title: tr('home'), component: Home, exact: true},
