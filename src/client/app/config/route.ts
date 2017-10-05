@@ -7,7 +7,6 @@ import {About} from "../components/root/About";
 import {Role} from "../components/root/Role";
 import {TranslateService} from "../service/TranslateService";
 import {Forget} from "../components/root/Forget";
-import {ContactUs} from "../components/root/ContactUs";
 
 export interface RouteItem {
     link: string;

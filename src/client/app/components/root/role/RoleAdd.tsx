@@ -4,7 +4,6 @@ import {PageComponent, PageComponentProps, PageComponentState} from "../../PageC
 import {RoleForm} from "./RoleForm";
 import {ChangeEventHandler, FormWrapper, SubmitEventHandler} from "../../general/form/FormWrapper";
 import {IRole} from "../../../cmn/models/Role";
-import {FormMultichoice} from "../../general/form/FormMultichoice";
 import {IExtPermission} from "../Role";
 
 export interface RoleAddParams {
@@ -27,7 +26,6 @@ export class RoleAdd extends PageComponent<RoleAddProps, RoleAddState> {
         super(props);
         this.state = {role: {}};
     }
-
 
 
     public onChange = (name: string, value: any) => {
