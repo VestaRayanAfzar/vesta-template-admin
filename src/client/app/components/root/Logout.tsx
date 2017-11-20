@@ -1,7 +1,7 @@
 import React from "react";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
-import {AuthService} from "../../service/AuthService";
 import {IUser} from "../../cmn/models/User";
+import {NotificationPlugin} from "../../plugin/NotificationPlugin";
 
 export interface LogoutParams {
 }
@@ -13,19 +13,22 @@ export interface LogoutState extends PageComponentState {
 }
 
 export class Logout extends PageComponent<LogoutProps, LogoutState> {
-    private auth: AuthService = AuthService.getInstance();
 
     public componentDidMount() {
         if (this.auth.isGuest()) {
             return this.props.history.push('/');
         }
+        NotificationPlugin.getInstance().logoutToken();
         this.api.get<IUser>('account/logout')
             .then(response => {
-                    this.auth.login(response.items[0]);
-                    this.props.history.push('/login');
+                this.auth.logout();
+                this.auth.login(response.items[0]);
+                this.props.history.push('/login');
             })
             .catch(err => {
-                this.notif.error(err.message);
+                this.auth.logout();
+                this.props.history.push('/login');
+                this.notif.error(this.tr(err.message));
             });
     }
 

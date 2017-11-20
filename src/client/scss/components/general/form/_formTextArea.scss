@@ -1,9 +1,6 @@
-$form-text-area-padding: 7px;
-.formTextArea-component {
-    > textarea {
+.text-area {
+    textarea {
         resize: none;
-        width: 90vw;
         height: 15vh;
-        padding: $form-text-area-padding;
     }
 }

@@ -1,13 +1,14 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {AuthService} from "../../service/AuthService";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
-import {IUser} from "../../cmn/models/User";
+import Navbar from "../general/Navbar";
+import {IUser, User} from "../../cmn/models/User";
 import {Preloader} from "../general/Preloader";
 import {FormWrapper} from "../general/form/FormWrapper";
 import {FormTextInput} from "../general/form/FormTextInput";
-import {Util} from "../../util/Util";
+import {FieldValidationMessage, ModelValidationMessage, Util} from "../../util/Util";
 import {Alert} from "../general/Alert";
+import {IValidationError} from "../../cmn/core/Validator";
 
 export interface LoginParams {
 }
@@ -19,10 +20,10 @@ export interface LoginState extends PageComponentState {
     showLoader: boolean;
     user: IUser;
     error: string;
+    validationErrors?: IValidationError;
 }
 
 export class Login extends PageComponent<LoginProps, LoginState> {
-    private auth: AuthService = AuthService.getInstance();
 
     constructor(props: LoginProps) {
         super(props);
@@ -30,44 +31,67 @@ export class Login extends PageComponent<LoginProps, LoginState> {
     }
 
     private onChange = (name: string, value: string) => {
-        let user = Util.shallowClone(this.state.user);
-        user[name] = value;
-        this.setState({user});
+        this.state.user[name] = value;
+        this.setState({user: this.state.user});
     }
 
     private onSubmit = () => {
-        this.setState({showLoader: true});
-        this.api.post<IUser>('account/login', this.state.user)
+        let user = new User(this.state.user);
+        let validationResult = user.validate('mobile', 'password');
+        if (validationResult) {
+            return this.setState({validationErrors: validationResult});
+        }
+        this.setState({showLoader: true, validationErrors: null});
+        this.api.post<IUser>('account/login', user.getValues('mobile', 'password'))
             .then(response => {
-                if (response) {
-                    this.auth.login(response.items[0]);
-                }
-                this.props.history.push('/');
+                this.auth.login(response.items[0]);
+                this.props.history.replace('/');
             })
             .catch(error => {
+                this.setState({showLoader: false, error: this.tr('err_wrong_user_pass')});
+                if (error.message == 'err_db_no_record') return;
                 this.notif.error(error.message);
-                this.setState({showLoader: false, error: this.tr.translate('err_login')});
             })
     }
 
     public render() {
-        const tr = this.tr.translate;
         const user = this.state.user;
-        const h = this.props.history;
-        let err = this.state.error ? <Alert type="error">{tr('err_login')}</Alert> : null;
-        return <div className="page">
-                <Preloader options={{show: this.state.showLoader}}/>
-                <FormWrapper name="loginForm" onSubmit={this.onSubmit}>
-                {err}
-                <FormTextInput name="username" label={tr('fld_username')} value={user.username}
-                                   onChange={this.onChange}/>
-                <FormTextInput name="password" label={tr('fld_password')} value={user.password} type="password"
-                                   onChange={this.onChange}/>
-                <div className="form-group btn-group">
-                    <button type="submit" className="btn btn-primary">{tr('login')}</button>
-                    <Link to="forget" className="btn btn-default">{tr('forget_pass')}</Link>
-                        </div>
-                </FormWrapper>
+        const formErrorsMessages: ModelValidationMessage = {
+            mobile: {
+                required: this.tr('err_required'),
+                type: this.tr('err_phone')
+            },
+            password: {
+                required: this.tr('err_required'),
+                minLength: this.tr('err_min_length', 4),
+                maxLength: this.tr('err_max_length', 16)
+            }
+        };
+        let errors: FieldValidationMessage = this.state.validationErrors ? Util.validationMessage(formErrorsMessages, this.state.validationErrors) : {};
+        let loginErr = this.state.error ? <Alert type="error">{this.tr('err_wrong_user_pass')}</Alert> : null;
+        return (
+            <div className="page login-page has-navbar page-logo-form">
+                <Navbar className="navbar-transparent" showBurger={true}/>
+                <Preloader show={this.state.showLoader}/>
+                <div className="logo-wrapper">
+                    <div className="logo-container">
+                        <img src="img/icons/192.png" alt="AutoApp Logo"/>
+                    </div>
                 </div>
+                <FormWrapper name="loginForm" onSubmit={this.onSubmit}>
+                    {loginErr}
+                    <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={user.mobile}
+                                   error={errors.mobile} onChange={this.onChange} placeholder={true} type="tel"/>
+                    <FormTextInput name="password" label={this.tr('fld_password')} value={user.password} type="password"
+                                   error={errors.password} onChange={this.onChange} placeholder={true}/>
+                    <p className="forget-link">
+                        <Link to="forget">{this.tr('forget_pass')}</Link>
+                    </p>
+                    <div className="btn-group">
+                        <button type="submit" className="btn btn-primary">{this.tr('login')}</button>
+                    </div>
+                </FormWrapper>
+            </div>
+        )
     }
 }

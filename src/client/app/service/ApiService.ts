@@ -1,12 +1,6 @@
 import {AuthService} from "./AuthService";
 import {ConfigService, IClientAppConfig} from "./ConfigService";
-import {IModelValues, IQueryRequest, IQueryResult} from "../medium";
-
-type PostData = string | ArrayBuffer | Blob | Document | FormData | IModelValues;
-
-export interface IFileKeyValue {
-    [key: string]: File | Blob | Array<File | Blob>;
-}
+import {IQueryRequest, IQueryResult} from "../cmn/core/ICRUDResult";
 
 export interface ApiServiceRequest<T> extends Promise<T> {
     xhr?: XMLHttpRequest;
@@ -18,11 +12,13 @@ export class ApiService {
     private endPoint: string = '';
     private enableCache: boolean;
     private tokenHeaderKeyName = 'X-Auth-Token';
+    private sourceApp;
 
     constructor(private authService: AuthService) {
-        let cfg: IClientAppConfig = ConfigService.getConfig();
-        this.endPoint = cfg.api;
+        const cfg: IClientAppConfig = ConfigService.getConfig();
+        this.endPoint = `${cfg.api}/api/${cfg.version.api}`;
         this.enableCache = !!cfg.cache.api;
+        this.sourceApp = ConfigService.get('sourceApp');
     }
 
     private onBeforeSend(xhr: XMLHttpRequest) {
@@ -39,7 +35,7 @@ export class ApiService {
         }
     }
 
-    private xhr<T, U>(method: string, edge: string, data: U, headers: any): ApiServiceRequest<T> {
+    private xhr<T>(method: string, edge: string, data: any, headers: any): ApiServiceRequest<T> {
         let xhr = new XMLHttpRequest();
         let promise: ApiServiceRequest<T> = new Promise<T>((resolve, reject) => {
             xhr.open(method, `${this.endPoint}/${edge}`, true);
@@ -63,7 +59,7 @@ export class ApiService {
                     }
                 }
             };
-            xhr.send(data ? JSON.stringify(data) : null);
+            xhr.send(data);
         });
         promise.xhr = xhr;
         promise.abort = () => {
@@ -73,25 +69,31 @@ export class ApiService {
     }
 
     public get<T>(edge: string, data?: IQueryRequest<T>) {
-        let queryString = data ? `?${this.param(data)}` : '';
-        return this.xhr<IQueryResult<T>, T>('GET', `${edge}${queryString}`, null, null);
+        let queryString = data ? `?${this.param(data)}&s=${this.sourceApp}` : `?s=${this.sourceApp}`;
+        return this.xhr<IQueryResult<T>>('GET', `${edge}${queryString}`, null, null);
     }
 
     public post<T>(edge: string, data: T) {
         let headers = {'Content-Type': 'application/json'};
-        return this.xhr<IQueryResult<T>, T>('POST', edge, data, headers);
-        }
+        data['s'] = this.sourceApp;
+        return this.xhr<IQueryResult<T>>('POST', edge, JSON.stringify(data), headers);
+    }
 
     public put<T>(edge: string, data: T) {
         let headers = {'Content-Type': 'application/json'};
-        return this.xhr<IQueryResult<T>, T>('PUT', edge, data, headers);
+        data['s'] = this.sourceApp;
+        return this.xhr<IQueryResult<T>>('PUT', edge, JSON.stringify(data), headers);
     }
 
-    public del<T>(edge: string, id: number) {
-        return this.xhr<IQueryResult<T>, T>('DELETE', `${edge}/${id}`, null, null);
+    public del<T>(edge: string, id: number | string) {
+        return this.xhr<IQueryResult<T>>('DELETE', `${edge}/${id}?s=${this.sourceApp}`, null, null);
     }
 
-    public static toFormData(data: Object): FormData {
+    public upload<T>(edge: string, id: number, files: T) {
+        return this.xhr<IQueryResult<T>>('POST', `${edge}/${id}?s=${this.sourceApp}`, this.toFormData(files), null);
+    }
+
+    public toFormData(data: Object): FormData {
         let fd = new FormData();
         for (let keys = Object.keys(data), i = keys.length; i--;) {
             fd.append(keys[i], data[keys[i]]);
@@ -110,7 +112,7 @@ export class ApiService {
      * jquery-param
      */
     private param(data) {
-        let s = [];
+        let queryStringParts = [];
         let rbracket = /\[\]$/;
 
         return buildParams('', data).join('&').replace(/%20/g, '+');
@@ -120,8 +122,9 @@ export class ApiService {
         }
 
         function add(k: string, v) {
-            v = typeof v === 'function' ? v() : v === null ? '' : v === undefined ? '' : v;
-            s[s.length] = `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+            if (typeof v === 'function') return;
+            if (v === null || v === undefined) return;
+            queryStringParts.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
         }
 
         function buildParams(prefix: string, obj) {
@@ -135,18 +138,18 @@ export class ApiService {
                         }
                     }
                 } else if (obj && String(obj) === '[object Object]') {
-                    for (let keys = Object.keys(obj), i = keys.length; --i;) {
+                    for (let keys = Object.keys(obj), i = keys.length; i--;) {
                         buildParams(`${prefix}[${keys[i]}]`, obj[keys[i]]);
                     }
                 } else {
                     add(prefix, obj);
                 }
             } else {
-                for (let keys = Object.keys(obj), i = keys.length; --i;) {
+                for (let keys = Object.keys(obj), i = keys.length; i--;) {
                     buildParams(keys[i], obj[keys[i]]);
                 }
             }
-            return s;
+            return queryStringParts;
         }
     }
 }

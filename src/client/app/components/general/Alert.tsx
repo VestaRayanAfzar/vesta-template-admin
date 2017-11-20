@@ -1,18 +1,15 @@
-import * as React from "react";
-import {PageComponentProps} from "../PageComponent";
+import React from "react";
+import {BaseComponentProps} from "../BaseComponent";
 
-export interface AlertParams {
-}
-
-export interface AlertProps extends PageComponentProps<AlertParams> {
+export interface AlertProps extends BaseComponentProps {
     type?: string;
 }
 
 export const Alert = (props: AlertProps) => {
     const className = `alert-component alert-${props.type}`;
     return (
-        <div className={className}>
+        <p className={className}>
             {props.children}
-        </div>
+        </p>
     )
 };

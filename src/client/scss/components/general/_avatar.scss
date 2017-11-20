@@ -1,0 +1,17 @@
+$avatar-default-width: 64px;
+
+.avatar-component {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    //align-items: center;
+    width: $avatar-default-width;
+    height: $avatar-default-width;
+    border-radius: 50%;
+    //border: 2px solid $border-color;
+    img {
+        width: auto;
+        height: 100%;
+    }
+}

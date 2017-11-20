@@ -1,5 +1,5 @@
 import {Dispatcher} from "./Dispatcher";
-import {ConfigService} from "./ConfigService";
+import {TranslateService} from "./TranslateService";
 
 export const enum MessageType {Info = 1, Success, Warning, Error}
 
@@ -9,34 +9,33 @@ export interface IToastData {
 }
 
 export class NotificationService {
-
     static instance: NotificationService;
-    private isProduction = true;
+    private tr = TranslateService.getInstance().translate;
 
-    constructor(private dispatcher: Dispatcher) {
-        this.isProduction = ConfigService.getConfig().env === 'production';
+    private constructor(private dispatcher: Dispatcher) {
     }
 
-    public success(message: string) {
-        this.toast(message, MessageType.Success);
+    public success(message: string, ...placeholders: Array<any>) {
+        this.toast(message, MessageType.Success, placeholders);
     }
 
-    public error(message: string) {
-        this.toast(message, MessageType.Error);
+    public error(message: string, ...placeholders: Array<any>) {
+        this.toast(message, MessageType.Error, placeholders);
     }
 
-    public warning(message: string) {
-        this.toast(message, MessageType.Warning);
+    public warning(message: string, ...placeholders: Array<any>) {
+        this.toast(message, MessageType.Warning, placeholders);
     }
 
-    public toast(message: string, type: MessageType = MessageType.Info) {
-        this.dispatcher.dispatch<IToastData>('toast', {message, type});
-        if (!this.isProduction) {
-            console.log(message);
-        }
+    public toast(message: string, type: MessageType = MessageType.Info, ...placeholders: Array<any>) {
+        const text = this.tr(message, placeholders);
+        this.dispatcher.dispatch<IToastData>('toast', {message: text, type});
+        //<development>
+        console.log(text);
+        //</development>
     }
 
-    public static getInstance(dispatcher: Dispatcher = Dispatcher.getInstance('main')): NotificationService {
+    public static getInstance(dispatcher: Dispatcher = Dispatcher.getInstance()): NotificationService {
         if (!NotificationService.instance) {
             NotificationService.instance = new NotificationService(dispatcher);
         }

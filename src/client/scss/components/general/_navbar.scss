@@ -1,20 +1,54 @@
-.navbar-component {
-    height: 100%;
+$navbar-bg-color: $color-primary;
+$navbar-title-margin: 20px;
+$navbar-back-btn-size: $btn-height;
+
+.navbar {
+    //border: 2px solid red;
+    height: $header-height;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: $z-index-header;
     padding: $header-padding;
     display: flex;
     align-items: center;
-    background: transparentize($color-dark, .25);
+
     color: $color-light;
+    background: $navbar-bg-color;
+
+    &.navbar-transparent {
+        background: transparent;
+        // make elements under navbar clickable
+        pointer-events: none;
+        .nav-btn {
+            pointer-events: auto;
+        }
+    }
+
     .nav-title {
         flex: 1;
-        text-align: center;
+        text-align: $float;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding:0 10px;
+        padding: 0 $navbar-title-margin;
+    }
+
+    .navbar-btn-group {
+        position: absolute;
+        #{$opposite-float}: $header-padding;
+        .btn {
+            background: transparent;
+            border: 0;
+            min-width: auto;
+        }
+        .icon {
+            font-size: ceil(1.6 * $font-size-medium);
+            color: $white;
+        }
     }
     .nav-btn {
-        font-size: $font-size-xlarge;
         cursor: pointer;
     }
 }

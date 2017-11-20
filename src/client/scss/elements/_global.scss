@@ -5,7 +5,7 @@
 }
 
 html {
-    background: url("../img/bg-main.jpg") no-repeat fixed center;
+    background: url("../img/bg-main.jpg") no-repeat fixed center $color-default;
     background-size: cover;
 }
 
@@ -17,6 +17,39 @@ html, body {
 
 body {
     color: $color-dark;
+    &.has-splash {
+        background: url("../img/splash/768x1024.png") no-repeat center white;
+        background-size: cover;
+    }
+    &.app-offline {
+        .app-offline-msg {
+            display: flex;
+        }
+        .navbar {
+            background: $color-default !important;
+        }
+    }
+    .app-offline-msg {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-top: 2px solid $color-error;
+        height: 10vh;
+        .alert {
+            max-width: $layout-medium-max;
+            display: block;
+            text-align: center;
+            border-radius: 20px;
+            direction: ltr;
+            padding: 7px 15px;
+            white-space: nowrap;
+            user-select: none;
+        }
+    }
 }
 
 .en {
@@ -34,4 +67,8 @@ a {
 
 table {
     border-collapse: collapse;
+}
+
+ul {
+    list-style: none;
 }

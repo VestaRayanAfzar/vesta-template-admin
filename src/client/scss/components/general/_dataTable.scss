@@ -21,7 +21,7 @@ $dt-data-cell-padding: 7px;
     tbody {
         > tr {
             //cursor: pointer;
-            transition: all 200ms linear;
+            //transition: all 200ms linear;
             //&:nth-child(odd) {
             //}
             //&:nth-child(even) {
@@ -35,12 +35,14 @@ $dt-data-cell-padding: 7px;
         td, th {
             position: relative;
             padding: $dt-data-cell-padding;
-            white-space: nowrap;
+            //white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            //text-overflow: ellipsis;
             border: 1px solid $dt-border-color;
         }
         th {
+            white-space: nowrap;
+            text-overflow: ellipsis;
             text-align: start;
         }
     }
@@ -61,6 +63,9 @@ $dt-data-cell-padding: 7px;
     justify-content: space-around;
 }
 
-.spec-table {
+.details-table {
     @include style-table();
+    img {
+        max-height: 15vh;
+    }
 }

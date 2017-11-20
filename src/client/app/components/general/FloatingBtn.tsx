@@ -1,19 +1,21 @@
-import React, {MouseEventHandler} from "react";
-import {PageComponentProps} from "../PageComponent";
+import React, {MouseEventHandler, PureComponent} from "react";
+import {BaseComponentProps} from "../BaseComponent";
 
-export interface FloatingBtnParams {
-}
-
-export interface FloatingBtnProps extends PageComponentProps<FloatingBtnParams> {
-    title?: string;
-    icon?: string;
+export interface FloatingBtnProps extends BaseComponentProps {
     className?: string;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const FloatingBtn = (props: FloatingBtnProps) => {
-    return (<div className={`floatingBtn-component ${props.className}`}>
-        <button onClick={props.onClick}>{props.title}</button>
-    </div>);
-};
+export class FloatingBtn extends PureComponent<FloatingBtnProps, null> {
+
+    public render() {
+        const {className, onClick, children} = this.props;
+
+        return (
+            <div className={`floating-btn ${className}`}>
+                <button type='button' onClick={onClick}>{children}</button>
+            </div>
+        )
+    }
+}
 

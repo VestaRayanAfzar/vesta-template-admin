@@ -1,13 +1,8 @@
-import React from "react";
-import {PageComponentProps} from "../../PageComponent";
-import {IModelValues} from "../../../medium";
+import React, {PureComponent} from "react";
+import {BaseComponentProps} from "../../BaseComponent";
 
 export interface ChangeEventHandler {
     (name: string, value: any): void;
-}
-
-export interface SubmitEventHandler {
-    (model: IModelValues): void;
 }
 
 export interface FormOption {
@@ -15,27 +10,25 @@ export interface FormOption {
     value: any;
 }
 
-export interface FormWrapperParams {
-}
-
-export interface FormWrapperProps extends PageComponentProps<FormWrapperParams> {
+export interface FormWrapperProps extends BaseComponentProps {
     name?: string;
-    isUpdate?: boolean;
-    onSubmit: SubmitEventHandler;
-    model?: IModelValues;
+    onSubmit: (e: Event) => void;
 }
 
-export const FormWrapper = (props: FormWrapperProps) => {
-    return (
-        <div className="formWrapper-component">
-            <form name={props.name} onSubmit={onSubmit}>
-                {props.children}
-            </form>
-        </div>
-    )
+export class FormWrapper extends PureComponent<FormWrapperProps, null> {
 
-    function onSubmit(e) {
+    private onSubmit = (e) => {
         e.preventDefault();
-        props.onSubmit(props.model);
+        this.props.onSubmit(e);
     }
-};
+
+    public render() {
+        return (
+            <div className="form-wrapper">
+                <form name={this.props.name} onSubmit={this.onSubmit} noValidate>
+                    {this.props.children}
+                </form>
+            </div>
+        )
+    }
+}

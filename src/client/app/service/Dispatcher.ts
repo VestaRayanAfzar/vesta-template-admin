@@ -34,7 +34,7 @@ export class Dispatcher {
         return true;
     }
 
-    public dispatch<T>(eventName: string, payload: T) {
+    public dispatch = <T>(eventName: string, payload: T) => {
         if (!this.registry[eventName]) {
             return;
         }

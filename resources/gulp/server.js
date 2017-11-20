@@ -1,8 +1,6 @@
 let http = require('http');
 let gulp = require('gulp');
 let server = require('gulp-develop-server');
-let chalk = require('chalk');
-let path = require('path');
 let ts = require('gulp-typescript');
 let map = require('gulp-sourcemaps');
 
@@ -70,7 +68,7 @@ gulp.task('server:run', function () {
                     let url = data[0]['devtoolsFrontendUrl'];
                     let regex = new RegExp(`&ws=[^:]+:${debug.ports.inspect}\/`);
                     url = url.replace(regex, `&ws=${debug.address}:${debug.ports.inspect}/`);
-                    process.stdout.write(`\n\nInspect URL: "${chalk.cyan(url)}"\n\n`);
+                    process.stdout.write(`\n\nInspect URL: \n${url}\n\n`);
                 })
             }).on('error', err => process.stderr.write(err.message));
         }

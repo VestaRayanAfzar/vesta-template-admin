@@ -1,60 +1,50 @@
-import React from "react";
-import {RouteItem} from "../../config/route";
+import React, {PureComponent} from "react";
 import {withRouter} from "react-router";
+import {BaseComponentProps} from "../BaseComponent";
 import {Link} from "react-router-dom";
-import {PageComponentProps} from "../PageComponent";
-import {Dispatcher} from "../../service/Dispatcher";
 import {Burger} from "./Burger";
 
-export interface NavbarProps extends PageComponentProps<any> {
-    routeItems: Array<RouteItem>;
+export interface NavbarProps extends BaseComponentProps {
+    title?: string;
+    className?: string;
+    backLink?: string;
+    backAction?: (e) => void;
+    showBurger?: boolean;
+    hide?: boolean;
 }
 
-export interface NavbarState {
-    title: string;
-}
+class Navbar extends PureComponent<NavbarProps, null> {
 
-class Navbar extends React.Component<NavbarProps, NavbarState> {
-    private dispatcher = Dispatcher.getInstance();
-
-    constructor(props: NavbarProps) {
-        super(props);
-        this.state = {title: ''};
-    }
-
-    private findRoute() {
-        // console.log(this.props);
-        let item: RouteItem = null;
-        let routeItems = this.props.routeItems;
-        for (let i = routeItems.length; i--;) {
-            if (`/${routeItems[i].link}` == this.props.location.pathname) {
-                item = routeItems[i];
-                break;
-            }
+    private goBack = (e) => {
+        e && e.stopPropagation();
+        const {backAction} = this.props;
+        if (backAction) {
+            return backAction(e);
         }
-        return item;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-        return true;
+        const {history, backLink} = this.props;
+        if (backLink) return history.replace(backLink);
+        if (history.length) return history.goBack();
+        history.replace('/');
     }
 
     public render() {
-        let routeItem = this.findRoute();
-        let title = '';
-        let backBtn = null;
-        if (routeItem) {
-            title = routeItem.title;
-            backBtn = routeItem.link ? <span className="nav-btn" onClick={this.props.history.goBack}>&gt;</span> : null;
-        }
+        let {title, className, backLink, showBurger, hide, backAction} = this.props;
+        if (hide) return null;
+        className = `navbar ${className || ''}`;
+        title = title || '';
+        let navBtn = (showBurger || location.pathname == '/') && !backLink && !backAction ?
+            <Burger className="nav-btn" event="main-sidenav-toggle"/> :
+            <Burger className="nav-btn back-btn" onClick={this.goBack}/>;
+
         return (
-            <div className="page navbar-component">
-                <Burger className="nav-btn" event="main-sidenav-toggle" />
+            <div className={className}>
+                {navBtn}
                 <p className="nav-title">{title}</p>
-                {backBtn}
+                <div className="navbar-btn-group">
+                    {this.props.children}
+                </div>
             </div>
-        );
+        )
     }
 }
 

@@ -1,4 +1,4 @@
-$crud-menu-top-offset: 5px;
+$crud-menu-top-offset: $header-height + 5px;
 $crud-menu-side-offset: 10px;
 $crud-menu-z-index: $z-index-content;
 

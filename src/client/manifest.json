@@ -1,10 +1,10 @@
 {
-  "name": "Vesta Control Panel App",
-  "short_name": "Vesta",
+  "name": "Vesta Control Panel",
+  "short_name": "Vesta CPanel",
   "description": "Vesta Control Panel Application",
-  "start_url": "index.html",
+  "start_url": "/",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "theme_color": "#ff9900",
   "background_color": "#9e9e9e",
   "icons": [

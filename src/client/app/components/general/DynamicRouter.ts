@@ -1,0 +1,1 @@
+export {HashRouter as DynamicRouter} from "react-router-dom";

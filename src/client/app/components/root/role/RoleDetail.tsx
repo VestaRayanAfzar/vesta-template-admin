@@ -9,7 +9,6 @@ export interface RoleDetailParams {
 }
 
 export interface RoleDetailProps extends PageComponentProps<RoleDetailParams> {
-    role: IRole;
     fetch: FetchById<IRole>;
 }
 
@@ -21,7 +20,7 @@ export class RoleDetail extends PageComponent<RoleDetailProps, RoleDetailState> 
 
     constructor(props: RoleDetailProps) {
         super(props);
-        this.state = {role: {}};
+        this.state = {role: null};
     }
 
     public componentDidMount() {
@@ -31,8 +30,7 @@ export class RoleDetail extends PageComponent<RoleDetailProps, RoleDetailState> 
 
     public render() {
         let role = this.state.role;
-        if (!role || !role.name) return null;
-        const tr = this.tr.translate;
+        if (!role) return null;
         let permissions: IPermissionCollection = {};
         for (let i = 0, il = role.permissions.length; i < il; ++i) {
             const p: IPermission = role.permissions[i] as IPermission;
@@ -43,41 +41,42 @@ export class RoleDetail extends PageComponent<RoleDetailProps, RoleDetailState> 
         }
         let permissionElements = [];
         for (let resources = Object.keys(permissions), i = 0, il = resources.length; i < il; ++i) {
-            permissionElements.push(<tr key={i}>
-                <td>{resources[i]}</td>
-                <td>{permissions[resources[i]].join(', ')}</td>
-            </tr>)
+            permissionElements.push(
+                <tr key={i}>
+                    <td>{resources[i]}</td>
+                    <td>{permissions[resources[i]].join(', ')}</td>
+                </tr>)
         }
-        const statusOptions = {1: tr('enum_active'), 0: tr('enum_inactive')};
+        const statusOptions = {1: this.tr('enum_active'), 0: this.tr('enum_inactive')};
         return (
-            <div className="page roleDetail-component">
-                <table className="spec-table">
+            <div className="crud-page">
+                <table className="details-table">
                     <thead>
                     <tr>
-                        <th colSpan={2}>Role #{role.id}</th>
+                        <th colSpan={2}>{this.tr('mdl_role')} #{role.id}</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{tr('fld_name')}</td>
+                        <td>{this.tr('fld_name')}</td>
                         <td>{role.name}</td>
                     </tr>
                     <tr>
-                        <td>{tr('fld_desc')}</td>
+                        <td>{this.tr('fld_desc')}</td>
                         <td>{role.desc}</td>
                     </tr>
                     <tr>
-                        <td>{tr('fld_status')}</td>
+                        <td>{this.tr('fld_status')}</td>
                         <td>{statusOptions[role.status]}</td>
                     </tr>
                     <tr>
-                        <td>{tr('fld_permission')}</td>
+                        <td>{this.tr('fld_permission')}</td>
                         <td>
                             <table>
                                 <thead>
                                 <tr>
-                                    <th>{tr('fld_resource')}</th>
-                                    <th>{tr('fld_action')}</th>
+                                    <th>{this.tr('fld_resource')}</th>
+                                    <th>{this.tr('fld_action')}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -88,6 +87,7 @@ export class RoleDetail extends PageComponent<RoleDetailProps, RoleDetailState> 
                     </tr>
                     </tbody>
                 </table>
-            </div>);
+            </div>
+        );
     }
 }

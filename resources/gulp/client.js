@@ -3,13 +3,22 @@ let fs = require('fs');
 let webpack = require('webpack');
 let webConnect = require('gulp-connect');
 let open = require('open');
-let electronServer = require('electron-connect').server;
 let eliminator = require('./plugins/eliminator');
 let bundler = require('./plugins/bundler');
 
 module.exports = function (setting) {
     let dir = setting.dir;
     let tmpClient = `${setting.dir.build}/tmp/client`;
+
+    gulp.task('client:sw', () => {
+        if (setting.is(setting.target, 'cordova')) return;
+        let target = setting.buildPath(setting.target);
+        let serviceWorkers = ['service-worker.js'];
+        let timestamp = Date.now();
+        for (let i = 0, il = serviceWorkers.length; i < il; ++i) {
+            setting.findInFileAndReplace(`${dir.srcClient}/${serviceWorkers[i]}`, /__TIMESTAMP__/g, timestamp, `${dir.buildClient}/${target}`);
+        }
+    });
 
     gulp.task('client:preBuild', () => {
         setting.clean(tmpClient);
@@ -18,8 +27,13 @@ module.exports = function (setting) {
             .pipe(eliminator(setting, setting.target))
             .pipe(gulp.dest(tmpClient))
     });
-    
-    gulp.task('client:build', ['client:preBuild'], () => {
+
+    gulp.task('client:build', ['client:preBuild', 'client:sw'], () => {
+        // copying conf.var to target on production mode
+        if (setting.production && !setting.is(setting.target, 'web')) {
+            fs.copyFileSync(`${setting.dir.resource}/gitignore/config.var.ts`,
+                `${tmpClient}/client/app/config/config.var.ts`);
+        }
         let webpackConfig = getWebpackConfig();
         const compiler = webpack(webpackConfig);
         return new Promise((resolve, reject) => {
@@ -42,29 +56,16 @@ module.exports = function (setting) {
             });
         })
     });
-    
+
     gulp.task('client:run', function () {
         if (setting.production) return;
         let target = setting.buildPath(setting.target);
         let root = `${dir.buildClient}/${target}`;
-        switch (setting.target) {
-            case 'web':
-                runWebServer(root);
-                break;
-            case 'android':
-            case 'ios':
-                runCordovaApp(root);
-                break;
-            case 'electron':
-                runElectronServer(root);
-                break;
-            default:
-                process.stderr.write(`${setting.target} Develop server is not supported`);
-        }
+        runWebServer(root);
     });
-    
+
     gulp.task(`client:watch`, () => {
-        gulp.watch([`${dir.srcClient}/**/*.ts*`, `${dir.src}/cmn/**/*`], [`client:build`]);
+        gulp.watch([`${dir.srcClient}/**/*.ts*`], [`client:build`]);
     });
 
     return {
@@ -79,21 +80,28 @@ module.exports = function (setting) {
                 minChunks: function (module) {
                     // console.log(module.context);
                     return module.context && module.context.indexOf("node_modules") !== -1;
-        }
+                }
+            }),
+            new webpack.ProvidePlugin({
+                '__assign': ['tslib', '__assign'],
+                '__extends': ['tslib', '__extends'],
             })
         ];
         if (setting.production) {
             plugins = plugins.concat([
                 new webpack.DefinePlugin({
-                    'process.env.NODE_ENV': JSON.stringify('production')
-            }),
+                    'process.env': {NODE_ENV: '"production"'}
+                }),
                 new webpack.LoaderOptionsPlugin({
                     minimize: true,
                     debug: false
-            }),
-                new webpack.optimize.UglifyJsPlugin()
+                }),
+                new webpack.optimize.UglifyJsPlugin({
+                    sourceMap: false,
+                    warnings: false,
+                })
             ]);
-    }
+        }
         let target = setting.buildPath(setting.target);
         return {
             entry: {
@@ -144,24 +152,5 @@ module.exports = function (setting) {
         gulp.watch([assets], function () {
             gulp.src(assets).pipe(webConnect.reload());
         });
-    }
-
-    function runElectronServer(wwwRoot) {
-        // // adding to index file
-        // let indexFile = `${wwwRoot}/index.html`;
-        // let html = fs.readFileSync(indexFile, {encoding: 'utf8'});
-        // html = html.replace('</head>', '<script>require("electron-connect").client.create()</script></head>');
-        // fs.writeFileSync(indexFile, html);
-        // starting electron dev server
-        let electronConnect = electronServer.create();
-        electronConnect.start();
-        // Restart browser process
-        gulp.watch(`${wwwRoot}/../app.js`, electronConnect.restart);
-        // Reload renderer process
-        gulp.watch([`${wwwRoot}/**/*`], electronConnect.reload);
-    }
-
-    function runCordovaApp(wwwRoot) {
-        // spawn('../../../node_modules/.bin/phonegap', ['serve'], {cwd: `${wwwRoot}/..`, stdio: 'inherit'})
     }
 };

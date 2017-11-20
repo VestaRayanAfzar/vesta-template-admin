@@ -1,0 +1,55 @@
+$form-file-input-padding: 5px;
+$form-file-input-del-width: 16px;
+
+.file-input {
+    input {
+        opacity: 0.5;
+        position: absolute;
+    }
+    .form-control {
+        height: auto;
+        min-height: $form-control-height;
+        position: relative;
+        label {
+            color: $color-semidark;
+            font-size: $font-size-xsmall;
+            position: relative;
+            top: -$form-control-padding;
+        }
+    }
+    .thumbnails {
+        overflow: hidden;
+        display: flex;
+        padding: $form-file-input-padding;
+    }
+    .img-wrapper {
+        margin: $form-file-input-padding;
+        flex: 1;
+        justify-content: space-around;
+        text-align: end;
+        position: relative;
+        .img-del {
+            position: absolute;
+            #{$opposite-float}: -1 * floor($form-file-input-del-width / 3);
+            top: -1 * floor($form-file-input-del-width / 3);
+            border-radius: 50%;
+            font-size: $font-size-small;
+            width: $form-file-input-del-width;
+            height: $form-file-input-del-width;
+            color: $color-light;
+            background: $color-error;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        img {
+            max-height: 15vh;
+            max-width: 15vh;
+            width: 98%;
+            border: 2px solid $border-color;
+            border-radius: $border-radius;
+            overflow: hidden;
+        }
+    }
+}

@@ -1,35 +1,48 @@
-import React from "react";
+import React, {PureComponent} from "react";
 import {Link} from "react-router-dom";
+import {BaseComponentProps} from "../BaseComponent";
 import {Dispatcher} from "../../service/Dispatcher";
 import {Menu, MenuItem} from "./Menu";
 import {IUser} from "../../cmn/models/User";
+import {Avatar} from "./Avatar";
+import {Util} from "../../util/Util";
+import {Icon} from "./Icon";
 
-export interface SideNavContentProps {
+export interface SideNavContentProps extends BaseComponentProps {
     name: string;
     menuItems: Array<MenuItem>;
     user: IUser;
 }
 
-export const SidenavContent = (props: SideNavContentProps) => {
-    const user = props.user || {};
+export class SidenavContent extends PureComponent<SideNavContentProps, null> {
+    private dispatch = Dispatcher.getInstance().dispatch;
 
-    return (
-        <div className="sidenav-content">
-            <header>
-                <div className="user-image-wrapper">
-                    <img src="img/vesta-logo.png"/>
-                </div>
-                <div className="name-wrapper">
-                    <h4>{user.username}</h4>
-                    <span>Vesta Control Panel Template</span>
-                </div>
-            </header>
-            <Menu name="nav-menu" items={props.menuItems} itemClick={closeSidenav}/>
-        </div>
-    );
-
-    function closeSidenav() {
-        Dispatcher.getInstance().dispatch(`${props.name}-close`, null);
+    private closeSidenav = () => {
+        this.dispatch(`${this.props.name}-close`, null);
         return true;
     }
-};
+
+    public render() {
+        let {user, menuItems} = this.props;
+        user = user || {};
+        const editLink = user && user.id ? <Link to="/profile" onClick={this.closeSidenav}><Icon name="setting"/></Link> : null;
+            let userImage = null;
+        if (user.image) {
+            userImage = Util.getFileUrl(`user/${user.image}`);
+        }
+        return (
+            <div className="sidenav-content">
+                <header>
+                    <Avatar src={userImage as string} defaultSrc="img/vesta-logo.png"/>
+                    <div className="name-wrapper">
+                        <h4>{user.name}</h4>
+                        {editLink}
+                    </div>
+                </header>
+                <main>
+                    <Menu name="nav-menu" items={menuItems} onClick={this.closeSidenav}/>
+                </main>
+            </div>
+        );
+    }
+}

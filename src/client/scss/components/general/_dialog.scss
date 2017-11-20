@@ -1,22 +1,46 @@
-$dialog-background-color: $color-light;
-$dialog-titlebar-height: $header-height;
+$dialog-background-color: $white;
+$dialog-header-padding: 7px;
+$dialog-padding: 30px;
 $dialog-border-radius: $border-radius;
 
 .dialog-component {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    position: absolute;
     align-items: center;
+    border-radius: $border-radius;
+    overflow: hidden;
     z-index: $z-index-dialog;
+    background: $dialog-background-color;
+    min-width: $layout-small-min;
     > .dialog-header {
-        min-height: $dialog-titlebar-height;
+        padding: $dialog-header-padding;
+        border-bottom: 1px solid $border-color;
+        h3 {
+            white-space: nowrap;
+        }
+        button {
+            position: absolute;
+            top: 0;
+            #{$opposite-float}: $dialog-header-padding;
+            min-width: auto;
+        }
     }
     > .dialog-content {
-        border: 2px solid white;
-        position: absolute;
+        padding: $dialog-padding floor($dialog-padding / 2);
         flex: 1;
-        background: $dialog-background-color;
-        min-height: $dialog-titlebar-height;
-        border-radius: $dialog-border-radius;
+    }
+    > .dialog-footer {
+        border-top: 1px solid $border-color;
+        text-align: end;
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .btn {
+            flex: 1;
+            height: $btn-height-large;
+            margin: $border-radius;
+            border-radius: $border-radius;
+            max-width: 50%;
+        }
     }
 }

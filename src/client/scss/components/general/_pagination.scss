@@ -1,0 +1,21 @@
+$pagination-input-width: 64px;
+
+.pagination {
+    text-align: center;
+    white-space: nowrap;
+
+    form {
+        display: inline-block;
+
+        input {
+            //border: 1px solid $border-color;
+            text-align: center;
+            width: $pagination-input-width;
+            border-radius: 0;
+            background: $white;
+        }
+    }
+    .btn {
+        min-width: 32px;
+    }
+}

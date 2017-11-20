@@ -1,13 +1,11 @@
-import {I18nService} from "./I18nService";
-import {Dictionary} from "../medium";
-import {ConfigService} from "./ConfigService";
+import {Dictionary} from "../cmn/core/Dictionary";
+import {Culture} from "../cmn/core/Culture";
 
 export class TranslateService {
-    private dictionary: Dictionary;
+    private dictionary: Dictionary = Culture.getDictionary();
     private static instance: TranslateService;
 
-    constructor(i18nService: I18nService) {
-        this.dictionary = i18nService.getDictionary();
+    private constructor() {
     }
 
     public translate = (key: string, ...placeholders: Array<any>): string => {
@@ -21,9 +19,9 @@ export class TranslateService {
         return tr;
     }
 
-    public static getInstance(i18n: I18nService = I18nService.getInstance(ConfigService.getConfig().locale)): TranslateService {
+    public static getInstance(): TranslateService {
         if (!TranslateService.instance) {
-            TranslateService.instance = new TranslateService(i18n);
+            TranslateService.instance = new TranslateService();
         }
         return TranslateService.instance;
     }

@@ -1,8 +1,9 @@
-import React from "react";
+import React, {PureComponent} from "react";
+import {BaseComponentProps} from "../BaseComponent";
 import {IToastData, MessageType} from "../../service/NotificationService";
 import {Dispatcher} from "../../service/Dispatcher";
 
-export interface ToastMessageProps {
+export interface ToastMessageProps extends BaseComponentProps {
 }
 
 export interface ToastMessageState {
@@ -10,7 +11,7 @@ export interface ToastMessageState {
     type: MessageType;
 }
 
-export class ToastMessage extends React.Component<ToastMessageProps, ToastMessageState> {
+export class ToastMessage extends PureComponent<ToastMessageProps, ToastMessageState> {
 
     private timer;
     private delay = 2000;

@@ -1,7 +1,29 @@
-.formMultichoice-component {
+$multichoice-margin-top: 20px;
+$multichoice-margin-side: 25%;
+
+.multichoice-input {
+    border-radius: $form-control-border-radius;
+    border: 1px solid $border-color;
+    background-color: $form-control-bg;
+    display: block;
+
+    &.has-error {
+        border-color: $color-error;
+    }
+
+    label {
+        font-size: $font-size-xsmall;
+        color: $color-semilight;
+    }
+
+    ul {
+        margin: getValueByDirection($multichoice-margin-top auto $multichoice-margin-top $multichoice-margin-side, $multichoice-margin-top $multichoice-margin-side $multichoice-margin-top auto);
+    }
+
     li {
         list-style: none;
         margin-#{$float}: 20px;
+        white-space: nowrap;
         label, input {
             display: inline-block;
             vertical-align: middle;

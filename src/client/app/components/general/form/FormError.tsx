@@ -1,10 +1,7 @@
 import React from "react";
-import {PageComponentProps} from "../../PageComponent";
+import {BaseComponentProps} from "../../BaseComponent";
 
-export interface FormErrorParams {
-}
-
-export interface FormErrorProps extends PageComponentProps<FormErrorParams> {
+export interface FormErrorProps extends BaseComponentProps {
     error: string;
 }
 

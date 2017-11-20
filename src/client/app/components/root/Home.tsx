@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
+import Navbar from "../general/Navbar";
 
 export interface HomeParams {
 }
@@ -18,12 +19,17 @@ export class Home extends PageComponent<HomeProps, HomeState> {
         this.state = {};
     }
 
+    public componentWillMount() {
+        if (this.auth.isGuest()) {
+            this.props.history.push('/login');
+        }
+    }
+
     public render() {
         return (
-            <div className="page">
+            <div className="page home-page has-navbar">
+                <Navbar title={this.tr('home')} showBurger={true}/>
                 <h1>Home Component</h1>
-                <br/>
-                <Link to='/about'>About</Link>
             </div>
         );
     }

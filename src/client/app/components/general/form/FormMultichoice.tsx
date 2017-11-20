@@ -1,45 +1,53 @@
-import React from "react";
-import {PageComponentProps} from "../../PageComponent";
-import {ChangeEventHandler, FormOption} from "./FormWrapper";
-import {FormError} from "./FormError";
+import React, {PureComponent} from "react";
+import {BaseComponentProps} from "../../BaseComponent";
+import {ChangeEventHandler} from "./FormWrapper";
 
-export interface FormMultichoiceParams {
-}
-
-export interface FormMultichoiceProps extends PageComponentProps<FormMultichoiceParams> {
+export interface FormMultichoiceProps extends BaseComponentProps {
     name: string;
     label: string;
-    value?: Array<number | string>;
+    options: Array<{}>;
+    titleKey?: string;
+    valueKey?: string;
+    value?: Array<any>;
     onChange?: ChangeEventHandler;
-    options: Array<FormOption>;
     error?: string;
 }
 
-export const FormMultichoice = (props: FormMultichoiceProps) => {
-    let list: HTMLUListElement = null;
-    let choices = props.options.map((o, i) => <li key={i}>
-        <label>
-            <input name={props.name} type="checkbox" value={o.value}
-                   checked={props.value && props.value.indexOf(o.value) >= 0} onChange={onChange}/> {o.title}
-        </label>
-    </li>);
+export class FormMultichoice extends PureComponent<FormMultichoiceProps, null> {
+    private list: HTMLUListElement;
 
-    return <div className="form-group">
-        <div className="formMultichoice-component">
-            <label>{props.label}</label>
-            <ul ref={el => list = el}>{choices}</ul>
-        </div>
-        <FormError error={props.error}/>
-    </div>;
-
-    function onChange(e) {
-        let value = [];
-        let checkBoxes = list.querySelectorAll('input');
+    private onChange = (e) => {
+        let values: Array<any> = [];
+        let checkBoxes = this.list.querySelectorAll('input');
         for (let i = 0, il = checkBoxes.length; i < il; ++i) {
             if (checkBoxes[i].checked) {
-                value.push(checkBoxes[i].value);
+                let value = checkBoxes[i].value;
+                let numericValue = +value;
+                values.push(isNaN(numericValue) ? value : numericValue);
             }
         }
-        props.onChange(props.name, value);
+        this.props.onChange(this.props.name, values.length ? values : null);
     }
-};
+
+    public render() {
+        let {options, value, label, error, titleKey, valueKey} = this.props;
+        if (!titleKey) titleKey = 'title';
+        if (!valueKey) valueKey = 'value';
+        let choices = options.map((o, i) => (
+            <li key={i}>
+                <label>
+                    <input name={name} type="checkbox" value={o[valueKey]}
+                           checked={value && value.indexOf(o[valueKey]) >= 0}
+                           onChange={this.onChange}/> {o[titleKey]}
+                </label>
+            </li>));
+
+        return (
+            <div className={`form-group multichoice-input${error ? ' has-error' : ''}`}>
+                <label>{label}</label>
+                <p className="form-error">{error || ''}</p>
+                <ul ref={el => this.list = el}>{choices}</ul>
+            </div>
+        )
+    }
+}

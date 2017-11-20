@@ -1,16 +1,31 @@
+$sidenav-header-avatar-width: 100px;
+$sidenav-padding: 20px;
+$sidenav-top-padding: $header-height + $sidenav-padding;
+
 .sidenav-content {
     header {
-        background: url(../img/sidenav-header.jpg);
+        position: relative;
+        background: url(../img/sidenav-header.png) no-repeat center;
         background-size: cover;
-        img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 20px;
+        padding: $sidenav-top-padding $sidenav-padding $sidenav-padding $sidenav-padding;
+        color: $white;
+        .icon {
+            font-size: $font-size-large;
+            position: absolute;
+            #{$opposite-float}: $sidenav-padding;
+            bottom: $sidenav-padding;
+            color: $white;
         }
     }
 
+    .avatar-component {
+        width: $sidenav-header-avatar-width;
+        height: $sidenav-header-avatar-width;
+        border: 2px solid $border-color;
+    }
+
     .name-wrapper {
-        padding-#{$float}: 20px;
+        $name-padding: ceil($sidenav-padding / 2);
+        margin: getValueByDirection($name-padding 0 0 3*$name-padding, $name-padding 3*$name-padding 0 0);
     }
 }

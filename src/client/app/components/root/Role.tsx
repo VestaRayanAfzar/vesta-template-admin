@@ -1,7 +1,6 @@
 import React from "react";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
 import {Route, Switch} from "react-router";
-import {DynamicRouter, IValidationError} from "../../medium";
 import {PageTitle} from "../general/PageTitle";
 import {Preloader} from "../general/Preloader";
 import {CrudMenu} from "../general/CrudMenu";
@@ -9,14 +8,21 @@ import {IRole, Role as RoleModel} from "../../cmn/models/Role";
 import {RoleAdd} from "./role/RoleAdd";
 import {RoleEdit} from "./role/RoleEdit";
 import {RoleDetail} from "./role/RoleDetail";
-import {RoleList} from "./role/RoleList";
 import {IPermission} from "../../cmn/models/Permission";
+import {IAccess} from "../../service/AuthService";
+import Navbar from "../general/Navbar";
+import {RoleList} from "./role/RoleList";
+import {IDataTableQueryOption} from "../general/DataTable";
+import {DynamicRouter} from "../general/DynamicRouter"
+import {IValidationError} from "../../cmn/core/Validator";
+
+export interface IAction {
+    id: number;
+    action?: string;
+}
 
 export interface IExtPermission {
-    [name: string]: Array<{
-        id: number;
-        action: string;
-    }>
+    [name: string]: Array<IAction>;
 }
 
 export interface RoleParams {
@@ -28,14 +34,24 @@ export interface RoleProps extends PageComponentProps<RoleParams> {
 export interface RoleState extends PageComponentState {
     showLoader: boolean;
     validationErrors: IValidationError;
+    roles: Array<IRole>;
+    queryOption: IDataTableQueryOption<IRole>;
     permissions: IExtPermission;
 }
 
 export class Role extends PageComponent<RoleProps, RoleState> {
+    private access: IAccess;
 
     constructor(props: RoleProps) {
         super(props);
-        this.state = {validationErrors: null, showLoader: false, permissions: {}};
+        this.state = {
+            showLoader: false,
+            validationErrors: null,
+            roles: [],
+            queryOption: {page: 1, limit: 100},
+            permissions: {}
+        };
+        this.access = this.auth.getAccessList('role');
     }
 
     public componentDidMount() {
@@ -50,7 +66,7 @@ export class Role extends PageComponent<RoleProps, RoleState> {
                 return response.items[0];
             })
             .catch(error => {
-                this.notif.error(error.message);
+                this.notif.error(this.tr(error.message));
                 this.setState({showLoader: false});
             })
     }
@@ -59,12 +75,11 @@ export class Role extends PageComponent<RoleProps, RoleState> {
         this.setState({showLoader: true});
         return this.api.get<IRole>('acl/role')
             .then(response => {
-                this.setState({showLoader: false});
-                return response.items;
+                this.setState({showLoader: false, roles: response.items});
             })
             .catch(error => {
                 this.setState({showLoader: false});
-                this.notif.error(error.message);
+                this.notif.error(this.tr(error.message));
             })
     }
 
@@ -80,12 +95,13 @@ export class Role extends PageComponent<RoleProps, RoleState> {
         let data = role.getValues<IRole>();
         (model.id ? this.api.put<IRole>('acl/role', data) : this.api.post<IRole>('acl/role', data))
             .then(response => {
-                this.notif.success(this.tr.translate(`info_${saveType}_record`, `${response.items[0].id}`));
+                this.notif.success(this.tr(`info_${saveType}_record`, `${response.items[0].id}`));
                 this.props.history.goBack();
+                this.fetchAll();
                 this.setState({showLoader: false});
             })
             .catch(error => {
-                this.notif.error(error.message);
+                this.notif.error(this.tr(error.message));
                 this.setState({validationErrors: error.validation, showLoader: false});
             });
     }
@@ -107,40 +123,47 @@ export class Role extends PageComponent<RoleProps, RoleState> {
                 this.setState({showLoader: false, permissions: permissions});
             })
             .catch(error => {
-                this.notif.error(error.message);
+                this.notif.error(this.tr(error.message));
                 this.setState({showLoader: false});
             })
     }
 
     public render() {
-        const tr = this.tr.translate;
         return (
-            <div className="page role-component">
-                <PageTitle title={tr('mdl_role')}/>
-                <h1>{tr('mdl_role')}</h1>
-                <Preloader options={{show: this.state.showLoader}}/>
-                <CrudMenu path="role"/>
-                <DynamicRouter>
-                    <Switch>
-                        <Route path="/role/add" render={this.tz.willTransitionTo(RoleAdd, {role: ['add']}, {
-                            save: this.save,
-                            validationErrors: this.state.validationErrors,
-                            permissions: this.state.permissions
-                        })}/>
-                        <Route path="/role/edit/:id" render={this.tz.willTransitionTo(RoleEdit, {role: ['edit']}, {
-                            save: this.save,
-                            fetch: this.fetch,
-                            validationErrors: this.state.validationErrors,
-                            permissions: this.state.permissions
-                        })}/>
-                        <Route path="/role/detail/:id" render={this.tz.willTransitionTo(RoleDetail, {role: ['read']}, {
-                            fetch: this.fetch
-                        })}/>
-                        <Route render={this.tz.willTransitionTo(RoleList, {role: ['read']}, {
-                            fetch: this.fetchAll
-                        })}/>
-                    </Switch>
-                </DynamicRouter>
-            </div>);
+            <div className="page role-page has-navbar">
+                <PageTitle title={this.tr('roles')}/>
+                <Navbar title={this.tr('roles')}/>
+                <h1>{this.tr('roles')}</h1>
+                <Preloader show={this.state.showLoader}/>
+                <CrudMenu path="role" access={this.access}/>
+                <div className="crud-wrapper">
+                    <DynamicRouter>
+                        <Switch>
+                            {this.access.add ?
+                                <Route path="/role/add"
+                                       render={this.tz(RoleAdd, {role: ['add']}, {
+                                           save: this.save,
+                                           validationErrors: this.state.validationErrors,
+                                           permissions: this.state.permissions
+                                       })}/> : null}
+                            {this.access.edit ?
+                                <Route path="/role/edit/:id"
+                                       render={this.tz(RoleEdit, {role: ['edit']}, {
+                                           save: this.save,
+                                           fetch: this.fetch,
+                                           validationErrors: this.state.validationErrors,
+                                           permissions: this.state.permissions
+                                       })}/> : null}
+                            <Route path="/role/detail/:id"
+                                   render={this.tz(RoleDetail, {role: ['read']}, {
+                                       fetch: this.fetch
+                                   })}/>
+                        </Switch>
+                    </DynamicRouter>
+                    <RoleList roles={this.state.roles} access={this.access} fetch={this.fetchAll}
+                              queryOption={this.state.queryOption}/>
+                </div>
+            </div>
+        )
     }
 }

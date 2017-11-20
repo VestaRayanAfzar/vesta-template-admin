@@ -14,44 +14,33 @@ print_status(){
   echo
 }
 
-cd "$CLONE_PATH"
-git checkout master
-
+cd ${CLONE_PATH}
+git checkout dev
+print_status "Cloning SubModules"
+git submodule update --init src/client/app/cmn
+git submodule foreach git checkout master
 mv resources/gitignore/config.var.ts src/client/app/config/config.var.ts
 
+print_status "Executing pre-deploy Script"
+chmod +x resources/ci/scripts/pre-deploy.js
+./resources/ci/scripts/pre-deploy.js
+
+#print_status "Configuring NGINX"
+#sudo mv resources/ci/nginx/panel.conf ${NGINX_PATH}
+
 print_status "Installing Node Packages"
-yarn install
+npm install
 
 print_status "Running Deploy Tasks"
 npm run deploy:web
 
-print_status "Configuring NGINX"
 cd ${WD}
-mv ${CLONE_PATH}/resources/docker/nginx.conf ${NGINX_PATH}
-cd ${CLONE_PATH}
+rm -rf ${DEPLOY_PATH}
+mkdir -p ${DEPLOY_PATH}
+mv ${CLONE_PATH}/vesta/client/web/www ${DEPLOY_PATH}/www
 
-print_status "Installing Node Packages for Web Server"
-cp package.json vesta/server/package.json
-cd vesta/server
-yarn install --production
-
-cd ${WD}
-if [ -d "$DEPLOY_PATH" ]; then
-  print_status "Stopping Previously Running Containers"
-  cd "$DEPLOY_PATH"
-  docker-compose stop
-  docker-compose down
-  cd "$WD"
-fi
-
-rm -rf "${DEPLOY_PATH}"
-mkdir -p "${DEPLOY_PATH}"
-mv ${CLONE_PATH}/build/app "${DEPLOY_PATH}/app"
-mv ${CLONE_PATH}/resources/docker/docker-compose.yml "${DEPLOY_PATH}/docker-compose.yml"
-
-print_status "Starting Containers"
-cd "$DEPLOY_PATH"
-docker-compose up -d --build
+#print_status "Re-Starting NGINX"
+#sudo service nginx restart
 
 print_status "All done"
 exit 0

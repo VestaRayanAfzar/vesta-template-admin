@@ -1,28 +1,77 @@
-$form-control-height: 32px;
+$form-control-height: 36px;
 $form-group-margin: 10px;
 $form-group-padding: 2px;
-$form-label-margin: 10px 0 5px 0;
-$form-control-padding: 5px;
+$form-label-margin: 0;
+$form-control-padding: 7px;
+$form-control-bg: $white;
+$form-control-border-radius: $border-radius;
+$form-error-padding: 5px;
 
-.formWrapper-component {
+.form-wrapper {
     .btn-group {
-        text-align: end;
+        padding: $btn-group-padding;
+        width: 100%;
+        margin: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        > .btn {
+            flex: 1;
+            margin: auto 5px;
+            border-radius: $border-radius;
+            height: $btn-height-large;
+        }
     }
+}
+
+.form-error {
+    padding: $form-error-padding;
+    position: absolute;
+    color: $color-error;
+    text-align: end;
+    font-size: $font-size-small;
+    top: -1 * ceil($form-control-height / 3);
+    #{$opposite-float}: 0;
 }
 
 .form-group {
     margin: $form-group-margin;
     padding: $form-group-padding;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
     label {
-        display: block;
+        margin-#{$opposite-float}: 10px;
+        white-space: nowrap;
+        text-align: end;
+        vertical-align: bottom;
         margin: $form-label-margin;
+    }
+    .form-control {
+        flex: 1;
+    }
+    &.btn-group {
+        margin-top: 4 * $form-group-margin;
+    }
+    &.has-error {
+        .form-control {
+            border-color: $color-error;
+        }
     }
 }
 
 .form-control {
+    background-color: $form-control-bg;
     height: $form-control-height;
     padding: $form-control-padding;
     border: 1px solid $border-color;
-    border-radius: $border-radius;
+    border-radius: $form-control-border-radius;
     outline: 0;
+}
+body.shrink-view {
+    .stick-btm {
+        @include scale(0);
+    }
 }

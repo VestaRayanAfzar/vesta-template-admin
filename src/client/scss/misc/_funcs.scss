@@ -1,6 +1,6 @@
 @function fontSize($coef:1) {
     $base: 14px;
-    @return $base * $coef;
+    @return ceil($base * $coef);
 }
 
 @function getValueByDirection($ltrValue, $rtlValue) {

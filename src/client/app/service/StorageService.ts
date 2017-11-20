@@ -1,19 +1,19 @@
-export class StorageService {
-    private storage: Storage = localStorage;
-    private static instance: StorageService;
+export enum StorageType {Local = 1, Session}
 
-    public set<T>(key: string, value: T) {
+export class StorageService {
+    private static storage: Storage = localStorage;
+
+    public static set<T>(key: string, value: T) {
         try {
-            this.storage.setItem(key, JSON.stringify(value));
+            StorageService.storage.setItem(key, JSON.stringify(value));
         } catch (e) {
             // QUOTA_EXCEEDED_ERR
             // localStorage is full
         }
-        StorageService.instance = this;
     }
 
-    public get<T>(key: string): T {
-        let value: any = this.storage.getItem(key),
+    public static get<T>(key: string): T {
+        let value: any = StorageService.storage.getItem(key),
             object: T;
         try {
             object = JSON.parse(value);
@@ -23,15 +23,12 @@ export class StorageService {
         return object;
     }
 
-    public remove(key: string): boolean {
-        this.storage.removeItem(key);
+    public static remove(key: string): boolean {
+        StorageService.storage.removeItem(key);
         return true;
     }
 
-    public static getInstance(): StorageService {
-        if (!StorageService.instance) {
-            StorageService.instance = new StorageService();
-        }
-        return StorageService.instance;
+    public static setStorage(type: StorageType) {
+        StorageService.storage = type == StorageType.Session ? sessionStorage : localStorage;
     }
 }

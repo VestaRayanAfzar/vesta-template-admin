@@ -1,20 +1,74 @@
-$modal-background-color: transparentize($color-dark, .3);
+$modal-background-color: transparentize($black, .2);
+$modal-transition-enter-duration: $transition-duration-short;
+$modal-transition-leave-duration: ceil($transition-duration-short);
+$modal-transition-effect: $transition-effect-default;
 
-.modal-component {
+.modal {
+    will-change: tranform;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
     background: $modal-background-color;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     align-content: center;
-    border: 2px solid silver;
     z-index: $z-index-dialog;
+    @include translate3d(0);
+
     > * {
         flex: 1;
+    }
+}
+
+.modal-enter {
+    @include translate3d(100%, 0);
+
+    &.modal-enter-active {
+        transition: transform $modal-transition-enter-duration $modal-transition-effect;
+        @include translate3d(0);
+        @include scale(1);
+    }
+}
+
+.modal-leave {
+
+    &.modal-leave-active {
+        transition: transform $modal-transition-leave-duration $modal-transition-effect;
+        @include translate3d(100%, 0);
+    }
+}
+
+.modal-zoom-enter {
+    @include scale(0);
+
+    &.modal-zoom-enter-active {
+        transition: transform $modal-transition-enter-duration $modal-transition-effect;
+        @include scale(1);
+    }
+}
+
+.modal-zoom-leave {
+
+    &.modal-zoom-leave-active {
+        transition: transform $modal-transition-leave-duration $modal-transition-effect;
+        @include scale(0);
+    }
+}
+
+html.modal-open {
+    overflow-y: hidden;
+    .page {
+        overflow-y: hidden;
+    }
+    .modal {
+        .page {
+            overflow-y: auto;
+        }
     }
 }

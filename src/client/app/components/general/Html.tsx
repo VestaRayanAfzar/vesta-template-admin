@@ -1,16 +1,20 @@
 import * as React from "react";
-import {PageComponentProps} from "../PageComponent";
+import {PureComponent} from "react";
 
-export interface HtmlParams {
-}
-
-export interface HtmlProps extends PageComponentProps<HtmlParams> {
+export interface HtmlProps {
     lang: string;
     dir: string;
 }
 
-export const Html = (props: HtmlProps) => {
-    document.documentElement.setAttribute('lang', props.lang);
-    document.documentElement.setAttribute('dir', props.dir);
-    return null;
-};
+export class Html extends PureComponent<HtmlProps, null> {
+
+    public componentDidMount() {
+        const {lang, dir} = this.props;
+        document.documentElement.setAttribute('lang', lang);
+        document.documentElement.setAttribute('dir', dir);
+    }
+
+    public render() {
+        return null;
+    }
+}

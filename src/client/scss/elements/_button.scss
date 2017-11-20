@@ -1,12 +1,14 @@
 $btn-padding: 7px;
 $btn-border-darken-ratio: 5%;
 $btn-height: 32px;
+$btn-height-large: floor(1.5 * $btn-height);
 $btn-min-width: 64px;
 $btn-border-radius: $border-radius;
 $btn-group-padding: 7px 10px;
+$btn-group-active-bg: lighten($color-primary, 15%);
 
-@mixin btn-style($color) {
-    color: $white;
+@mixin btn-style($color, $text-color: $white) {
+    color: $text-color;
     //text-shadow: 1px 1px 2px $dark;
     background: $color;
     border: 1px solid lighten($color, $btn-border-darken-ratio);
@@ -17,36 +19,70 @@ $btn-group-padding: 7px 10px;
     }
 }
 
+@mixin btn-size($height, $font-size) {
+    height: $height;
+    font-size: $font-size;
+}
+
+%btns-stick-to-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2px;
+    display: flex;
+}
+
 .btn {
-    display: inline-block;
-    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    //text-align: center;
     height: $btn-height;
     min-width: $btn-min-width;
-    padding: $btn-padding;
+    padding: 0 $btn-padding;
     border-radius: $btn-border-radius;
     cursor: pointer;
     user-select: none;
     outline: 0;
     vertical-align: middle;
     font-size: $font-size-small;
-    @include btn-style($color-default);
+    color: $color-primary;
+    background: transparent;
+    border: 1px solid transparent;
     //box-shadow: 1px 1px 2px $dark;
     &:hover {
         //transition: all $transitionShortDuration;
         //box-shadow: 0 0 2px $dark inset;
     }
+    &.btn-default {
+        @include btn-style($color-default, $color-primary);
+    }
+    &.btn-primary {
+        @include btn-style($color-primary);
+    }
+    &.btn-secondary {
+        @include btn-style($color-secondary);
+    }
+    &.btn-large {
+        @include btn-size($btn-height-large, $font-size-medium);
+    }
     &:disabled {
         cursor: not-allowed;
+        @include btn-style($silver, $grey);
     }
-    @each $class in $color-classes {
-        &.btn-#{$class} {
-            @include btn-style(nth($color-list, index($color-classes, $class)));
-        }
-    }
+    //@each $class in $color-classes {
+    //    &.btn-#{$class} {
+    //        @include btn-style(nth($color-list, index($color-classes, $class)));
+    //    }
+    //}
 }
 
 .btn-group {
     padding: $btn-group-padding;
+    &.stick-btm {
+        @extend %btns-stick-to-bottom;
+    }
     > .btn {
         border-radius: 0;
         &:first-child {
@@ -56,6 +92,32 @@ $btn-group-padding: 7px 10px;
         &:last-child {
             border-top-#{$opposite-float}-radius: $border-radius;
             border-bottom-#{$opposite-float}-radius: $border-radius;
+        }
+    }
+}
+
+.tab-header {
+    padding: $btn-group-padding;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    &.stick-btm {
+        @extend %btns-stick-to-bottom;
+    }
+    > .btn {
+        flex: 1;
+        margin: auto 5px;
+        height: $btn-height-large;
+    }
+    &.tab-header-default {
+        > .btn {
+            @include btn-style($white, $color-primary);
+            &.active {
+                @include btn-style($btn-group-active-bg, $color-semidark);
+            }
         }
     }
 }

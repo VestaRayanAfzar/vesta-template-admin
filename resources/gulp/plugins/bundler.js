@@ -1,4 +1,3 @@
-let gulp = require('gulp');
 let util = require('gulp-util');
 let fse = require('fs-extra');
 let path = require('path');

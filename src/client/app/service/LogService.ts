@@ -1,43 +1,24 @@
-import {ConfigService} from "./ConfigService";
-
 export class LogService {
     private static LogType = {Log: 'log', Info: 'info', Warn: 'warn', Error: 'error'};
-    private static instance: LogService = null;
-    private isProduction = true;
 
-
-    constructor() {
-        this.isProduction = ConfigService.getConfig().env === 'production';
+    public static log(log: any, method?: string, file?: string) {
+        LogService.echo(LogService.LogType.Log, method, file, log);
     }
 
-    private echo(logType: string, location: string, log: any) {
-        if (this.isProduction) {
-            // todo what to do ???
-        } else {
-            console[logType](location, log);
-        }
+    public static warn(warning: any, method?: string, file?: string) {
+        LogService.echo(LogService.LogType.Warn, method, file, warning);
     }
 
-    public log(location: string, log: any) {
-        this.echo(LogService.LogType.Log, location, log);
+    public static info(information: any, method?: string, file?: string) {
+        LogService.echo(LogService.LogType.Info, method, file, information);
     }
 
-    public warn(location: string, warning: any) {
-        this.echo(LogService.LogType.Warn, location, warning);
+    public static error(error: any, method?: string, file?: string) {
+        LogService.echo(LogService.LogType.Error, method, file, error);
     }
 
-    public info(location: string, information: any) {
-        this.echo(LogService.LogType.Info, location, information);
-    }
-
-    public error(location: string, error: any) {
-        this.echo(LogService.LogType.Error, location, error);
-    }
-
-    public static getInstance(): LogService {
-        if (!LogService.instance) {
-            LogService.instance = new LogService();
-        }
-        return LogService.instance;
+    private static echo(logType: string, method: string, file: string, log: any) {
+        // todo what to do ???
+        console[logType](`[${file || ''}::${method || ''}]`, log);
     }
 }

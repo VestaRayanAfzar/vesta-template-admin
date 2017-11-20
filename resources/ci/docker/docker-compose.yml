@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  web:
+    build: vesta/pm2
+    ports:
+      - '8080:80'
+      - '8443:443'
+    volumes:
+      - ./app:/app
+    networks:
+      - network
+    working_dir: /app
+    command: pm2 start app.js --no-daemon
+    environment:
+      PORT: 80
+      NODE_ENV: production
+
+networks:
+  network:

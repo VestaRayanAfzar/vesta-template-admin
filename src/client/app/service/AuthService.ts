@@ -2,7 +2,7 @@ import {IUser} from "../cmn/models/User";
 import {IPermission} from "../cmn/models/Permission";
 import {IRole} from "../cmn/models/Role";
 import {Dispatcher} from "./Dispatcher";
-import {AclPolicy} from "../cmn/enum/Acl";
+import {AclAction, AclPolicy} from "../cmn/enum/Acl";
 
 export interface IPermissionCollection {
     [resource: string]: Array<string>;
@@ -10,6 +10,10 @@ export interface IPermissionCollection {
 
 interface IStateResourceMap {
     [state: string]: IPermissionCollection;
+}
+
+export interface IAccess {
+    [action: string]: boolean;
 }
 
 export class AuthService {
@@ -34,6 +38,7 @@ export class AuthService {
 
     public logout(): void {
         this.storage.removeItem(this.userKeyName);
+        this.storage.removeItem(this.tokenKeyName);
         this.login(<IUser>{});
     }
 
@@ -47,13 +52,13 @@ export class AuthService {
         this.permissions = {};
         let role = <IRole>this.user.role;
         if (!role) return;
-                    for (let k = role.permissions.length; k--;) {
-                        let permission = <IPermission>role.permissions[k];
-                        if (!(permission.resource in this.permissions)) {
-                            this.permissions[permission.resource] = [];
-                        }
-                        this.permissions[permission.resource].push(permission.action);
-                    }
+        for (let k = role.permissions.length; k--;) {
+            let permission = <IPermission>role.permissions[k];
+            if (!(permission.resource in this.permissions)) {
+                this.permissions[permission.resource] = [];
+            }
+            this.permissions[permission.resource].push(permission.action);
+        }
         Dispatcher.getInstance().dispatch(AuthService.Events.Update, {user: this.user});
     }
 
@@ -101,6 +106,17 @@ export class AuthService {
             return true
         }
         return this.defaultPolicy == AclPolicy.Allow;
+    }
+
+    public getAccessList(resource: string, ...actions: Array<string>): IAccess {
+        if (!actions.length) {
+            actions = [AclAction.Read, AclAction.Add, AclAction.Edit, AclAction.Delete];
+        }
+        let access = {};
+        for (let i = actions.length; i--;) {
+            if (this.isAllowed(resource, actions[i])) access[actions[i]] = true;
+        }
+        return access;
     }
 
     /**

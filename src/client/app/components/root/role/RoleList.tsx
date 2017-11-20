@@ -1,35 +1,33 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
+import {FetchAll, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
 import {IRole} from "../../../cmn/models/Role";
-import {Column, DataTable, DataTableOption} from "../../general/DataTable";
-import {IDeleteResult} from "../../../medium";
-import {AuthService} from "../../../service/AuthService";
-import {AclAction} from "../../../cmn/enum/Acl";
+import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
+import {IAccess} from "../../../service/AuthService";
+import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
 
 export interface RoleListParams {
 }
 
 export interface RoleListProps extends PageComponentProps<RoleListParams> {
-    fetch: () => Promise<Array<IRole>>;
+    roles: Array<IRole>;
+    access: IAccess;
+    fetch: FetchAll<IRole>;
+    queryOption: IDataTableQueryOption<IRole>;
 }
 
 export interface RoleListState extends PageComponentState {
-    roles: Array<IRole>;
 }
 
 export class RoleList extends PageComponent<RoleListProps, RoleListState> {
-    private delAccess = false;
 
     constructor(props: RoleListProps) {
         super(props);
-        this.state = {roles: []};
-        this.delAccess = AuthService.getInstance().isAllowed('role', AclAction.Delete);
+        this.state = {};
     }
 
     public componentDidMount() {
-        this.props.fetch()
-            .then(roles => this.setState({roles}));
+        this.props.fetch(this.props.queryOption);
     }
 
     public del = (e) => {
@@ -38,31 +36,31 @@ export class RoleList extends PageComponent<RoleListProps, RoleListState> {
         if (match) {
             this.api.del<IDeleteResult>('acl/role', +match[0])
                 .then(response => {
-                    this.notif.success(this.tr.translate('info_delete_record', response.items[0]));
-                    this.props.fetch().then(roles => this.setState({roles}))
+                    this.notif.success(this.tr('info_delete_record', response.items[0]));
+                    this.props.fetch(this.props.queryOption);
+                })
+                .catch(error => {
+                    this.notif.error(this.tr(error.message));
                 })
         }
     }
 
     public render() {
-        const tr = this.tr.translate;
-        const statusOptions = {1: tr('enum_active'), 0: tr('enum_inactive')};
-        const dtOptions: DataTableOption<IRole> = {
-            showIndex: true
-        };
+        const access = this.props.access;
+        const statusOptions = {1: this.tr('enum_active'), 0: this.tr('enum_inactive')};
         const columns: Array<Column<IRole>> = [
-            {name: 'id', title: tr('fld_id')},
-            {name: 'name', title: tr('fld_name')},
-            {name: 'status', title: tr('fld_status'), render: r => tr(`enum_${statusOptions[r.status]}`)},
+            {name: 'id', title: this.tr('fld_id')},
+            {name: 'name', title: this.tr('fld_name')},
+            {name: 'status', title: this.tr('fld_status'), render: r => this.tr(statusOptions[r.status])},
             {
-                title: 'Operations', render: r => <span className="dt-operation-cell">
+                title: this.tr('operations'), render: r => <span className="dt-operation-cell">
                 <Link to={`/role/detail/${r.id}`}>View</Link>
-                <Link to={`/role/edit/${r.id}`}>Edit</Link>
-                {this.delAccess ? <Link to={`/role/del/${r.id}`} onClick={this.del}>Del</Link> : null}</span>
+                {access.edit ? <Link to={`/role/edit/${r.id}`}>Edit</Link> : null}
+                {access.del ? <Link to={`/role/del/${r.id}`} onClick={this.del}>Del</Link> : null}</span>
             }
         ];
-        return <div className="page commandList-component">
-            <DataTable option={dtOptions} columns={columns} records={this.state.roles}/>
+        return <div className="crud-page">
+            <DataTable fetch={this.props.fetch} columns={columns} records={this.props.roles} pagination={false}/>
         </div>
     }
 }

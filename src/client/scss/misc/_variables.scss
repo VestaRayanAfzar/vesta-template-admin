@@ -23,6 +23,7 @@ $transition-duration-long: 500ms;
 $transition-duration-default: $transition-duration-short;
 
 // easing
+$transition-effect-default: ease-in-out;
 
 // zIndex
 $z-index-base: 1;
@@ -31,6 +32,7 @@ $z-index-header: 10;
 $z-index-sidenav: 11;
 $z-index-dialog: 12;
 $z-index-date-picker: 12;
+$z-index-actionSheet: 13;
 $z-index-notification: 99;
 
 // sizes

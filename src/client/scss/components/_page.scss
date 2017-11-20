@@ -1,3 +1,77 @@
+$page-transition-enter-duration: $transition-duration-default;
+$page-transition-leave-duration: floor(2 * $page-transition-enter-duration / 3);
+$page-transition-effect: $transition-effect-default;
+$page-center-form-padding: 30px 30px 15px 30px;
+
 .page {
+    max-width: $layout-medium-max;
+    margin: auto;
+    &.has-navbar {
+        padding-top: $header-height;
+    }
     position: relative;
+}
+
+.crud-page {
+    & + .crud-page {
+        display: none;
+    }
+}
+
+.page-logo-form {
+    $logo-img-size: 25vh;
+    $logo-border-size: floor($logo-img-size / 10);
+    $logo-wrapper-size: $logo-img-size + (2 * $logo-border-size);
+
+    .logo-wrapper {
+        height: $logo-wrapper-size;
+        width: $logo-wrapper-size;
+        border-radius: 50%;
+        overflow: hidden;
+        border: $logo-border-size solid transparentize($white, .5);
+        margin: 5px auto 30px auto;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: $logo-img-size;
+        height: $logo-img-size;
+        border-radius: 50%;
+        overflow: hidden;
+        border: $logo-border-size solid transparentize($white, .3);
+        img {
+            width: auto;
+            height: 100%;
+        }
+    }
+
+    .form-wrapper {
+        width: 90%;
+        max-width: $layout-medium-max;
+        margin: auto;
+        background: transparentize($white, 0);
+        border-radius: $border-radius;
+        padding: $page-center-form-padding;
+    }
+
+    .form-control {
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid $color-dark;
+        border-radius: 0;
+    }
+
+    .btn-group {
+        margin-top: 30px;
+    }
+
+    .btn {
+        height: $btn-height-large;
+    }
+
+    .form-error {
+        top: $form-control-height;
+    }
 }

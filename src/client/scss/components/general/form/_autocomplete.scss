@@ -1,0 +1,28 @@
+//$autocomplete-list-top-offset: 2 * ($form-group-margin + $form-group-padding) + $form-control-height + 2 * ($form-control-padding);
+$autocomplete-list-top-offset: $form-control-height;
+
+.autocomplete-input {
+    position: relative;
+    .list-wrapper {
+        padding: 0;
+        border: 0;
+        width: 80%;
+        position: absolute;
+        top: $autocomplete-list-top-offset;
+        #{$opposite-float}: 3px;
+        z-index: $z-index-content;
+    }
+    .list-item {
+        //border: 1px solid blue;
+        display: block;
+        cursor: pointer;
+        background: $form-control-bg;
+        border-top: 1px solid $border-color;
+        padding: $form-control-padding;
+        &:last-child {
+            border-bottom: 1px solid $border-color;
+            border-bottom-left-radius: $border-radius;
+            border-bottom-right-radius: $border-radius;
+        }
+    }
+}

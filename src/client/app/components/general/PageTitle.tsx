@@ -1,16 +1,21 @@
-import React from "react";
-import {PageComponentProps} from "../PageComponent";
+import React, {PureComponent} from "react";
+import {BaseComponentProps} from "../BaseComponent";
 
-export interface PageTitleParams {
-}
-
-export interface PageTitleProps extends PageComponentProps<PageTitleParams> {
+export interface PageTitleProps extends BaseComponentProps {
     title: string;
     append?: boolean;
 }
-let baseTitle = document.title;
 
-export const PageTitle = (props: PageTitleProps) => {
-    document.title = 'append' in props && !props.append ? props.title : `${props.title}, ${baseTitle}`;
-    return null;
-};
+
+export class PageTitle extends PureComponent<PageTitleProps, null> {
+    private static baseTitle = document.title;
+
+    public componentDidMount() {
+        let {title, append} = this.props;
+        document.title = append ? `${title}, ${PageTitle.baseTitle}` : title;
+    }
+
+    public render() {
+        return null;
+    }
+}

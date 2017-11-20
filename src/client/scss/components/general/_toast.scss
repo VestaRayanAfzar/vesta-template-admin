@@ -6,7 +6,7 @@ $toast-border-color: $border-color;
 $toast-text-color: $white;
 
 .toast-wrapper {
-    position: absolute;
+    position: fixed;
     z-index: $z-index-notification;
     bottom: 0;
     left: 0;

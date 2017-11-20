@@ -1,9 +1,17 @@
-.role-component {
-    li {
-        list-style: none;
-    }
+.role-page {
     .permission-list {
         margin: 20px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        > li {
+            //display: inline-block;
+            //vertical-align: top;
+            width: 45%;
+            border: 1px solid $white;
+            border-radius: $border-radius;
+            margin: 10px;
+        }
         .formMultichoice-component {
             > label {
                 font-weight: bold;

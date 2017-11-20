@@ -1,3 +1,10 @@
-.login-component {
-
+.login-page {
+    background: $color-secondary;
+    .forget-link {
+        margin: 20px auto 0 auto;
+        font-size: $font-size-small;
+        a {
+            color: $color-primary;
+        }
+    }
 }

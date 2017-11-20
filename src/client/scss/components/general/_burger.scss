@@ -1,3 +1,10 @@
+$burger-item-height: 3px;
+
+@mixin back-btn-rotate($deg) {
+    @include rotate($deg);
+    #{$float}: -3px;
+}
+
 .burger-component {
     $burger-width: $header-height - ( 2 * $header-padding);
     display: flex;
@@ -5,8 +12,25 @@
     flex-direction: column;
     width: $burger-width + ($header-padding/2);
     height: $burger-width - 1;
+    overflow: hidden;
+    outline: 0 !important;
+
     > span {
-        height: 3px;
-        background: $color-light;
+        position: relative;
+        #{$float}: 0;
+        @include rotate(0);
+        height: $burger-item-height;
+        background: $white;
+        border-radius: ceil($burger-item-height / 2);
+        transition: transform, #{$float} $transition-duration-short;
+    }
+
+    &.back-btn {
+        span:first-child {
+            @include back-btn-rotate(40deg);
+        }
+        span:last-child {
+            @include back-btn-rotate(-40deg);
+        }
     }
 }

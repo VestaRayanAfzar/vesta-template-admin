@@ -1,14 +1,8 @@
 .DS_Store
 .idea
-/node_modules
+node_modules
 npm-debug.log
 /src/client/app/config/config.var.ts
-/vesta/client/cordova/platforms/*
-!/vesta/client/cordova/platforms/platforms.json
-/vesta/client/cordova/plugins/*
-!/vesta/client/cordova/plugins/fetch.json
-/vesta/client/cordova/www
-/vesta/client/electron/www
 /vesta/client/web/www
+/vesta/server/app
 /vesta/tmp
-/vesta/server/

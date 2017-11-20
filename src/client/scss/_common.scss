@@ -5,8 +5,8 @@
 ///<vesta:scssFont/>
 ///<vesta:scssLibrary/>
 @import "elements/global";
-@import "elements/form";
 @import "elements/button";
+@import "elements/form";
 @import "elements/frame";
 ///<vesta:scssElement/>
 @import "components/page";
@@ -17,22 +17,34 @@
 @import "components/general/dialog";
 @import "components/general/modal";
 @import "components/general/crudMenu";
-@import "components/general/form/formError";
+@import "components/general/avatar";
 @import "components/general/form/formSelect";
 @import "components/general/form/formTextInput";
 @import "components/general/form/formTextArea";
 @import "components/general/form/formMultichoice";
 @import "components/general/form/formWrapper";
+@import "components/general/form/formDateTimeInput";
+@import "components/general/form/formFileInput";
+@import "components/general/form/formNumericInput";
+@import "components/general/form/autocomplete";
 @import "components/general/menu";
 @import "components/general/sidenav";
 @import "components/general/sidenavContent";
 @import "components/general/navbar";
 @import "components/general/burger";
-// page components
-@import "components/root/login";
-@import "components/root/signup";
-@import "components/root/logout";
-@import "components/root/role";
 @import "components/general/alert";
+@import "components/general/datePicker";
+@import "components/general/pagination";
+@import "components/general/googleMap";
+@import "components/general/actionSheet";
+@import "components/general/messageBox";
 ///<vesta:scssComponent/>
-///<vesta:scssPage/>
+@import "components/root/home";
+@import "components/root/login";
+@import "components/root/forget";
+@import "components/root/forbidden";
+@import "components/root/logout";
+@import "components/root/profile";
+@import "components/root/role";
+@import "components/root/user";
+///<vesta:scssPageComponent/>

@@ -1,5 +1,8 @@
-import React from "react";
-import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
+import React, {Component} from "react";
+import {BaseComponentProps} from "../BaseComponent";
+import Pagination from "./Pagination";
+import {Util} from "../../util/Util";
+import {IQueryRequest} from "../../cmn/core/ICRUDResult";
 
 export interface Column<T> {
     name?: string;
@@ -7,30 +10,33 @@ export interface Column<T> {
     render?: (record: T) => any;
 }
 
-export interface DataTableOption<T> {
+export interface IDataTableQueryOption<T> extends IQueryRequest<T> {
+    total?: number;
+}
+
+export interface DataTableProps<T> extends BaseComponentProps {
     showIndex?: boolean;
     selectable?: boolean;
-}
-
-export interface DataTableParams {
-}
-
-export interface DataTableProps<T> extends PageComponentProps<DataTableParams> {
-    option?: DataTableOption<T>;
+    pagination?: boolean;
+    fetch?: (option: IDataTableQueryOption<T>) => void;
+    queryOption?: IDataTableQueryOption<T>;
     columns: Array<Column<T>>;
     records: Array<T>;
 }
 
-export interface DataTableState extends PageComponentState {
-
+export interface DataTableState {
 }
 
-export class DataTable<T> extends PageComponent<DataTableProps<T>, DataTableState> {
+export class DataTable<T> extends Component<DataTableProps<T>, DataTableState> {
     private headerRow;
 
     constructor(props: DataTableProps<T>) {
         super(props);
         this.state = {records: []};
+    }
+
+    public componentWillMount() {
+        this.createHeader();
     }
 
     private createHeader() {
@@ -48,19 +54,34 @@ export class DataTable<T> extends PageComponent<DataTableProps<T>, DataTableStat
         });
     }
 
-    public componentWillMount() {
-        this.createHeader();
+    private onPaginationChange = (page: number, recordsPerPage: number) => {
+        let queryOption = Util.shallowClone<IQueryRequest<T>>(this.props.queryOption);
+        queryOption.page = +page;
+        queryOption.limit = recordsPerPage;
+        this.props.fetch(queryOption);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // todo
+        return true;
     }
 
     public render() {
         const rows = this.createRows();
+        const queryOption = this.props.queryOption;
+        const pagination = this.props.pagination ?
+            <Pagination totalRecords={queryOption.total} currentPage={queryOption.page}
+                        fetch={this.onPaginationChange} recordsPerPage={queryOption.limit}/> : null;
         return (
-            <div className="dataTable-component">
-                <table>
-                    <thead>{this.headerRow}</thead>
-                    <tbody>{rows}</tbody>
-                </table>
+            <div>
+                <div className="dataTable-component">
+                    <table>
+                        <thead>{this.headerRow}</thead>
+                        <tbody>{rows}</tbody>
+                    </table>
+                </div>
+                {pagination}
             </div>
-        );
+        )
     }
 }
