@@ -6,7 +6,7 @@ module.exports = function (setting) {
     let buildPath = `${dir.build}/tmp/cmn`;
 
     gulp.task('model:compile', () => {
-        let tsFiles = [`${dir.srcClient}/app/cmn/**/*`];
+        let tsFiles = [`${dir.srcClient}/app/cmn/**/*.ts`];
         let stream = gulp.src(tsFiles);
         let tsResult = stream.pipe(ts({
             target: 'es5',

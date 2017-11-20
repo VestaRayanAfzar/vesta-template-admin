@@ -1,7 +1,6 @@
 import React from "react";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
 import {IUser} from "../../cmn/models/User";
-import {NotificationPlugin} from "../../plugin/NotificationPlugin";
 
 export interface LogoutParams {
 }
@@ -18,7 +17,6 @@ export class Logout extends PageComponent<LogoutProps, LogoutState> {
         if (this.auth.isGuest()) {
             return this.props.history.push('/');
         }
-        NotificationPlugin.getInstance().logoutToken();
         this.api.get<IUser>('account/logout')
             .then(response => {
                 this.auth.logout();

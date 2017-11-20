@@ -9,7 +9,6 @@ import {FieldValidationMessage, ModelValidationMessage, Util} from "../../util/U
 import {FormOption, FormWrapper} from "../general/form/FormWrapper";
 import {FormTextInput} from "../general/form/FormTextInput";
 import {FormSelect} from "../general/form/FormSelect";
-import {FormTextArea} from "../general/form/FormTextArea";
 import {Preloader} from "../general/Preloader";
 import {IRole} from "../../cmn/models/Role";
 import {FormDateTimeInput} from "../general/form/FormDateTimeInput";
@@ -120,13 +119,18 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
         }
         const requiredErrorMessage = this.tr('err_required');
         const formErrorsMessages: ModelValidationMessage = {
-            name: {
+            firstName: {
+                required: requiredErrorMessage,
+                minLength: this.tr('err_min_length', 2),
+                maxLength: this.tr('err_max_length', 64)
+            },
+            lastName: {
                 required: requiredErrorMessage,
                 minLength: this.tr('err_min_length', 2),
                 maxLength: this.tr('err_max_length', 64)
             },
             email: {
-                email: this.tr('err_email')
+                type: this.tr('err_email')
             },
             password: {
                 required: requiredErrorMessage,
@@ -142,9 +146,6 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
             image: {
                 maxSize: this.tr('err_file_size', 6144),
                 fileType: this.tr('err_file_type')
-            },
-            desc: {
-                maxLength: this.tr('err_max_length', 512)
             }
         };
         const genderOptions: Array<FormOption> = [
@@ -166,20 +167,19 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
                         <h2>{user.username}</h2>
                         <p>{user.mobile}</p>
                     </div>
+
                     <fieldset className="profile-form">
-                        <FormTextInput name="name" label={this.tr('fld_name')} value={user.name} placeholder={true}
-                                       error={errors.name} onChange={this.onChange}/>
+                        <FormTextInput name="firstName" label={this.tr('fld_firstname')} value={user.firstName}
+                                       placeholder={true} error={errors.firstName} onChange={this.onChange}/>
+                        <FormTextInput name="lastName" label={this.tr('fld_lastname')} value={user.lastName}
+                                       placeholder={true} error={errors.lastName} onChange={this.onChange}/>
                         <FormTextInput name="email" label={this.tr('fld_email')} value={user.email} placeholder={true}
                                        error={errors.email} onChange={this.onChange} type="email" dir="ltr"/>
                         <FormSelect name="gender" label={this.tr('fld_gender')} value={user.gender} placeholder={true}
                                     error={errors.gender} onChange={this.onChange} options={genderOptions}/>
-                        <FormTextArea name="desc" label={this.tr('fld_desc')} value={user.desc || ''} placeholder={true}
-                                      error={errors.desc} onChange={this.onChange}/>
                         <FormDateTimeInput name="birthDate" label={this.tr('fld_birth_date')} value={user.birthDate}
-                                           placeholder={true}
-                                           error={errors.birthDate} onChange={this.onChange}/>
+                                           placeholder={true} error={errors.birthDate} onChange={this.onChange}/>
                     </fieldset>
-
 
                     <fieldset className="profile-form">
                         <legend>{this.tr('txt_change_pass')}</legend>
@@ -189,6 +189,7 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
                         <FormTextInput name="confPassword" label={this.tr('fld_conf_password')} placeholder={true}
                                        value={user['confPassword']} onChange={this.onChange} type="password"/>
                     </fieldset>
+
                     <div className="btn-group">
                         <button type="submit" className="btn btn-primary">{this.tr('update')}</button>
                     </div>

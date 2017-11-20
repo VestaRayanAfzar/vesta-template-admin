@@ -37,12 +37,12 @@ export class Login extends PageComponent<LoginProps, LoginState> {
 
     private onSubmit = () => {
         let user = new User(this.state.user);
-        let validationResult = user.validate('mobile', 'password');
+        let validationResult = user.validate('username', 'password');
         if (validationResult) {
             return this.setState({validationErrors: validationResult});
         }
         this.setState({showLoader: true, validationErrors: null});
-        this.api.post<IUser>('account/login', user.getValues('mobile', 'password'))
+        this.api.post<IUser>('account/login', user.getValues('username', 'password'))
             .then(response => {
                 this.auth.login(response.items[0]);
                 this.props.history.replace('/');
@@ -57,9 +57,8 @@ export class Login extends PageComponent<LoginProps, LoginState> {
     public render() {
         const user = this.state.user;
         const formErrorsMessages: ModelValidationMessage = {
-            mobile: {
-                required: this.tr('err_required'),
-                type: this.tr('err_phone')
+            username: {
+                required: this.tr('err_required')
             },
             password: {
                 required: this.tr('err_required'),
@@ -74,14 +73,12 @@ export class Login extends PageComponent<LoginProps, LoginState> {
                 <Navbar className="navbar-transparent" showBurger={true}/>
                 <Preloader show={this.state.showLoader}/>
                 <div className="logo-wrapper">
-                    <div className="logo-container">
-                        <img src="img/icons/192.png" alt="AutoApp Logo"/>
-                    </div>
+                    <div className="logo-container"/>
                 </div>
                 <FormWrapper name="loginForm" onSubmit={this.onSubmit}>
                     {loginErr}
-                    <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={user.mobile}
-                                   error={errors.mobile} onChange={this.onChange} placeholder={true} type="tel"/>
+                    <FormTextInput name="username" label={this.tr('fld_username')} value={user.username}
+                                   error={errors.username} onChange={this.onChange} placeholder={true}/>
                     <FormTextInput name="password" label={this.tr('fld_password')} value={user.password} type="password"
                                    error={errors.password} onChange={this.onChange} placeholder={true}/>
                     <p className="forget-link">

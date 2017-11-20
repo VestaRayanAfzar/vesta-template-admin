@@ -70,9 +70,7 @@ export class Forget extends PageComponent<ForgetProps, ForgetState> {
                 <Navbar showBurger={true} className="navbar-transparent"/>
                 <Preloader show={this.state.showLoader}/>
                 <div className="logo-wrapper">
-                    <div className="logo-container">
-                        <img src="img/icons/192.png" alt="AutoApp Logo"/>
-                    </div>
+                    <div className="logo-container"/>
                 </div>
                 <FormWrapper name="ForgetForm" onSubmit={this.onSubmit}>
                     <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={this.state.mobile} type="tel"

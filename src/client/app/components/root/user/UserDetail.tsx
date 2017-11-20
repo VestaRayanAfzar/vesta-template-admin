@@ -21,7 +21,7 @@ export class UserDetail extends PageComponent<UserDetailProps, UserDetailState> 
 
     constructor(props: UserDetailProps) {
         super(props);
-        this.state = {user: {}};
+        this.state = {user: null};
     }
 
     public componentDidMount() {
@@ -60,7 +60,7 @@ export class UserDetail extends PageComponent<UserDetailProps, UserDetailState> 
                     </tr>
                     <tr>
                         <td>{this.tr('fld_name')}</td>
-                        <td>{user.name}</td>
+                        <td>{`${user.firstName} ${user.lastName}`}</td>
                     </tr>
                     <tr>
                         <td>{this.tr('fld_email')}</td>
@@ -77,10 +77,6 @@ export class UserDetail extends PageComponent<UserDetailProps, UserDetailState> 
                     <tr>
                         <td>{this.tr('fld_image')}</td>
                         <td>{<img src={userImage}/>}</td>
-                    </tr>
-                    <tr>
-                        <td>{this.tr('fld_desc')}</td>
-                        <td>{user.desc}</td>
                     </tr>
                     <tr>
                         <td>{this.tr('fld_status')}</td>

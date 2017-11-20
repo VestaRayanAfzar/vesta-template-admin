@@ -1,29 +1,16 @@
-var cacheName = 'autoapp-panel-__TIMESTAMP__';
+var cacheName = 'vesta-panel-__TIMESTAMP__';
 var filesToCache = [
     '/index.html',
-    '/img/map-preload.jpg',
-    '/img/shop-default.png',
-    '/img/sidenav-header.png',
-    '/img/icons/144.png',
-    '/img/icons/192.png',
-    '/img/icons/512.png',
-    '/img/splash/768x1024.png',
-    '/fonts/autoapp-icons/autoapp.eot',
-    '/fonts/autoapp-icons/autoapp.svg',
-    '/fonts/autoapp-icons/autoapp.ttf',
-    '/fonts/autoapp-icons/autoapp.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb_Black.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb_Bold.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb_Light.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb_Medium.woff',
-    '/fonts/iranian-sans/woff/IRANSansWeb_UltraLight.woff',
-    '/fonts/iranian-sans/woff2/IRANSansWeb.woff2',
-    '/fonts/iranian-sans/woff2/IRANSansWeb_Black.woff2',
-    '/fonts/iranian-sans/woff2/IRANSansWeb_Bold.woff2',
-    '/fonts/iranian-sans/woff2/IRANSansWeb_Light.woff2',
-    '/fonts/iranian-sans/woff2/IRANSansWeb_Medium.woff2',
-    '/fonts/iranian-sans/woff2/IRANSansWeb_UltraLight.woff2',
+    '/img/bg-main.jpg',
+    '/img/sidenav-header.jpg',
+    '/img/vesta-logo.png',
+    '/img/vesta-logo-white.png',
+    '/img/icons/launcher-icon-0-75x.png',
+    '/img/icons/launcher-icon-1-5x.png',
+    '/img/icons/launcher-icon-1x.png',
+    '/img/icons/launcher-icon-2x.png',
+    '/img/icons/launcher-icon-3x.png',
+    '/img/icons/launcher-icon-4x.png',
 ];
 
 self.addEventListener('install', function (e) {
@@ -69,10 +56,9 @@ self.addEventListener('fetch', function (event) {
 
 function shouldCache(url) {
     var toCache = [
-        'https://app.autoapp.ir/img/'
-        // 'https://app.autoapp.ir/css/',
-        // 'https://app.autoapp.ir/js/',
-        // 'https://maps.googleapis.com/maps/api/staticmap'
+        'https://app.vesta.bz/img/'
+        // 'https://app.vesta.bz/css/',
+        // 'https://app.vesta.bz/js/'
     ];
     for (var i = toCache.length; i--;) {
         if (url.indexOf(toCache[i]) > -1) return true;

@@ -68,7 +68,12 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
                 minLength: this.tr('err_min_length', 4),
                 maxLength: this.tr('err_max_length', 16)
             },
-            name: {
+            firstName: {
+                required: requiredErrorMessage,
+                minLength: this.tr('err_min_length', 2),
+                maxLength: this.tr('err_max_length', 64)
+            },
+            lastName: {
                 required: requiredErrorMessage,
                 minLength: this.tr('err_min_length', 2),
                 maxLength: this.tr('err_max_length', 64)
@@ -98,9 +103,6 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
                 maxSize: this.tr('err_file_size', 6144),
                 fileType: this.tr('err_file_type')
             },
-            desc: {
-                maxLength: this.tr('err_max_length', 512)
-            },
             status: {
                 required: requiredErrorMessage,
                 enum: this.tr('err_enum')
@@ -113,10 +115,7 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
         const errors: FieldValidationMessage = validationErrors ? Util.validationMessage(formErrorsMessages, validationErrors) : {};
         const typeOptions: Array<FormOption> = [
             {value: UserType.Admin, title: this.tr('enum_admin')},
-            {value: UserType.Mechanic, title: this.tr('enum_mechanic')},
-            {value: UserType.Technician, title: this.tr('enum_technician')},
-            {value: UserType.User, title: this.tr('enum_user')},
-            {value: UserType.MechanicShop, title: this.tr('enum_mechanicshop')}];
+            {value: UserType.User, title: this.tr('enum_user')}];
         // const dateTime = DateTimeFactory.create(ConfigService.getConfig().locale)
         const genderOptions: Array<FormOption> = [
             {value: UserGender.Male, title: this.tr('enum_male')},
@@ -136,8 +135,10 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
                             error={errors.role} onChange={this.onChange} titleKey="name" valueKey="id"/>
                 <FormTextInput name="username" label={this.tr('fld_username')} value={user.username} placeholder={true}
                                error={errors.username} onChange={this.onChange}/>
-                <FormTextInput name="name" label={this.tr('fld_name')} value={user.name} placeholder={true}
-                               error={errors.name} onChange={this.onChange}/>
+                <FormTextInput name="firstName" label={this.tr('fld_firstname')} value={user.firstName}
+                               placeholder={true} error={errors.firstName} onChange={this.onChange}/>
+                <FormTextInput name="lastName" label={this.tr('fld_lastname')} value={user.lastName}
+                               placeholder={true} error={errors.lastName} onChange={this.onChange}/>
                 <FormTextInput name="email" label={this.tr('fld_email')} value={user.email} placeholder={true}
                                error={errors.email} onChange={this.onChange} type="email"/>
                 <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={user.mobile} placeholder={true}
@@ -150,8 +151,6 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
                             error={errors.gender} onChange={this.onChange} options={genderOptions}/>
                 <FormFileInput name="image" label={this.tr('fld_image')} value={user.image} placeholder={true}
                                error={errors.image} onChange={this.onChange}/>
-                <FormTextArea name="desc" label={this.tr('fld_desc')} value={user.desc} placeholder={true}
-                              error={errors.desc} onChange={this.onChange}/>
                 <FormSelect name="status" label={this.tr('fld_status')} value={user.status} placeholder={true}
                             error={errors.status} onChange={this.onChange} options={statusOptions}/>
                 {this.props.children}

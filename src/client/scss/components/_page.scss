@@ -41,15 +41,13 @@ $page-center-form-padding: 30px 30px 15px 30px;
         border-radius: 50%;
         overflow: hidden;
         border: $logo-border-size solid transparentize($white, .3);
-        img {
-            width: auto;
-            height: 100%;
-        }
+        background: url("../img/vesta-logo.png") no-repeat center ;
+        background-size: contain;
     }
 
     .form-wrapper {
         width: 90%;
-        max-width: $layout-medium-max;
+        max-width: $layout-small-max;
         margin: auto;
         background: transparentize($white, 0);
         border-radius: $border-radius;

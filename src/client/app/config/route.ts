@@ -8,6 +8,7 @@ import {Logout} from "../components/root/Logout";
 import {TranslateService} from "../service/TranslateService";
 import {Forget} from "../components/root/Forget";
 import {User} from "../components/root/User";
+import {Context} from "../components/root/Context";
 
 export interface RouteItem {
     link: string;
@@ -24,8 +25,9 @@ export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
 
     return isLoggedIn ? [
         {link: '', title: tr('home'), component: Home, exact: true},
+        {link: 'context', title: tr('context'), component: Context, permissions: {context: ['read']}},
         {link: 'user', title: tr('users'), component: User, permissions: {user: ['read']}},
-        {link: 'role', title: tr('roles'), component: Role,  permissions: {role: ['read']}},
+        {link: 'role', title: tr('roles'), component: Role, permissions: {role: ['read']}},
         {link: 'profile', title: tr('profile'), component: Profile, permissions: {role: ['read']}},
         {link: 'logout', title: tr('logout'), component: Logout, permissions: {account: ['logout']}}
     ] : [
