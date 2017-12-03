@@ -18,6 +18,8 @@ export interface RouteItem {
     children?: Array<RouteItem>;
     component?: ComponentClass<any>;
     permissions?: IPermissionCollection;
+    // show/hide in menu list
+    hidden?: boolean;
 }
 
 export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
@@ -25,11 +27,11 @@ export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
 
     return isLoggedIn ? [
         {link: '', title: tr('home'), component: Home, exact: true},
-        {link: 'context', title: tr('context'), component: Context, permissions: {context: ['read']}},
-        {link: 'user', title: tr('users'), component: User, permissions: {user: ['read']}},
-        {link: 'role', title: tr('roles'), component: Role, permissions: {role: ['read']}},
-        {link: 'profile', title: tr('profile'), component: Profile, permissions: {role: ['read']}},
-        {link: 'logout', title: tr('logout'), component: Logout, permissions: {account: ['logout']}}
+        {link: 'context', title: tr('mdl_context'), component: Context, permissions: {context: ['read']}},
+        {link: 'user', title: tr('mdl_user'), component: User, permissions: {user: ['read']}},
+        {link: 'role', title: tr('mdl_role'), component: Role, permissions: {role: ['read']}},
+        {link: 'profile', title: tr('profile'), component: Profile, permissions: {role: ['read']}, hidden: true},
+        {link: 'logout', title: tr('logout'), component: Logout, permissions: {account: ['logout']}},
     ] : [
         {link: '', title: tr('home'), component: Home, exact: true},
         {link: 'login', title: tr('login'), component: Login, permissions: {account: ['login']}},

@@ -33,6 +33,7 @@ $z-index-sidenav: 11;
 $z-index-dialog: 12;
 $z-index-date-picker: 12;
 $z-index-actionSheet: 13;
+$z-index-splash: 90;
 $z-index-notification: 99;
 
 // sizes
@@ -44,8 +45,8 @@ $footer-height: 32px;
 $sidenav-width: 300px;
 
 // colors
-$color-primary: $orange;
-$color-secondary: $teal;
+$color-primary: #6b036b;
+$color-secondary: #c4a42d;
 $color-default: $grey;
 $color-success: $green;
 $color-error: $red;

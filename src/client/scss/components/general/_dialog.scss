@@ -11,11 +11,14 @@ $dialog-border-radius: $border-radius;
     z-index: $z-index-dialog;
     background: $dialog-background-color;
     min-width: $layout-small-min;
+    //@include translate3d(0, -50%, 0);
+
     > .dialog-header {
         padding: $dialog-header-padding;
         border-bottom: 1px solid $border-color;
         h3 {
             white-space: nowrap;
+            font-weight: lighter;
         }
         button {
             position: absolute;

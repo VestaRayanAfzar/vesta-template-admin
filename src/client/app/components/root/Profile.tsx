@@ -5,13 +5,19 @@ import {IValidationError} from "../../cmn/core/Validator";
 import Navbar from "../general/Navbar";
 import {Avatar} from "../general/Avatar";
 import {IUser, User, UserGender} from "../../cmn/models/User";
-import {FieldValidationMessage, ModelValidationMessage, Util} from "../../util/Util";
 import {FormOption, FormWrapper} from "../general/form/FormWrapper";
 import {FormTextInput} from "../general/form/FormTextInput";
 import {FormSelect} from "../general/form/FormSelect";
 import {Preloader} from "../general/Preloader";
 import {IRole} from "../../cmn/models/Role";
 import {FormDateTimeInput} from "../general/form/FormDateTimeInput";
+import {
+    FieldValidationMessage,
+    getFileUrl,
+    ModelValidationMessage,
+    shallowClone,
+    validationMessage
+} from "../../util/Util";
 
 export interface ProfileParams {
 }
@@ -30,7 +36,7 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
 
     constructor(props: ProfileProps) {
         super(props);
-        let user = Util.shallowClone(this.auth.getUser());
+        let user = shallowClone(this.auth.getUser());
         user.role = (user.role as IRole).id;
         this.state = {
             user,
@@ -98,7 +104,7 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
                     this.setState({showLoader: false});
                     return this.updateUser(response);
                 }
-                this.api.upload<IUser>('user/file', userModel.id, userImage)
+                return this.api.upload<IUser>('user/file', userModel.id, userImage)
                     .then(response => {
                         this.setState({showLoader: false});
                         this.updateUser(response);
@@ -112,10 +118,10 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
 
     public render() {
         const {showLoader, validationErrors, imagePreview} = this.state;
-        const user = Util.shallowClone(this.state.user);
+        const user = shallowClone(this.state.user);
         let userImage = null;
-        if (user.image) {
-            userImage = Util.getFileUrl(`user/${user.image}`);
+        if (user.image && "string" == typeof user.image) {
+            userImage = getFileUrl(`user/${user.image}`);
         }
         const requiredErrorMessage = this.tr('err_required');
         const formErrorsMessages: ModelValidationMessage = {
@@ -151,7 +157,7 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
         const genderOptions: Array<FormOption> = [
             {value: UserGender.Male, title: this.tr('enum_male')},
             {value: UserGender.Female, title: this.tr('enum_female')}];
-        const errors: FieldValidationMessage = validationErrors ? Util.validationMessage(formErrorsMessages, validationErrors) : {};
+        const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
 
         return (
             <div className="page profile-page has-navbar">
@@ -161,7 +167,7 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
                     <div className="avatar-wrapper">
                         <Avatar src={imagePreview ? imagePreview : userImage as string}
                                 defaultSrc="img/vesta-logo.png">
-                            <button className="change-image">{this.tr('txt_change_image')}</button>
+                            <button className="change-image" type="button">{this.tr('txt_change_image')}</button>
                             <input className="change-image" type="file" name="image" onChange={this.updateImage}/>
                         </Avatar>
                         <h2>{user.username}</h2>

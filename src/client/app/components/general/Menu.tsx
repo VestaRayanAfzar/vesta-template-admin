@@ -23,7 +23,7 @@ export class Menu extends PureComponent<MenuProps, null> {
         const routeCount = routeItems.length;
         for (let i = 0, il = routeCount; i < il; ++i) {
             const item = routeItems[i];
-            if (!item.abstract) {
+            if (!item.abstract && !item.hidden) {
                 let basePath = prefix ? `/${prefix}` : '';
                 links.push(
                     <li key={this.keyCounter++}>
@@ -40,7 +40,6 @@ export class Menu extends PureComponent<MenuProps, null> {
     public render() {
         let {name, items, horizontal} = this.props;
         const menuItems = this.renderMenuItems(items, '');
-
         const className = `menu-component ${name} ${horizontal ? 'horizontal' : 'vertical'}`;
 
         return (

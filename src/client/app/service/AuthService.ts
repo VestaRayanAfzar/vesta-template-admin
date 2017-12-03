@@ -59,18 +59,18 @@ export class AuthService {
             }
             this.permissions[permission.resource].push(permission.action);
         }
-        Dispatcher.getInstance().dispatch(AuthService.Events.Update, {user: this.user});
+        Dispatcher.getInstance().dispatch(AuthService.Events.Update, this.user);
     }
 
     public isGuest(): boolean {
         return !(this.user && this.user.id);
     }
 
-    public getUser() {
+    public getUser(): IUser {
         return this.user;
     }
 
-    public setToken(token: string): void {
+    public setToken(token: string) {
         this.storage.setItem(this.tokenKeyName, token);
     }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {FetchById, PageComponent, PageComponentProps, Save} from "../../PageComponent";
-import {FieldValidationMessage, ModelValidationMessage, Util} from "../../../util/Util";
+import {FieldValidationMessage, getFileUrl, ModelValidationMessage, validationMessage} from "../../../util/Util";
 import {FormOption, FormWrapper} from "../../general/form/FormWrapper";
 import {IUser, UserGender, UserType} from "../../../cmn/models/User";
 import {IRole} from "../../../cmn/models/Role";
@@ -41,7 +41,7 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
         this.props.fetch(id)
             .then(user => {
                 if (user.image) {
-                    user.image = Util.getFileUrl(`user/${user.image}`);
+                    user.image = getFileUrl(`user/${user.image}`);
                 }
                 this.setState({user});
             });
@@ -112,7 +112,7 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
             }
         };
         const {validationErrors, roles} = this.props;
-        const errors: FieldValidationMessage = validationErrors ? Util.validationMessage(formErrorsMessages, validationErrors) : {};
+        const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
         const typeOptions: Array<FormOption> = [
             {value: UserType.Admin, title: this.tr('enum_admin')},
             {value: UserType.User, title: this.tr('enum_user')}];

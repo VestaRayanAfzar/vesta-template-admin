@@ -5,6 +5,7 @@ import {IRole} from "../../../cmn/models/Role";
 import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
 import {IAccess} from "../../../service/AuthService";
 import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
+import {DataTableOperations} from "../../general/DataTableOperations";
 
 export interface RoleListParams {
 }
@@ -53,10 +54,8 @@ export class RoleList extends PageComponent<RoleListProps, RoleListState> {
             {name: 'name', title: this.tr('fld_name')},
             {name: 'status', title: this.tr('fld_status'), render: r => this.tr(statusOptions[r.status])},
             {
-                title: this.tr('operations'), render: r => <span className="dt-operation-cell">
-                <Link to={`/role/detail/${r.id}`}>View</Link>
-                {access.edit ? <Link to={`/role/edit/${r.id}`}>Edit</Link> : null}
-                {access.del ? <Link to={`/role/del/${r.id}`} onClick={this.del}>Del</Link> : null}</span>
+                title: this.tr('operations'),
+                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="role"/>
             }
         ];
         return <div className="crud-page">

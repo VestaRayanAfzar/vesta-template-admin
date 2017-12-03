@@ -14,7 +14,7 @@ export class ApiService {
     private tokenHeaderKeyName = 'X-Auth-Token';
     private sourceApp;
 
-    constructor(private authService: AuthService) {
+    private constructor(private authService: AuthService) {
         const cfg: IClientAppConfig = ConfigService.getConfig();
         this.endPoint = `${cfg.api}/api/${cfg.version.api}`;
         this.enableCache = !!cfg.cache.api;

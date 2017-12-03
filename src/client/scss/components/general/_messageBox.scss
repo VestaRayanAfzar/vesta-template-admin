@@ -1,3 +1,21 @@
 .msg-box {
+    &.msg-box-1 {
+        //info
+        color: $color-info;
+    }
+    &.msg-box-2 {
+        //success
 
+        color: $color-success;
+    }
+    &.msg-box-3 {
+        //error
+        .dialog-header {
+            color: $color-error;
+        }
+    }
+    &.msg-box-4 {
+        //warning
+        color: $color-warning;
+    }
 }

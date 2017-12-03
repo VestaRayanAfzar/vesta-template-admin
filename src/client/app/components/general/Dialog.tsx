@@ -4,10 +4,10 @@ import {Modal} from "./Modal";
 
 export interface DialogProps extends BaseComponentProps {
     title?: string;
-    modal?: boolean;
     show: boolean;
     onClose?: EventHandler<any>;
     className?: string;
+    modalClassName?: string;
 }
 
 export class Dialog extends PureComponent<DialogProps, null> {
@@ -23,26 +23,26 @@ export class Dialog extends PureComponent<DialogProps, null> {
     }
 
     public render() {
-        const {modal, show, className} = this.props;
-        if (!show) return null;
+        const {show, className, modalClassName} = this.props;
         const children: Array<ReactChild> = this.props.children as Array<ReactChild>;
         let content = null;
         let footer = null;
-        if (children.length == 2) {
+        if (children && children.length) {
             content = children[0];
             footer = <div className="dialog-footer">{children[1]}</div>;
         } else {
             content = children;
         }
         const header = this.renderHeader();
-        const dialog = (
-            <div className={`dialog-component${className ? ` ${className}` : ''}`}>
-                {header}
-                <div className="dialog-content">{content}</div>
-                {footer}
-            </div>
-        );
 
-        return modal ? <Modal show={true} name="modal-zoom">{dialog}</Modal> : dialog;
+        return (
+            <Modal show={show} name="modal-zoom" className={modalClassName}>
+                <div className={`dialog-component${className ? ` ${className}` : ''}`}>
+                    {header}
+                    <div className="dialog-content">{content}</div>
+                    {footer}
+                </div>
+            </Modal>
+        );
     }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import {FetchById, PageComponent, PageComponentProps, Save} from "../../PageComponent";
-import {FieldValidationMessage, ModelValidationMessage, Util} from "../../../util/Util";
+import {FieldValidationMessage, ModelValidationMessage, validationMessage} from "../../../util/Util";
 import {FormWrapper} from "../../general/form/FormWrapper";
 import {IContext} from "../../../cmn/models/Context";
 import {FormTextInput} from "../../general/form/FormTextInput";
@@ -60,7 +60,7 @@ export class ContextForm extends PageComponent<ContextFormProps, ContextFormStat
             }
         };
         const {validationErrors} = this.props;
-        const errors: FieldValidationMessage = validationErrors ? Util.validationMessage(formErrorsMessages, validationErrors) : {};
+        const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
 
         let context = this.state.context;
         return (

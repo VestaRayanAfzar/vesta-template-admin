@@ -7,7 +7,7 @@ import {FormWrapper} from "../general/form/FormWrapper";
 import {FormTextInput} from "../general/form/FormTextInput";
 import Navbar from "../general/Navbar";
 import {Alert} from "../general/Alert";
-import {FieldValidationMessage, ModelValidationMessage, Util} from "../../util/Util";
+import {FieldValidationMessage, ModelValidationMessage, validationMessage} from "../../util/Util";
 import {IValidationError} from "../../cmn/core/Validator";
 
 export interface ForgetParams {
@@ -53,7 +53,7 @@ export class Forget extends PageComponent<ForgetProps, ForgetState> {
     }
 
     public render() {
-        const {message} = this.state;
+        const {message, validationErrors, showLoader, mobile} = this.state;
         const formErrorsMessages: ModelValidationMessage = {
             mobile: {
                 required: this.tr('err_required'),
@@ -63,17 +63,19 @@ export class Forget extends PageComponent<ForgetProps, ForgetState> {
                 invalid: this.tr('err_invalid_phone')
             }
         };
-        let errors: FieldValidationMessage = this.state.validationErrors ? Util.validationMessage(formErrorsMessages, this.state.validationErrors) : {};
+        let errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
         let alert = message ? <Alert type="info">{message}</Alert> : null;
         return (
             <div className="page forget-page has-navbar page-logo-form">
                 <Navbar showBurger={true} className="navbar-transparent"/>
-                <Preloader show={this.state.showLoader}/>
+                <Preloader show={showLoader}/>
                 <div className="logo-wrapper">
-                    <div className="logo-container"/>
+                    <div className="logo-container">
+                        <img src="img/vesta-logo.png" alt="Vesta Logo"/>
+                    </div>
                 </div>
                 <FormWrapper name="ForgetForm" onSubmit={this.onSubmit}>
-                    <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={this.state.mobile} type="tel"
+                    <FormTextInput name="mobile" label={this.tr('fld_mobile')} value={mobile} type="tel"
                                    error={errors.mobile} placeholder={true} onChange={this.onChange}/>
                     {alert}
                     <div className="btn-group">

@@ -2,7 +2,7 @@ import React from "react";
 import {FetchById, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
 import {IUser} from "../../../cmn/models/User";
 import {IRole} from "../../../cmn/models/Role";
-import {Util} from "../../../util/Util";
+import {getFileUrl} from "../../../util/Util";
 
 export interface UserDetailParams {
     id: number;
@@ -21,7 +21,7 @@ export class UserDetail extends PageComponent<UserDetailProps, UserDetailState> 
 
     constructor(props: UserDetailProps) {
         super(props);
-        this.state = {user: null};
+        this.state = {user: {}};
     }
 
     public componentDidMount() {
@@ -39,7 +39,7 @@ export class UserDetail extends PageComponent<UserDetailProps, UserDetailState> 
             5: this.tr('enum_user')
         };
         const userGenderOptions = {1: this.tr('enum_male'), 2: this.tr('enum_female')};
-        const userImage = Util.getFileUrl(`user/${user.image}`);
+        const userImage = getFileUrl(`user/${user.image}`);
         const statusOptions = {1: this.tr('enum_active'), 0: this.tr('enum_inactive')};
         return (
             <div className="crud-page">

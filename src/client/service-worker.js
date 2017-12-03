@@ -14,17 +14,15 @@ var filesToCache = [
 ];
 
 self.addEventListener('install', function (e) {
-    console.log('[ServiceWorker] Install');
     e.waitUntil(
         caches.open(cacheName).then(function (cache) {
-            console.log('[ServiceWorker] Caching app shell');
+            console.log('[ServiceWorker] Caching static files');
             return cache.addAll(filesToCache);
         })
     );
 });
 
 self.addEventListener('activate', function (e) {
-    console.log('[ServiceWorker] Activate');
     e.waitUntil(
         caches.keys()
             .then(function (keyList) {
@@ -70,8 +68,8 @@ function shouldCache(url) {
 //     const title = event.data.text();
 //     const options = {
 //         title: event.data.text(),
-//         body: 'AutoApp',
-//         icon: 'img/icons/512.png',
+//         body: 'Vesta',
+//         icon: 'img/vesta-logo.png',
 //     };
 //     event.waitUntil(self.registration.showNotification(title, options));
 // });

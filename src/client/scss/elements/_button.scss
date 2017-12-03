@@ -1,5 +1,6 @@
 $btn-padding: 7px;
 $btn-border-darken-ratio: 5%;
+$btn-border-color: $border-color;
 $btn-height: 32px;
 $btn-height-large: floor(1.5 * $btn-height);
 $btn-min-width: 64px;
@@ -49,7 +50,7 @@ $btn-group-active-bg: lighten($color-primary, 15%);
     font-size: $font-size-small;
     color: $color-primary;
     background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid $btn-border-color;
     //box-shadow: 1px 1px 2px $dark;
     &:hover {
         //transition: all $transitionShortDuration;

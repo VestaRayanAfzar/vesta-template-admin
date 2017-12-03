@@ -5,6 +5,11 @@ $burger-item-height: 3px;
     #{$float}: -3px;
 }
 
+@mixin close-btn-rotate($deg, $coef) {
+    transform: translate3d(0, $coef * 10px, 0) rotate($deg);
+    //#{$float}: -3px;
+}
+
 .burger-component {
     $burger-width: $header-height - ( 2 * $header-padding);
     display: flex;
@@ -29,8 +34,22 @@ $burger-item-height: 3px;
         span:first-child {
             @include back-btn-rotate(40deg);
         }
+        span:nth-child(2) {
+            @include scale(0);
+        }
         span:last-child {
             @include back-btn-rotate(-40deg);
+        }
+    }
+    &.close-btn {
+        span:first-child {
+            @include close-btn-rotate(40deg, 1);
+        }
+        span:nth-child(2) {
+            @include scale(0);
+        }
+        span:last-child {
+            @include close-btn-rotate(-40deg, -1);
         }
     }
 }

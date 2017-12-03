@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {FetchById, PageComponentProps, PageComponentState, Save} from "../../PageComponent";
-import {FieldValidationMessage, ModelValidationMessage, Util} from "../../../util/Util";
+import {FieldValidationMessage, ModelValidationMessage, validationMessage} from "../../../util/Util";
 import {TranslateService} from "../../../service/TranslateService";
 import {FormOption, FormWrapper} from "../../general/form/FormWrapper";
 import {IRole} from "../../../cmn/models/Role";
@@ -60,7 +60,6 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
                         }
                     }
                 }
-                console.log(this.permissions);
                 this.setState({role});
             });
     }
@@ -121,7 +120,7 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
                 enum: tr('err_enum')
             }
         };
-        let errors: FieldValidationMessage = validationErrors ? Util.validationMessage(formErrorsMessages, validationErrors) : {};
+        let errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
         const statusOptions: Array<FormOption> = [
             {value: Status.Active, title: tr('enum_active')},
             {value: Status.Inactive, title: tr('enum_inactive')}];

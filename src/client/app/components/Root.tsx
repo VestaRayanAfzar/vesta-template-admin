@@ -27,12 +27,12 @@ export class Root extends Component<RootProps, RootState> {
 
     constructor(props: RootProps) {
         super(props);
-        this.state = {user: null};
+        this.state = {user: this.auth.getUser()};
     }
 
     public componentDidMount() {
-        this.dispatcher.register<{ user: IUser }>(AuthService.Events.Update, (payload) => {
-            this.setState({user: payload.user});
+        this.dispatcher.register<IUser>(AuthService.Events.Update, (user) => {
+            this.setState({user});
         });
         this.api.get<IUser>('me')
             .then(response => {
@@ -44,15 +44,16 @@ export class Root extends Component<RootProps, RootState> {
     }
 
     public render() {
+        const {user} = this.state;
         const {code, dir} = Culture.getLocale();
         return (
-            <div id="main-wrapper">
+            <div id="main-wrapper" className="root-component">
                 <Html lang={code} dir={dir}/>
                 <div id="content-wrapper">
                     {this.props.children}
                 </div>
                 <Sidenav name="main-sidenav">
-                    <SidenavContent name="main-sidenav" user={this.state.user} menuItems={this.props.routeItems}/>
+                    <SidenavContent name="main-sidenav" user={user} menuItems={routeItems}/>
                 </Sidenav>
                 <ToastMessage/>
             </div>

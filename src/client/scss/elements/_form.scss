@@ -70,6 +70,7 @@ $form-error-padding: 5px;
     border-radius: $form-control-border-radius;
     outline: 0;
 }
+
 body.shrink-view {
     .stick-btm {
         @include scale(0);

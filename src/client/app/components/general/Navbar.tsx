@@ -4,6 +4,8 @@ import {BaseComponentProps} from "../BaseComponent";
 import {Link} from "react-router-dom";
 import {Burger} from "./Burger";
 
+export enum NavBarMainButtonType {Burger = 1, Back, Close}
+
 export interface NavbarProps extends BaseComponentProps {
     title?: string;
     className?: string;
@@ -11,6 +13,7 @@ export interface NavbarProps extends BaseComponentProps {
     backAction?: (e) => void;
     showBurger?: boolean;
     hide?: boolean;
+    mainButtonType?: NavBarMainButtonType;
 }
 
 class Navbar extends PureComponent<NavbarProps, null> {
@@ -28,13 +31,17 @@ class Navbar extends PureComponent<NavbarProps, null> {
     }
 
     public render() {
-        let {title, className, backLink, showBurger, hide, backAction} = this.props;
+        let {title, className, backLink, showBurger, hide, backAction, mainButtonType} = this.props;
         if (hide) return null;
         className = `navbar ${className || ''}`;
         title = title || '';
+        let btnClassName = 'back-btn';
+        if (mainButtonType == NavBarMainButtonType.Close) {
+            btnClassName = 'close-btn';
+        }
         let navBtn = (showBurger || location.pathname == '/') && !backLink && !backAction ?
             <Burger className="nav-btn" event="main-sidenav-toggle"/> :
-            <Burger className="nav-btn back-btn" onClick={this.goBack}/>;
+            <Burger className={`nav-btn ${btnClassName}`} onClick={this.goBack}/>;
 
         return (
             <div className={className}>

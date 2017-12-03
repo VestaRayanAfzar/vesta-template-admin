@@ -4,17 +4,18 @@ import {Route, Switch} from "react-router";
 import {DynamicRouter} from "./components/general/DynamicRouter";
 import {AuthService} from "./service/AuthService";
 import {AclPolicy} from "./cmn/enum/Acl";
-import {Dispatcher} from "./service/Dispatcher";
 import {NotFound} from "./components/root/NotFound";
 import {Root} from "./components/Root";
 import {IUser} from "./cmn/models/User";
 import {TransitionService} from "./service/TransitionService";
 import {getRoutes, RouteItem} from "./config/route";
 import {LogService} from "./service/LogService";
+import {Dispatcher} from "./service/Dispatcher";
 
 export class ClientApp {
     private tz = TransitionService.getInstance().willTransitionTo;
     private auth = AuthService.getInstance();
+    private dispatcher = Dispatcher.getInstance();
 
     private registerServiceWorker() {
         if ('serviceWorker' in navigator) {
@@ -49,9 +50,11 @@ export class ClientApp {
 
     public init() {
         this.auth.setDefaultPolicy(AclPolicy.Deny);
-        // auth event registration
-        Dispatcher.getInstance().register<{ user: IUser }>(AuthService.Events.Update, this.run.bind(this));
         this.registerServiceWorker();
+        // auth event registration
+        this.dispatcher.register<IUser>(AuthService.Events.Update, (user) => {
+            this.run();
+        });
     }
 
     public run() {
@@ -66,7 +69,13 @@ export class ClientApp {
                     </Switch>
                 </Root>
             </DynamicRouter>,
-            document.getElementById("root")
+            document.getElementById("root"),
+            () => {
+                // removing splash screen
+                setTimeout(() => {
+                    document.body.classList.remove('has-splash');
+                }, 1000);
+            }
         );
     }
 }

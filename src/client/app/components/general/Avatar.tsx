@@ -8,28 +8,29 @@ export interface AvatarProps extends BaseComponentProps {
 
 export class Avatar extends PureComponent<AvatarProps, null> {
     private wrapper;
+    private loadDefault = false;
+    private faileCount = 0;
 
-    private renderInitials() {
-
+    public componentDidUpdate() {
+        // after rendering default, set it to false in case of future props changes
+        this.loadDefault = false;
     }
 
     private imageLoadError = (e) => {
-        console.log(e);
+        ++this.faileCount;
+        if (this.faileCount > 3) return;
+        this.loadDefault = true;
+        this.forceUpdate();
     }
 
     public render() {
         const {src, defaultSrc} = this.props;
-        let imageSrc = null;
-        if (src) {
-            imageSrc = src;
-        }
-        else if (defaultSrc){
-            imageSrc = defaultSrc;
-        }
-
+        let imageSrc = this.loadDefault ? defaultSrc : (src || defaultSrc);
+        let avatar = imageSrc ? <img src={imageSrc} onError={this.imageLoadError}/> :
+            <div className="avatar-holder"/>
         return (
             <div className="avatar-component" ref={el => this.wrapper = el}>
-                <img src={this.props.src}/>
+                {avatar}
                 {this.props.children}
             </div>
         )

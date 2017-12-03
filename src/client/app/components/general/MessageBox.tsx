@@ -12,7 +12,6 @@ export enum MessageBoxBtnGroup {OK, OkCancel = 1, OkCancelRetry, CancelRetry}
 export interface MessageBoxProps extends BaseComponentProps {
     show: boolean;
     title?: string;
-    modal?: boolean;
     type?: MessageBoxType;
     btnGroup?: MessageBoxBtnGroup;
     onAction?: (btn: MessageBoxBtn) => void;
@@ -40,20 +39,16 @@ export class MessageBox extends PureComponent<MessageBoxProps, MessageBoxState> 
     }
 
     private renderRetryBtn(key: number) {
-        return <button className="btn btn-default" key={key} onClick={this.onBtnClick}
+        return <button className="btn btn-primary" key={key} onClick={this.onBtnClick}
                        data-key={MessageBoxBtn.Retry}>{this.tr('retry')}</button>
-    }
-
-    private onBtnClick = (e) => {
-        this.onAction(+e.target.getAttribute('data-key'));
     }
 
     private renderMessageBoxBtnGroup() {
         switch (this.props.btnGroup) {
             case MessageBoxBtnGroup.CancelRetry:
                 return [
-                    this.renderCancelBtn(1),
                     this.renderRetryBtn(2),
+                    this.renderCancelBtn(1),
                 ];
             case MessageBoxBtnGroup.OkCancel:
                 return [
@@ -71,17 +66,21 @@ export class MessageBox extends PureComponent<MessageBoxProps, MessageBoxState> 
         }
     }
 
+    private onBtnClick = (e) => {
+        this.onAction(+e.target.getAttribute('data-key'));
+    }
+
     private onAction = (btn: MessageBoxBtn) => {
         const {onAction} = this.props;
         onAction && onAction(btn);
     }
 
     public render() {
-        let {modal, title, show} = this.props;
-        if (modal !== false) modal = true;
+        let {title, show, type} = this.props;
+
         return (
-            <Dialog modal={modal} show={show} title={title}>
-                <div>
+            <Dialog show={show} title={title} className={`msg-box msg-box-${type}`}>
+                <div className="msg-box-content">
                     {this.props.children}
                 </div>
                 <div className="btn-group">

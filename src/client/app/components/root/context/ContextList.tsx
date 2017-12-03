@@ -5,6 +5,7 @@ import {IContext} from "../../../cmn/models/Context";
 import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
 import {IAccess} from "../../../service/AuthService";
 import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
+import {DataTableOperations} from "../../general/DataTableOperations";
 
 export interface ContextListParams {
 }
@@ -48,13 +49,11 @@ export class ContextList extends PageComponent<ContextListProps, ContextListStat
     public render() {
         const access = this.props.access;
         const columns: Array<Column<IContext>> = [
-			{name: 'id', title: this.tr('fld_id')},
-			{name: 'key', title: this.tr('fld_key')},
+            {name: 'id', title: this.tr('fld_id')},
+            {name: 'key', title: this.tr('fld_key')},
             {
-                title: this.tr('Operations'), render: r => <span className="dt-operation-cell">
-                <Link to={`/context/detail/${r.id}`}>View</Link>
-                {access.edit ? <Link to={`/context/edit/${r.id}`}>Edit</Link> : null}
-                {access.del ? <Link to={`/context/del/${r.id}`} onClick={this.del}>Del</Link> : null}</span>
+                title: this.tr('operations'),
+                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="context"/>
             }
         ];
         return (

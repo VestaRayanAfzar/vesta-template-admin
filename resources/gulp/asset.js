@@ -6,11 +6,9 @@ module.exports = function (setting) {
     let dir = setting.dir;
     gulp.task('asset:html', function () {
         let target = setting.buildPath(setting.target);
+        let timestamp = Date.now();
         let stream = gulp.src(`${dir.srcClient}/index.html`);
-        if (setting.is(setting.target, 'cordova')) {
-            stream = stream.pipe(replace(`<script src="js/lib.js"></script>`, `<script src="js/lib.js"></script>\n<script src="cordova.js"></script>`));
-            stream = stream.pipe(replace('!cordova-->', ''));
-        }
+        stream = stream.pipe(replace('__TIMESTAMP__', timestamp));
         if (setting.production) {
             stream = minifyHtml(stream).on('error', setting.error);
         }
@@ -25,6 +23,8 @@ module.exports = function (setting) {
 
     gulp.task('asset:font', function () {
         let target = setting.buildPath(setting.target);
+        gulp.src([`${dir.npm}/md-font/iconfont/*.{eot,ijmap,svg,ttf,woff,woff2}`])
+            .pipe(gulp.dest(`${dir.buildClient}/${target}/fonts/material-icon`));
         return gulp.src([`${dir.srcClient}/fonts/**/*`])
             .pipe(gulp.dest(`${dir.buildClient}/${target}/fonts`));
     });

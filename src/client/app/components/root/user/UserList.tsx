@@ -5,6 +5,7 @@ import {IUser} from "../../../cmn/models/User";
 import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
 import {IAccess} from "../../../service/AuthService";
 import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
+import {DataTableOperations} from "../../general/DataTableOperations";
 
 export interface UserListParams {
 }
@@ -55,6 +56,8 @@ export class UserList extends PageComponent<UserListProps, UserListState> {
         };
         const userGenderOptions = {1: this.tr('enum_male'), 2: this.tr('enum_female')};
         const statusOptions = {1: this.tr('enum_active'), 0: this.tr('enum_inactive')};
+        // prevent deleting user
+        delete access.del;
         const columns: Array<Column<IUser>> = [
             {name: 'id', title: this.tr('fld_id')},
             {name: 'username', title: this.tr('fld_username')},
@@ -65,10 +68,8 @@ export class UserList extends PageComponent<UserListProps, UserListState> {
             // {name: 'gender', title: this.tr('fld_gender'), render: r => this.tr(userGenderOptions[r.gender])},
             {name: 'status', title: this.tr('fld_status'), render: r => this.tr(statusOptions[r.status])},
             {
-                title: this.tr('operations'), render: r => <span className="dt-operation-cell">
-                <Link to={`/user/detail/${r.id}`}>View</Link>
-                {access.edit ? <Link to={`/user/edit/${r.id}`}>Edit</Link> : null}
-                {access.del ? <Link to={`/user/del/${r.id}`} onClick={this.del}>Del</Link> : null}</span>
+                title: this.tr('operations'),
+                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="user"/>
             }
         ];
         return (

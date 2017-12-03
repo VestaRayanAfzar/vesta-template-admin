@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {BaseComponentProps} from "../BaseComponent";
 import Pagination from "./Pagination";
-import {Util} from "../../util/Util";
 import {IQueryRequest} from "../../cmn/core/ICRUDResult";
+import {shallowClone} from "../../util/Util";
 
 export interface Column<T> {
     name?: string;
@@ -55,7 +55,7 @@ export class DataTable<T> extends Component<DataTableProps<T>, DataTableState> {
     }
 
     private onPaginationChange = (page: number, recordsPerPage: number) => {
-        let queryOption = Util.shallowClone<IQueryRequest<T>>(this.props.queryOption);
+        let queryOption = shallowClone<IQueryRequest<T>>(this.props.queryOption);
         queryOption.page = +page;
         queryOption.limit = recordsPerPage;
         this.props.fetch(queryOption);

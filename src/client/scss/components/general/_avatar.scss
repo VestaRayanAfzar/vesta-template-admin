@@ -1,4 +1,5 @@
 $avatar-default-width: 64px;
+$avatar-holder-bg: $color-default;
 
 .avatar-component {
     position: relative;
@@ -13,5 +14,10 @@ $avatar-default-width: 64px;
     img {
         width: auto;
         height: 100%;
+    }
+    .avatar-holder {
+        width: 100%;
+        height: 100%;
+        background: $avatar-holder-bg;
     }
 }

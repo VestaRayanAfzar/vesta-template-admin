@@ -17,9 +17,23 @@ html, body {
 
 body {
     color: $color-dark;
-    &.has-splash {
-        background: url("../img/splash/768x1024.png") no-repeat center white;
+    .splash-wrapper {
+        display: block;
+        position: fixed;
+        z-index: $z-index-splash;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url("../img/splash/1024x768.jpg") no-repeat center white;
         background-size: cover;
+        transition: transform $transition-duration-short $transition-effect-default;
+        @include scale(0);
+    }
+    &.has-splash {
+        .splash-wrapper {
+            @include scale(1);
+        }
     }
     &.app-offline {
         .app-offline-msg {
@@ -63,6 +77,7 @@ input, textarea, select, button {
 
 a {
     text-decoration: none;
+    color: $blue;
 }
 
 table {

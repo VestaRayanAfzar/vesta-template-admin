@@ -6,6 +6,8 @@ import {ConfigService} from "../../service/ConfigService";
 export interface ModalProps extends BaseComponentProps {
     show: boolean;
     name?: string;
+    className?: string;
+    onClick?: (e) => void;
 }
 
 export class Modal extends PureComponent<ModalProps, null> {
@@ -35,15 +37,19 @@ export class Modal extends PureComponent<ModalProps, null> {
     }
 
     private onModalClicked = (e) => {
-        e.stopPropagation();
+        const {onClick} = this.props;
+        if (onClick) {
+            e.stopPropagation();
+            onClick(e);
+        }
     }
 
     public render() {
-        let {name, show, children} = this.props;
+        let {name, show, children, className} = this.props;
         let {enter, leave} = this.transTime;
         this.updateStatus(show);
         let content = show ?
-            <div className="modal" onClick={this.onModalClicked}>
+            <div className={`modal ${className}`} onClick={this.onModalClicked}>
                 {children}
             </div> : null;
 

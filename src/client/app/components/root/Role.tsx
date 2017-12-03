@@ -131,9 +131,9 @@ export class Role extends PageComponent<RoleProps, RoleState> {
     public render() {
         return (
             <div className="page role-page has-navbar">
-                <PageTitle title={this.tr('roles')}/>
-                <Navbar title={this.tr('roles')}/>
-                <h1>{this.tr('roles')}</h1>
+                <PageTitle title={this.tr('mdl_role')}/>
+                <Navbar title={this.tr('mdl_role')} showBurger={true}/>
+                <h1>{this.tr('mdl_role')}</h1>
                 <Preloader show={this.state.showLoader}/>
                 <CrudMenu path="role" access={this.access}/>
                 <div className="crud-wrapper">

@@ -8,6 +8,8 @@ export const enum PreloaderType {Text = 1, Linear, Circular, Progress}
 export interface PreloaderProps extends BaseComponentProps {
     show: boolean;
     type?: PreloaderType;
+    title?: string;
+    subTitle?: string;
     message?: string;
 }
 
@@ -24,13 +26,16 @@ export class Preloader extends PureComponent<PreloaderProps, null> {
     }
 
     public render() {
-        const {show, message} = this.props;
+        let {show, title, subTitle, message} = this.props;
+        title = title || this.waitMessage;
+        subTitle = subTitle || this.inProgressMessage;
+
         return show ?
-            <Dialog show={true} modal={true}>
+            <Dialog show={true} modalClassName="preloader-modal">
                 <div className="preloader-component">
                     <div>
-                        <h2>{this.waitMessage}</h2>
-                        <h3>{this.inProgressMessage}</h3>
+                        <h2>{title}</h2>
+                        <h3>{subTitle}</h3>
                         {message ? <p>{message}</p> : null}
                     </div>
                 </div>
