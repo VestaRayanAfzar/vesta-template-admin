@@ -16,7 +16,7 @@ export class NotFound extends PureComponent<NotFoundProps, null> {
 
     public render() {
         return (
-            <div className="notFound-page page has-navbar forbidden-page"/>
+            <div className="notFound-page page has-navbar"/>
         );
     }
 }

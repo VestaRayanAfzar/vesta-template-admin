@@ -23,6 +23,9 @@ $page-center-form-padding: 30px 30px 15px 30px;
     $logo-border-size: floor($logo-img-size / 10);
     $logo-wrapper-size: $logo-img-size + (2 * $logo-border-size);
 
+    display: flex;
+    flex-direction: column;
+
     .logo-wrapper {
         height: $logo-wrapper-size;
         width: $logo-wrapper-size;

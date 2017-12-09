@@ -1,16 +1,18 @@
-var cacheName = 'vesta-panel-__TIMESTAMP__';
+var cacheName = 'vesta-admin-__TIMESTAMP__';
 var filesToCache = [
     '/index.html',
     '/img/bg-main.jpg',
     '/img/sidenav-header.jpg',
     '/img/vesta-logo.png',
     '/img/vesta-logo-white.png',
-    '/img/icons/launcher-icon-0-75x.png',
-    '/img/icons/launcher-icon-1-5x.png',
-    '/img/icons/launcher-icon-1x.png',
-    '/img/icons/launcher-icon-2x.png',
-    '/img/icons/launcher-icon-3x.png',
-    '/img/icons/launcher-icon-4x.png',
+    '/img/icons/36x36.png',
+    '/img/icons/48x48.png',
+    '/img/icons/72x72.png',
+    '/img/icons/96x96.png',
+    '/img/icons/144x144.png',
+    '/img/icons/192x192.png',
+    '/img/splash/768x1024.jpg',
+    '/img/splash/1024x768.jpg',
 ];
 
 self.addEventListener('install', function (e) {

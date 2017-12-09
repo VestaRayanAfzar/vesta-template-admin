@@ -59,6 +59,13 @@ $color-semidark: lighten($black, 40%);
 $color-list: $color-primary $color-success $color-error $color-warning $color-info;
 $color-classes: primary success error warning info;
 
+//shadow
+$shadow-color: $color-dark;
+$shadow-horizontal-offset:1px;
+$shadow-vertical-offset:1px;
+$shadow-radius:3px;
+$shadow-default: $shadow-horizontal-offset $shadow-vertical-offset $shadow-radius $shadow-color;
+
 // element colors
 $body-background-color: rgba(250, 250, 250, .85);
 $border-color: $color-default;

@@ -1,7 +1,7 @@
 {
-  "name": "Vesta Control Panel",
-  "short_name": "Vesta CPanel",
-  "description": "Vesta Control Panel Application",
+  "name": "Vesta Admin Panel",
+  "short_name": "Vesta Admin",
+  "description": "Vesta Admin Panel Application",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

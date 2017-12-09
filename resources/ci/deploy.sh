@@ -2,7 +2,7 @@
 
 CLONE_PATH=$1
 DEPLOY_PATH=$2
-NGINX_PATH=/etc/nginx/conf.d/vesta-template-client.conf
+NGINX_PATH=/etc/nginx/conf.d/vesta-template-admin.conf
 
 WD=`pwd`
 counter=0
@@ -26,7 +26,7 @@ chmod +x resources/ci/scripts/pre-deploy.js
 ./resources/ci/scripts/pre-deploy.js
 
 #print_status "Configuring NGINX"
-#sudo mv resources/ci/nginx/panel.conf ${NGINX_PATH}
+#sudo mv resources/ci/nginx/admin.conf ${NGINX_PATH}
 
 print_status "Installing Node Packages"
 npm install

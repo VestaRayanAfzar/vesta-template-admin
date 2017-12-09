@@ -1,5 +1,5 @@
 {
-  "name": "vesta-panel-server",
+  "name": "vesta-admin-server",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "./app.js",

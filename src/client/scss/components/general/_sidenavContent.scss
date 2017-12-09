@@ -5,7 +5,7 @@ $sidenav-top-padding: $header-height + $sidenav-padding;
 .sidenav-content {
     header {
         position: relative;
-        background: url(../img/sidenav-header.jpg) no-repeat center;
+        background: url(../img/bg-main.jpg) no-repeat center;
         background-size: cover;
         padding: $sidenav-top-padding $sidenav-padding $sidenav-padding $sidenav-padding;
         color: $white;

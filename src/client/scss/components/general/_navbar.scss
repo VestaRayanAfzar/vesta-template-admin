@@ -1,4 +1,4 @@
-$navbar-bg-color: $color-primary;
+$navbar-bg-color: transparentize($color-dark, .25);
 $navbar-title-margin: 20px;
 $navbar-back-btn-size: $btn-height;
 

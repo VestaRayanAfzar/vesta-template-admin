@@ -1,14 +1,15 @@
 import {ComponentClass} from "react";
 import {IPermissionCollection} from "../service/AuthService";
-import {Login} from "../components/root/Login";
-import {Home} from "../components/root/Home";
-import {Profile} from "../components/root/Profile";
-import {Role} from "../components/root/Role";
-import {Logout} from "../components/root/Logout";
 import {TranslateService} from "../service/TranslateService";
+import {Login} from "../components/root/Login";
 import {Forget} from "../components/root/Forget";
-import {User} from "../components/root/User";
+import {Logout} from "../components/root/Logout";
+import {Home} from "../components/root/Home";
+import {Contact} from "../components/root/Contact";
 import {Context} from "../components/root/Context";
+import {User} from "../components/root/User";
+import {Role} from "../components/root/Role";
+import {Profile} from "../components/root/Profile";
 
 export interface RouteItem {
     link: string;
@@ -27,6 +28,7 @@ export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
 
     return isLoggedIn ? [
         {link: '', title: tr('home'), component: Home, exact: true},
+        {link: 'contact', title: tr('mdl_contact'), component: Contact, permissions: {contact: ['read']}},
         {link: 'context', title: tr('mdl_context'), component: Context, permissions: {context: ['read']}},
         {link: 'user', title: tr('mdl_user'), component: User, permissions: {user: ['read']}},
         {link: 'role', title: tr('mdl_role'), component: Role, permissions: {role: ['read']}},

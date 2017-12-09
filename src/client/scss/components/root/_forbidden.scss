@@ -1,23 +1,2 @@
 .forbidden-page {
-
-    .dir-ltr {
-        direction: ltr;
-    }
-
-    h1 {
-        margin-top: 5vh;
-        text-align: center;
-    }
-    h3 {
-        margin: 5vh;
-    }
-    section {
-        width: 90vw;
-        max-width: $layout-medium-max;
-        margin: 5vh auto;
-        text-align: left;
-        br {
-            line-height: 2;
-        }
-    }
 }
