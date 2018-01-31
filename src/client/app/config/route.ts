@@ -19,8 +19,10 @@ export interface RouteItem {
     children?: Array<RouteItem>;
     component?: ComponentClass<any>;
     permissions?: IPermissionCollection;
-    // show/hide in menu list
+    // show/hide this item in menu list
     hidden?: boolean;
+    // show icon on menu
+    icon?: string;
 }
 
 export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
@@ -32,11 +34,11 @@ export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
         {link: 'context', title: tr('mdl_context'), component: Context, permissions: {context: ['read']}},
         {link: 'user', title: tr('mdl_user'), component: User, permissions: {user: ['read']}},
         {link: 'role', title: tr('mdl_role'), component: Role, permissions: {role: ['read']}},
-        {link: 'profile', title: tr('profile'), component: Profile, permissions: {role: ['read']}, hidden: true},
-        {link: 'logout', title: tr('logout'), component: Logout, permissions: {account: ['logout']}},
+        {link: 'log', title: tr('mdl_log'), component: Log, permissions: {log: ['read']}},
+        {link: 'profile', title: tr('profile'), component: Profile, hidden: true},
+        {link: 'logout', title: tr('logout'), component: Logout}
     ] : [
-        {link: '', title: tr('home'), component: Home, exact: true},
-        {link: 'login', title: tr('login'), component: Login, permissions: {account: ['login']}},
-        {link: 'forget', title: tr('forget_pass'), component: Forget, permissions: {account: ['forget']}},
+        {link: '', title: tr('login'), component: Login, exact: true},
+        {link: 'forget', title: tr('forget_pass'), component: Forget, hidden: true},
     ]
 }

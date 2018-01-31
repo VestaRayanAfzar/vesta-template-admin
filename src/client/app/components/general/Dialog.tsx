@@ -37,7 +37,7 @@ export class Dialog extends PureComponent<DialogProps, null> {
 
         return (
             <Modal show={show} name="modal-zoom" className={modalClassName}>
-                <div className={`dialog-component${className ? ` ${className}` : ''}`}>
+                <div className={`dialog ${className ? `${className}` : ''}`}>
                     {header}
                     <div className="dialog-content">{content}</div>
                     {footer}

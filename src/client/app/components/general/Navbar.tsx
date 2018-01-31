@@ -1,12 +1,14 @@
 import React, {PureComponent} from "react";
-import {withRouter} from "react-router";
-import {BaseComponentProps} from "../BaseComponent";
+import {RouteComponentProps, withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import {Burger} from "./Burger";
 
 export enum NavBarMainButtonType {Burger = 1, Back, Close}
 
-export interface NavbarProps extends BaseComponentProps {
+export interface NavbarParams {
+}
+
+export interface NavbarProps extends RouteComponentProps<NavbarParams> {
     title?: string;
     className?: string;
     backLink?: string;

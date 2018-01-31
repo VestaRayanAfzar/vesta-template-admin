@@ -29,7 +29,7 @@ export class Avatar extends PureComponent<AvatarProps, null> {
         let avatar = imageSrc ? <img src={imageSrc} onError={this.imageLoadError}/> :
             <div className="avatar-holder"/>
         return (
-            <div className="avatar-component" ref={el => this.wrapper = el}>
+            <div className="avatar" ref={el => this.wrapper = el}>
                 {avatar}
                 {this.props.children}
             </div>

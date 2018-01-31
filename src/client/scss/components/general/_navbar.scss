@@ -1,4 +1,4 @@
-$navbar-bg-color: transparentize($color-dark, .25);
+$navbar-bg-color: $color-primary;
 $navbar-title-margin: 20px;
 $navbar-back-btn-size: $btn-height;
 
@@ -9,7 +9,7 @@ $navbar-back-btn-size: $btn-height;
     top: 0;
     left: 0;
     right: 0;
-    z-index: $z-index-header;
+    z-index: $z-index-navbar;
     padding: $header-padding;
     display: flex;
     align-items: center;

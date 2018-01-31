@@ -1,5 +1,5 @@
 $multichoice-margin-top: 20px;
-$multichoice-margin-side: 25%;
+$multichoice-margin-side: 10%;
 
 .multichoice-input {
     border-radius: $form-control-border-radius;
@@ -24,10 +24,18 @@ $multichoice-margin-side: 25%;
         list-style: none;
         margin-#{$float}: 20px;
         white-space: nowrap;
+
+        &.select-all-choice {
+            label {
+                color: $color-secondary;
+            }
+        }
+
         label, input {
             display: inline-block;
             vertical-align: middle;
             margin: auto 5px;
+            cursor: pointer;
         }
     }
 }

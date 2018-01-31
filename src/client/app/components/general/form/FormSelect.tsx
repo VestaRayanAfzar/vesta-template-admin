@@ -5,31 +5,28 @@ import {ChangeEventHandler} from "./FormWrapper";
 export interface FormSelectProps extends BaseComponentProps {
     name: string;
     label: string;
-    value?: any;
-    onChange?: ChangeEventHandler;
     options: Array<{}>;
-    error?: string;
-    placeholder?: boolean;
-    //
     titleKey?: string;
     valueKey?: string;
+    value?: any;
+    onChange?: ChangeEventHandler;
+    error?: string;
+    placeholder?: boolean;
 }
 
 export class FormSelect extends PureComponent<FormSelectProps, null> {
+    public static defaultProps = {valueKey: 'id', titleKey: 'title'};
 
     private onChange = (e) => {
         let {name, onChange} = this.props;
         let value = e.target.value;
         let numericValue = +value;
-        if (isNaN(numericValue)) return onChange(name, value);
-        onChange(name, numericValue);
-
+        onChange(name, isNaN(numericValue) ? value : numericValue);
     }
 
     public render() {
         let {label, name, value, options, error, placeholder, titleKey, valueKey} = this.props;
-        if (!titleKey) titleKey = 'title';
-        if (!valueKey) valueKey = 'value';
+
         const optionsList = [{[titleKey]: placeholder ? label : '', [valueKey]: ''}].concat(options)
             .map((o, i) => (<option key={i} value={o[valueKey]}>{o[titleKey]}</option>));
         return (

@@ -2,9 +2,10 @@ $page-transition-enter-duration: $transition-duration-default;
 $page-transition-leave-duration: floor(2 * $page-transition-enter-duration / 3);
 $page-transition-effect: $transition-effect-default;
 $page-center-form-padding: 30px 30px 15px 30px;
+$max-page-width: $layout-medium-max;
 
 .page {
-    max-width: $layout-medium-max;
+    max-width: $max-page-width;
     margin: auto;
     &.has-navbar {
         padding-top: $header-height;
@@ -22,9 +23,6 @@ $page-center-form-padding: 30px 30px 15px 30px;
     $logo-img-size: 25vh;
     $logo-border-size: floor($logo-img-size / 10);
     $logo-wrapper-size: $logo-img-size + (2 * $logo-border-size);
-
-    display: flex;
-    flex-direction: column;
 
     .logo-wrapper {
         height: $logo-wrapper-size;

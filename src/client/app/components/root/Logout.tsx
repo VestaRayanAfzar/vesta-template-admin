@@ -2,6 +2,7 @@ import React from "react";
 import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
 import {IUser} from "../../cmn/models/User";
 import {Preloader} from "../general/Preloader";
+import {LogService} from "../../service/LogService";
 
 export interface LogoutParams {
 }
@@ -14,24 +15,24 @@ export interface LogoutState extends PageComponentState {
 
 export class Logout extends PageComponent<LogoutProps, LogoutState> {
 
-    private onAfterLogout() {
+    private onAfterLogout(user: IUser) {
         this.auth.logout();
+        this.auth.login(user);
+        this.props.history.replace('/');
     }
 
     public componentDidMount() {
         if (this.auth.isGuest()) {
-            return this.props.history.push('/');
+            return this.props.history.replace('/');
         }
 
         this.api.get<IUser>('account/logout')
             .then(response => {
-                this.onAfterLogout();
-                this.auth.login(response.items[0]);
-                this.props.history.push('/login');
+                this.onAfterLogout(response.items[0]);
             })
-            .catch(err => {
-                this.props.history.push('/login');
-                this.notif.error(err.message);
+            .catch(error => {
+                LogService.error(error, 'componentDidMount', 'Logout');
+                this.onAfterLogout({});
             });
     }
 

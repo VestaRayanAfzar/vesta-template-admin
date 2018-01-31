@@ -45,7 +45,7 @@ export class Forget extends PageComponent<ForgetProps, ForgetState> {
             .then(response => {
                 this.setState({showLoader: false});
                 this.notif.success(this.tr('info_forget'));
-                this.props.history.push('/login');
+                this.props.history.push('/');
             })
             .catch(error => {
                 this.setState({showLoader: false, validationErrors: error.violations});
@@ -80,8 +80,7 @@ export class Forget extends PageComponent<ForgetProps, ForgetState> {
                     {alert}
                     <div className="btn-group">
                         <button type="submit" className="btn btn-primary">{this.tr('send_reset')}</button>
-                        <br/>
-                        <Link to="login" className="btn">{this.tr('login')}</Link>
+                        <Link to="/" className="btn">{this.tr('login')}</Link>
                     </div>
                 </FormWrapper>
             </div>

@@ -51,11 +51,16 @@ export class ApiService {
                     if (xhr.status === 200) {
                         this.onAfterReceive(xhr);
                     }
-                    try {
-                        let data = JSON.parse(xhr.responseText);
-                        data && data.error ? reject(data.error) : resolve(<T>data);
-                    } catch (e) {
-                        reject(new Error(`${xhr.responseText} [${e.message}]`));
+                    let contentType = xhr.getResponseHeader('Content-Type');
+                    if (contentType && contentType.indexOf("application/json") >= 0) {
+                        try {
+                            let data = JSON.parse(xhr.responseText);
+                            data && data.error ? reject(data.error) : resolve(<T>data);
+                        } catch (e) {
+                            reject(new Error(e.message));
+                        }
+                    } else {
+                        resolve(xhr.responseText as any as T);
                     }
                 }
             };

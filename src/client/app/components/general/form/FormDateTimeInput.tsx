@@ -47,8 +47,8 @@ export class FormDateTimeInput extends PureComponent<FormDateTimeInputProps, For
     }
 
     private onChange = (value) => {
-        let {name, onChange} = this.props;
-        let timestamp = this.dateTime.validate(value);
+        let {name, onChange, hasTime} = this.props;
+        let timestamp = this.dateTime.validate(value, hasTime);
         if (timestamp) {
             onChange(name, timestamp);
         }

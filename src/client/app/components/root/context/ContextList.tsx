@@ -32,11 +32,8 @@ export class ContextList extends PageComponent<ContextListProps, ContextListStat
         this.props.fetch(this.props.queryOption);
     }
 
-    public del = (e) => {
-        e.preventDefault();
-        let match = e.target.href.match(/(\d+)$/);
-        if (!match) return;
-        this.api.del<IDeleteResult>('context', +match[0])
+    public del = (id) => {
+        this.api.del<IDeleteResult>('context', id)
             .then(response => {
                 this.notif.success(this.tr('info_delete_record', response.items[0]));
                 this.props.fetch(this.props.queryOption);

@@ -18,19 +18,6 @@
     }
 }
 
-@mixin clearfix {
-    *zoom: 1;
-    &:before,
-    &:after {
-        display: table;
-        content: "";
-        line-height: 0;
-    }
-    &:after {
-        clear: both;
-    }
-}
-
 @mixin rotate($degrees) {
     transform: rotate($degrees);
 }
@@ -57,8 +44,11 @@
     -webkit-filter: $filter;
 }
 
-@mixin drop-shadow($shadow) {
-    @include filter(drop-shadow($shadow));
+@mixin animation-rotate($duration, $effect: $transition-effect-default) {
+    animation-name: rotate;
+    animation-duration: $duration;
+    animation-iteration-count: infinite;
+    animation-timing-function: $effect;
 }
 
 // Media queries

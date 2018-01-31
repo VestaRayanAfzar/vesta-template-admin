@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import {ApiService} from "../service/ApiService";
 import {AuthService} from "../service/AuthService";
@@ -12,7 +13,10 @@ import {Html} from "./general/Html";
 import {LogService} from "../service/LogService";
 import {Culture} from "../cmn/core/Culture";
 
-export interface RootProps {
+export interface RootParams {
+}
+
+export interface RootProps extends RouteComponentProps<RootParams> {
     routeItems: Array<RouteItem>;
 }
 
@@ -20,7 +24,7 @@ interface RootState {
     user: IUser;
 }
 
-export class Root extends Component<RootProps, RootState> {
+class Root extends Component<RootProps, RootState> {
     private api = ApiService.getInstance();
     private auth = AuthService.getInstance();
     private dispatcher = Dispatcher.getInstance();
@@ -31,9 +35,11 @@ export class Root extends Component<RootProps, RootState> {
     }
 
     public componentDidMount() {
+        // registering for user auth status change event
         this.dispatcher.register<IUser>(AuthService.Events.Update, (user) => {
             this.setState({user});
         });
+        // updating user information from API
         this.api.get<IUser>('me')
             .then(response => {
                 this.auth.login(response.items[0]);
@@ -47,7 +53,6 @@ export class Root extends Component<RootProps, RootState> {
         const {user} = this.state;
         const {routeItems} = this.props;
         const {code, dir} = Culture.getLocale();
-
         return (
             <div id="main-wrapper" className="root-component">
                 <Html lang={code} dir={dir}/>
@@ -62,3 +67,5 @@ export class Root extends Component<RootProps, RootState> {
         )
     }
 }
+
+export default withRouter(Root);

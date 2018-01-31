@@ -14,7 +14,7 @@ export interface ContactListParams {
 export interface ContactListProps extends PageComponentProps<ContactListParams> {
     contacts: Array<IContact>;
     access: IAccess;
-    fetch: (queryOption: IDataTableQueryOption<IContact>) => void;
+    onFetch: (queryOption: IDataTableQueryOption<IContact>) => void;
     queryOption: IDataTableQueryOption<IContact>;
 }
 
@@ -30,17 +30,14 @@ export class ContactList extends PageComponent<ContactListProps, ContactListStat
     }
 
     public componentDidMount() {
-        this.props.fetch(this.props.queryOption);
+        this.props.onFetch(this.props.queryOption);
     }
 
-    public del = (e) => {
-        e.preventDefault();
-        let match = e.target.href.match(/(\d+)$/);
-        if (!match) return;
-        this.api.del<IDeleteResult>('contact', +match[0])
+    public onDelete = (id) => {
+        this.api.del<IDeleteResult>('contact', id)
             .then(response => {
                 this.notif.success(this.tr('info_delete_record', response.items[0]));
-                this.props.fetch(this.props.queryOption);
+                this.props.onFetch(this.props.queryOption);
             })
             .catch(error => {
                 this.notif.error(error.message);
@@ -48,32 +45,31 @@ export class ContactList extends PageComponent<ContactListProps, ContactListStat
     }
 
     public render() {
-        const {access} = this.props;
-		const dateTime = Culture.getDateTimeInstance();
+        const {access, onFetch, contacts} = this.props;
+        delete access.edit;
+        const dateTime = Culture.getDateTimeInstance();
         const dateTimeFormat = Culture.getLocale().defaultDateFormat;
         const columns: Array<Column<IContact>> = [
-			{name: 'id', title: this.tr('fld_id')},
-			{name: 'title', title: this.tr('fld_title')},
-
-                {
-                    title: this.tr('fld_date'),
-                    render: r => {
-                        {
-                dateTime.setTime(r.date);
-                return dateTime.format(dateTimeFormat);
-            }
-                    }
-                },
-			{name: 'name', title: this.tr('fld_name')},
+            {name: 'id', title: this.tr('fld_id')},
+            {name: 'title', title: this.tr('fld_title')},
+            {
+                title: this.tr('fld_date'),
+                render: r => {
+                    dateTime.setTime(r.date);
+                    return dateTime.format(dateTimeFormat);
+                }
+            },
+            {name: 'name', title: this.tr('fld_name')},
+            {name: 'phone', title: this.tr('fld_phone')},
             {
                 title: this.tr('operations'),
-                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="contact"/>
+                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.onDelete} path="contact"/>
             }
         ];
         return (
             <div className="crud-page">
-                <DataTable queryOption={this.props.queryOption} columns={columns} records={this.props.contacts}
-                           fetch={this.props.fetch} pagination={true}/>
+                <DataTable queryOption={this.props.queryOption} columns={columns} records={contacts}
+                           fetch={onFetch} pagination={true}/>
             </div>
         )
     }

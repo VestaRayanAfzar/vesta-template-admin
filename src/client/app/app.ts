@@ -13,25 +13,27 @@ ConfigService.set('sourceApp', SourceApp.Panel);
 
 // initiating locale
 Culture.register(IrLocale, IrVocabs, IrDate);
-const OFFLINE_ASSUMPTION_DURATION = 30000;
-const SCRIPT_CHECK_INTERVAL = 300;
 
 window.addEventListener('DOMContentLoaded', checkScripts, false);
-const scriptsToCheck = [];
-let scriptCheckCounter = 0;
 
 function checkScripts() {
-    ++scriptCheckCounter;
-    if (scriptCheckCounter * SCRIPT_CHECK_INTERVAL > OFFLINE_ASSUMPTION_DURATION) {
-        return document.body.classList.add('app-offline');
-    }
-    for (let i = scriptsToCheck.length; i--;) {
-        if (!(scriptsToCheck[i] in window)) {
-            // check every 500ms
-            return setTimeout(checkScripts, 300);
+    const OFFLINE_ASSUMPTION_DURATION = 30000;
+    const SCRIPT_CHECK_INTERVAL = 300;
+    const scriptsToCheck = [];
+    let scriptCheckCounter = 0;
+    (function check() {
+        ++scriptCheckCounter;
+        if (scriptCheckCounter * SCRIPT_CHECK_INTERVAL > OFFLINE_ASSUMPTION_DURATION) {
+            return document.body.classList.add('app-offline');
         }
-    }
-    startApp();
+        for (let i = scriptsToCheck.length; i--;) {
+            if (!(scriptsToCheck[i] in window)) {
+                // check every 300ms
+                return setTimeout(check, 300);
+            }
+        }
+        startApp();
+    })();
 }
 
 function startApp() {

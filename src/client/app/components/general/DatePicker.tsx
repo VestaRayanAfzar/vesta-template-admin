@@ -21,17 +21,16 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
     private format;
     private weekDayNames: Array<string> = [];
     private monthNames: Array<string> = [];
+    // the datePicker should render the month in which the selected date exist
     private tr = TranslateService.getInstance().translate;
-    private monthTimer;
-    private yearTimer;
-    private defaultRenderTimeout = 200;
 
     constructor(props: DatePickerProps) {
         super(props);
-        let timestamp = this.dateTime.validate(props.value);
-        if (timestamp) {
-            this.dateTime.setTime(timestamp);
-            this.selectedDateTime.setTime(timestamp);
+        // dateTime validation, also sets the correct values
+        if (this.selectedDateTime.validate(props.value, props.hasTime)) {
+            this.dateTime.setTime(this.selectedDateTime.getTime());
+        } else {
+            this.selectedDateTime.setTime(this.dateTime.getTime());
         }
         this.state = {};
         let locale = this.dateTime.locale;
@@ -66,6 +65,7 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
     }
 
     private onDaySelect = (e) => {
+        // this.dateTime holds the current month & year
         this.dateTime.setDate(+e.currentTarget.textContent);
         this.selectedDateTime.setTime(this.dateTime.getTime());
         this.forceUpdate();
@@ -73,14 +73,14 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
 
     private onHourSelect = (e) => {
         let hour = +e.target.value;
-        this.dateTime.setHours(hour);
+        // this.dateTime.setHours(hour);
         this.selectedDateTime.setHours(hour);
         this.forceUpdate();
     }
 
     private onMinSelect = (e) => {
         let minute = +e.target.value;
-        this.dateTime.setMinutes(minute);
+        // this.dateTime.setMinutes(minute);
         this.selectedDateTime.setMinutes(minute);
         this.forceUpdate();
     }
@@ -121,8 +121,10 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
         let tmpDate = Culture.getDateTimeInstance();
         const isThisMonth = tmpDate.getFullYear() === this.dateTime.getFullYear() && tmpDate.getMonth() === this.dateTime.getMonth();
         const today = tmpDate.getDate();
+        //
         tmpDate.setFullYear(this.dateTime.getFullYear(), this.dateTime.getMonth(), 1);
         const isSelectedMonth = this.selectedDateTime.getFullYear() === this.dateTime.getFullYear() && this.selectedDateTime.getMonth() === this.dateTime.getMonth();
+        const selectedDay = this.selectedDateTime.getDate();
         let rows = [];
         let rowCounter = 1;
         let colCounter = 0;
@@ -137,7 +139,7 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
         }
         for (let i = 1; i <= daysInMonth; i++) {
             let className = isThisMonth && i == today ? 'today' : '';
-            className = `${className}${isSelectedMonth && i == this.selectedDateTime.getDate() ? ' selected' : ''}`
+            className = `${className} ${isSelectedMonth && i == selectedDay ? 'selected' : ''}`;
             row.push(<td key={colCounter} className={className} onClick={this.onDaySelect}><i>{i}</i></td>);
             ++colCounter;
             if (colCounter % 7 == 0) {
@@ -158,8 +160,8 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
     }
 
     private renderTime() {
-        const hour = this.dateTime.getHours();
-        const minute = this.dateTime.getMinutes();
+        const hour = this.selectedDateTime.getHours();
+        const minute = this.selectedDateTime.getMinutes();
         const hourSelect = [];
         for (let i = 0; i <= 23; ++i) {
             hourSelect.push(<option value={i} key={i}>{i}</option>);

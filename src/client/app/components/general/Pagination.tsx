@@ -23,9 +23,9 @@ export default class Pagination extends PureComponent<PaginationProps, Paginatio
         let page = +e.target.value;
         let totalPages = this.totalPages(this.props.totalRecords, this.props.recordsPerPage);
 
-        if(page > totalPages) {
+        if (page > totalPages) {
             page = totalPages;
-        } else if(page < 1) {
+        } else if (page < 1) {
             page = 1;
         }
 

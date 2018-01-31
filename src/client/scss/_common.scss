@@ -2,6 +2,7 @@
 @import "misc/colors";
 @import "misc/variables";
 @import "misc/mixins";
+@import "misc/animation";
 @import "fonts/material";
 ///<vesta:scssFont/>
 ///<vesta:scssLibrary/>
@@ -51,4 +52,5 @@
 @import "components/root/role";
 @import "components/root/user";
 @import "components/root/contact";
+@import "components/root/log";
 ///<vesta:scssPageComponent/>

@@ -4,13 +4,14 @@ import {Route, Switch} from "react-router";
 import {DynamicRouter} from "./components/general/DynamicRouter";
 import {AuthService} from "./service/AuthService";
 import {AclPolicy} from "./cmn/enum/Acl";
+import {Dispatcher} from "./service/Dispatcher";
 import {NotFound} from "./components/root/NotFound";
-import {Root} from "./components/Root";
+import Root from "./components/Root";
 import {IUser} from "./cmn/models/User";
 import {TransitionService} from "./service/TransitionService";
 import {getRoutes, RouteItem} from "./config/route";
 import {LogService} from "./service/LogService";
-import {Dispatcher} from "./service/Dispatcher";
+import {ConfigService} from "./service/ConfigService";
 
 export class ClientApp {
     private tz = TransitionService.getInstance().willTransitionTo;
@@ -18,17 +19,17 @@ export class ClientApp {
     private dispatcher = Dispatcher.getInstance();
 
     private registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((reg: ServiceWorkerRegistration) => {
-                    try {
-                        reg.update().catch(error => LogService.error(error, 'reg.update', 'ClientApp'));
-                    } catch (error) {
-                        LogService.error(error, 'registerServiceWorker', 'ClientApp');
-                    }
-                })
-                .catch(err => LogService.error(err.message, 'registerServiceWorker', 'ClientApp'));
-        }
+        if (!('serviceWorker' in navigator)) return;
+        const swScript = ConfigService.getConfig().sw;
+        navigator.serviceWorker.register(`/${swScript}.js`)
+            .then((reg: ServiceWorkerRegistration) => {
+                try {
+                    reg.update().catch(error => LogService.error(error, 'reg.update', 'ClientApp'));
+                } catch (error) {
+                    LogService.error(error, 'registerServiceWorker', 'ClientApp');
+                }
+            })
+            .catch(err => LogService.error(err.message, 'registerServiceWorker', 'ClientApp'));
     }
 
     private renderRoutes(routeItems: Array<RouteItem>, prefix: string) {

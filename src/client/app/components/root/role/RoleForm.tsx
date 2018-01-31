@@ -79,7 +79,11 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
     }
 
     private onPermissionChange = (name: string, value: any) => {
-        this.permissions[name] = value;
+        if (!value) {
+            delete this.permissions[name];
+        } else {
+            this.permissions[name] = value;
+        }
         this.state.role.permissions = this.getAllPermissionsValue();
         this.setState({role: this.state.role});
     }
@@ -91,18 +95,15 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
     private renderPermissionTable() {
         let resources = Object.keys(this.props.permissions);
         if (!resources.length) return null;
-        let values = this.getAllPermissionsValue();
         let rows = [];
         for (let i = resources.length; i--;) {
             let resource = resources[i];
             let actions = this.props.permissions[resource];
-            let options = actions.map(action => {
-                return {title: action.action, value: action.id}
-            })
+            const values = this.permissions[resource];
             rows.push(
                 <li key={i}>
                     <FormMultichoice name={resource} label={resource} value={values} onChange={this.onPermissionChange}
-                                     options={options}/>
+                                     options={actions} titleKey="action"/>
                 </li>);
         }
         return rows;
@@ -122,8 +123,8 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
         };
         let errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
         const statusOptions: Array<FormOption> = [
-            {value: Status.Active, title: tr('enum_active')},
-            {value: Status.Inactive, title: tr('enum_inactive')}];
+            {id: Status.Active, title: tr('enum_active')},
+            {id: Status.Inactive, title: tr('enum_inactive')}];
 
         let role = this.state.role;
         const rows = this.renderPermissionTable();
@@ -135,7 +136,8 @@ export class RoleForm extends Component<RoleFormProps, RoleFormState> {
                     <FormTextInput name="desc" label={tr('fld_desc')} value={role.desc} placeholder={true}
                                    error={errors.desc} onChange={this.onFormChange}/>
                     <FormSelect name="status" label={tr('fld_status')} value={role.status} placeholder={true}
-                                error={errors.status} onChange={this.onFormChange} options={statusOptions}/>
+                                titleKey="title" error={errors.status} onChange={this.onFormChange}
+                                options={statusOptions}/>
                     <div className="form-group">
                         <ul className="permission-list">
                             {rows}

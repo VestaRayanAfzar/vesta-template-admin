@@ -35,7 +35,7 @@ export class DataTable<T> extends Component<DataTableProps<T>, DataTableState> {
         this.state = {records: []};
     }
 
-    public componentWillMount() {
+    public componentDidMount() {
         this.createHeader();
     }
 
@@ -74,7 +74,7 @@ export class DataTable<T> extends Component<DataTableProps<T>, DataTableState> {
                         fetch={this.onPaginationChange} recordsPerPage={queryOption.limit}/> : null;
         return (
             <div>
-                <div className="dataTable-component">
+                <div className="data-table">
                     <table>
                         <thead>{this.headerRow}</thead>
                         <tbody>{rows}</tbody>

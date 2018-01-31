@@ -1,13 +1,14 @@
 import React from "react";
 import {FetchById, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
 import {IContact} from "../../../cmn/models/Contact";
+import {Culture} from "../../../cmn/core/Culture";
 
 export interface ContactDetailParams {
     id: number;
 }
 
 export interface ContactDetailProps extends PageComponentProps<ContactDetailParams> {
-    fetch: FetchById<IContact>;
+    onFetch: FetchById<IContact>;
 }
 
 export interface ContactDetailState extends PageComponentState {
@@ -22,13 +23,17 @@ export class ContactDetail extends PageComponent<ContactDetailProps, ContactDeta
     }
 
     public componentDidMount() {
-        this.props.fetch(+this.props.match.params.id)
+        this.props.onFetch(+this.props.match.params.id)
             .then(contact => this.setState({contact}));
     }
 
     public render() {
         const contact = this.state.contact;
         if (!contact) return null;
+		const dateTime = Culture.getDateTimeInstance();
+        const dateTimeFormat = Culture.getLocale().defaultDateTimeFormat;
+        dateTime.setTime(contact.date);
+        const contactDate = dateTime.format(dateTimeFormat);
         return (
             <div className="crud-page">
                 <table className="details-table">
@@ -45,6 +50,10 @@ export class ContactDetail extends PageComponent<ContactDetailProps, ContactDeta
 					<tr>
 						<td>{this.tr('fld_content')}</td>
 						<td>{contact.content}</td>
+					</tr>
+					<tr>
+						<td>{this.tr('fld_date')}</td>
+						<td>{contactDate}</td>
 					</tr>
 					<tr>
 						<td>{this.tr('fld_name')}</td>

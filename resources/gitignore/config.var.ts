@@ -3,7 +3,7 @@ import {IVariantClientAppConfig} from "../service/ConfigService";
 export const VariantConfig: IVariantClientAppConfig = {
     env: 'production',
     api: 'https://api.vesta.bz',
-    asset: '',
+    sw: 'service-worker',
     cache: {
         api: 0
     },

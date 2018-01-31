@@ -1,0 +1,34 @@
+.log-page {
+
+    .details-table {
+        margin: 20px 5px;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        padding: 10px;
+
+        .en {
+            //display: inline-block;
+            text-align: left;
+        }
+        label {
+            font-weight: lighter;
+            color: $color-secondary;
+            display: inline-block;
+            width: 64px;
+        }
+    }
+
+    code {
+        font-family: Courier, monospace;
+    }
+
+    .alert-1 {
+        color: $color-error;
+    }
+    .alert-2 {
+        color: $color-warning;
+    }
+    .alert-3 {
+        color: $color-info;
+    }
+}

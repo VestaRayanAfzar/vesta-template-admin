@@ -21,6 +21,7 @@ export class AuthService {
     static Events = {Update: 'auth-update'};
     private tokenKeyName: string = 'auth-token';
     private userKeyName: string = 'userData';
+    private dispatch = Dispatcher.getInstance().dispatch;
     private storage: Storage = localStorage;
     private user: IUser = null;
     private permissions: IPermissionCollection = {};
@@ -30,6 +31,7 @@ export class AuthService {
     constructor() {
         try {
             this.user = JSON.parse(this.storage.getItem(this.userKeyName));
+            if (!this.user) this.user = {};
             this.updatePermissions();
         } catch (e) {
             this.logout();
@@ -37,9 +39,8 @@ export class AuthService {
     }
 
     public logout(): void {
-        this.storage.removeItem(this.userKeyName);
         this.storage.removeItem(this.tokenKeyName);
-        this.login(<IUser>{});
+        this.storage.removeItem(this.userKeyName);
     }
 
     public login(user: IUser) {
@@ -51,7 +52,7 @@ export class AuthService {
     private updatePermissions() {
         this.permissions = {};
         let role = <IRole>this.user.role;
-        if (!role) return;
+        if (!role) return this.dispatch(AuthService.Events.Update, this.user);
         for (let k = role.permissions.length; k--;) {
             let permission = <IPermission>role.permissions[k];
             if (!(permission.resource in this.permissions)) {
@@ -59,7 +60,7 @@ export class AuthService {
             }
             this.permissions[permission.resource].push(permission.action);
         }
-        Dispatcher.getInstance().dispatch(AuthService.Events.Update, this.user);
+        this.dispatch(AuthService.Events.Update, this.user);
     }
 
     public isGuest(): boolean {
@@ -102,7 +103,7 @@ export class AuthService {
         let userPermissions = this.permissions;
         let userActions = userPermissions[resource];
         if ((userActions && (userActions.indexOf('*') >= 0 || userActions.indexOf(action) >= 0)) ||
-            (userPermissions['*'] && (userPermissions['*'].indexOf('*') >= 0 || userPermissions['*'].indexOf(action) >= 0 ))) {
+            (userPermissions['*'] && (userPermissions['*'].indexOf('*') >= 0 || userPermissions['*'].indexOf(action) >= 0))) {
             return true
         }
         return this.defaultPolicy == AclPolicy.Allow;

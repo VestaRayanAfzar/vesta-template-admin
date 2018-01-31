@@ -1,14 +1,16 @@
-let gulp = require('gulp');
-let htmlMin = require('gulp-htmlmin');
-let replace = require('gulp-replace');
+const gulp = require('gulp');
+const htmlMin = require('gulp-htmlmin');
+const replace = require('gulp-replace');
+const eliminator = require('./plugins/eliminator');
 
 module.exports = function (setting) {
     let dir = setting.dir;
     gulp.task('asset:html', function () {
         let target = setting.buildPath(setting.target);
         let timestamp = Date.now();
-        let stream = gulp.src(`${dir.srcClient}/index.html`);
-        stream = stream.pipe(replace('__TIMESTAMP__', timestamp));
+        let stream = gulp.src(`${dir.srcClient}/index.html`)
+            .pipe(eliminator(setting))
+            .pipe(replace('__TIMESTAMP__', timestamp));
         if (setting.production) {
             stream = minifyHtml(stream).on('error', setting.error);
         }

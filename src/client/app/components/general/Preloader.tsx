@@ -9,7 +9,6 @@ export interface PreloaderProps extends BaseComponentProps {
     show: boolean;
     type?: PreloaderType;
     title?: string;
-    subTitle?: string;
     message?: string;
 }
 
@@ -25,18 +24,34 @@ export class Preloader extends PureComponent<PreloaderProps, null> {
         this.inProgressMessage = tr('msg_wait');
     }
 
+    private getPreloader() {
+        const {type} = this.props;
+        let preloader = null;
+        switch (type) {
+            default:
+                preloader = <div className="pl-circular"/>;
+                break;
+        }
+        return (
+            <div className="pl-wrapper">
+                {preloader}
+            </div>
+        );
+    }
+
     public render() {
-        let {show, title, subTitle, message} = this.props;
+        let {show, title, message} = this.props;
         title = title || this.waitMessage;
-        subTitle = subTitle || this.inProgressMessage;
+        message = message || this.inProgressMessage;
+        const preloader = this.getPreloader();
 
         return show ?
             <Dialog show={true} modalClassName="preloader-modal">
-                <div className="preloader-component">
-                    <div>
-                        <h2>{title}</h2>
-                        <h3>{subTitle}</h3>
-                        {message ? <p>{message}</p> : null}
+                <div className="preloader">
+                    {preloader}
+                    <div className="pl-text">
+                        <h3 className="pl-title">{title}</h3>
+                        {message ? <p className="pl-message">{message}</p> : null}
                     </div>
                 </div>
             </Dialog> : <Dialog show={false}/>;

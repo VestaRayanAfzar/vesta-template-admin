@@ -15,6 +15,4 @@ export class NetworkService {
         }
         return NetworkService.instance;
     }
-
-
 }

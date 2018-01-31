@@ -10,8 +10,8 @@ export interface AutocompleteProps extends BaseComponentProps {
     search: Search<any>;
     onChange?: ChangeEventHandler;
     error?: string;
-    titleKey: string;
-    valueKey: string;
+    titleKey?: string;
+    valueKey?: string;
     placeholder?: boolean;
 }
 
@@ -22,6 +22,7 @@ export interface AutocompleteState {
 }
 
 export class Autocomplete extends Component<AutocompleteProps, AutocompleteState> {
+    public static defaultProps = {valueKey: 'id', titleKey: 'title'};
     private showDropDown = false;
 
     constructor(props: AutocompleteProps) {
@@ -73,7 +74,7 @@ export class Autocomplete extends Component<AutocompleteProps, AutocompleteState
     }
 
     public render() {
-        let {name, label, error, value, titleKey, placeholder} = this.props;
+        const {name, label, error, value, titleKey, placeholder} = this.props;
         let {showLoader, term} = this.state;
         let list = this.renderList();
         term = term || (value && value[titleKey]) || '';

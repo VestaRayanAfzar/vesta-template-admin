@@ -1,10 +1,9 @@
-let gulp = require('gulp');
-let fs = require('fs');
-let webpack = require('webpack');
-let webConnect = require('gulp-connect');
-let open = require('open');
-let eliminator = require('./plugins/eliminator');
-let bundler = require('./plugins/bundler');
+const gulp = require('gulp');
+const fs = require('fs-extra');
+const webpack = require('webpack');
+const webConnect = require('gulp-connect');
+const eliminator = require('./plugins/eliminator');
+const bundler = require('./plugins/bundler');
 
 module.exports = function (setting) {
     let dir = setting.dir;
@@ -24,15 +23,14 @@ module.exports = function (setting) {
         setting.clean(tmpClient);
         bundler(setting, getEntry(`${setting.dir.srcClient}/app`), tmpClient);
         return gulp.src(`${tmpClient}/**/*.ts*`)
-            .pipe(eliminator(setting, setting.target))
+            .pipe(eliminator(setting))
             .pipe(gulp.dest(tmpClient))
     });
 
     gulp.task('client:build', ['client:preBuild', 'client:sw'], () => {
-        // copying conf.var to target on production mode
-        if (setting.production && !setting.is(setting.target, 'web')) {
-            fs.copyFileSync(`${setting.dir.resource}/gitignore/config.var.ts`,
-                `${tmpClient}/client/app/config/config.var.ts`);
+        // copying conf.var to target on production mode [in case of not using deploy system]
+        if (setting.production) {
+            fs.copySync(`${setting.dir.resource}/gitignore/config.var.ts`, `${tmpClient}/client/app/config/config.var.ts`);
         }
         let webpackConfig = getWebpackConfig();
         const compiler = webpack(webpackConfig);
@@ -68,8 +66,12 @@ module.exports = function (setting) {
         gulp.watch([`${dir.srcClient}/**/*.ts*`], [`client:build`]);
     });
 
+    gulp.task(`sw:watch`, () => {
+        gulp.watch([`${dir.srcClient}/*.js`], [`client:sw`]);
+    });
+
     return {
-        watch: ['client:watch'],
+        watch: ['client:watch', 'sw:watch'],
         tasks: ['client:build', 'client:run']
     };
 
@@ -139,15 +141,12 @@ module.exports = function (setting) {
 
     function runWebServer(wwwRoot) {
         let assets = `${wwwRoot}/**/*`;
-        let url = `http://localhost:${setting.port.http}`;
 
         webConnect.server({
             root: [wwwRoot],
             livereload: true,
             port: setting.port.http
         });
-
-        setTimeout(open.bind(null, url), 1000);
 
         gulp.watch([assets], function () {
             gulp.src(assets).pipe(webConnect.reload());

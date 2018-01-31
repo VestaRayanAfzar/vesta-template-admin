@@ -10,7 +10,7 @@ $burger-item-height: 3px;
     //#{$float}: -3px;
 }
 
-.burger-component {
+.burger {
     $burger-width: $header-height - ( 2 * $header-padding);
     display: flex;
     justify-content: space-between;

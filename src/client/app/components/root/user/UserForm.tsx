@@ -114,15 +114,15 @@ export class UserForm extends PageComponent<UserFormProps, UserFormState> {
         const {validationErrors, roles} = this.props;
         const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
         const typeOptions: Array<FormOption> = [
-            {value: UserType.Admin, title: this.tr('enum_admin')},
-            {value: UserType.User, title: this.tr('enum_user')}];
+            {id: UserType.Admin, title: this.tr('enum_admin')},
+            {id: UserType.User, title: this.tr('enum_user')}];
         // const dateTime = DateTimeFactory.create(ConfigService.getConfig().locale)
         const genderOptions: Array<FormOption> = [
-            {value: UserGender.Male, title: this.tr('enum_male')},
-            {value: UserGender.Female, title: this.tr('enum_female')}];
+            {id: UserGender.Male, title: this.tr('enum_male')},
+            {id: UserGender.Female, title: this.tr('enum_female')}];
         const statusOptions: Array<FormOption> = [
-            {value: Status.Active, title: this.tr('enum_active')},
-            {value: Status.Inactive, title: this.tr('enum_inactive')}];
+            {id: Status.Active, title: this.tr('enum_active')},
+            {id: Status.Inactive, title: this.tr('enum_inactive')}];
 
         const user = this.state.user;
         const roleId = user.role && (user.role as IRole).id;

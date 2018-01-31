@@ -9,7 +9,8 @@ import {PageTitle} from "../general/PageTitle";
 import {Preloader} from "../general/Preloader";
 import {CrudMenu} from "../general/CrudMenu";
 import {IAccess} from "../../service/AuthService";
-import {IContact} from "../../cmn/models/Contact";
+import {Contact as ContactModel, IContact} from "../../cmn/models/Contact";
+import {ContactAdd} from "./contact/ContactAdd";
 import {ContactDetail} from "./contact/ContactDetail";
 import {ContactList} from "./contact/ContactList";
 
@@ -40,7 +41,7 @@ export class Contact extends PageComponent<ContactProps, ContactState> {
         };
     }
 
-    public fetch = (id: number) => {
+    public onFetch = (id: number) => {
         this.setState({showLoader: true});
         return this.api.get<IContact>(`contact/${id}`)
             .then(response => {
@@ -53,7 +54,7 @@ export class Contact extends PageComponent<ContactProps, ContactState> {
             })
     }
 
-    private fetchCount = (queryOption: IDataTableQueryOption<IContact>) => {
+    private onFetchCount = (queryOption: IDataTableQueryOption<IContact>) => {
         this.api.get<IContact>('contact/count', queryOption)
             .then(response => {
                 this.state.queryOption.total = response.total;
@@ -66,9 +67,9 @@ export class Contact extends PageComponent<ContactProps, ContactState> {
             })
     }
 
-    public fetchAll = (queryOption: IDataTableQueryOption<IContact>) => {
+    public onFetchAll = (queryOption: IDataTableQueryOption<IContact>) => {
         this.setState({showLoader: true, queryOption});
-        this.fetchCount(queryOption);
+        this.onFetchCount(queryOption);
         this.api.get<IContact>('contact', queryOption)
             .then(response => {
                 this.setState({showLoader: false, contacts: response.items});
@@ -79,11 +80,31 @@ export class Contact extends PageComponent<ContactProps, ContactState> {
             })
     }
 
-    public render() {
-        let {showLoader, contacts, queryOption} = this.state;
-        delete this.access.add;
-        delete this.access.edit;
+    public onSave = (model: IContact) => {
+        let contact = new ContactModel(model);
+        const saveType = contact.id ? 'update' : 'add';
+        let validationErrors = contact.validate();
+        if (validationErrors) {
+            return this.setState({validationErrors});
+        }
+        this.setState({showLoader: true, validationErrors: null});
+        let data = contact.getValues<IContact>();
+        (model.id ? this.api.put<IContact>('contact', data) : this.api.post<IContact>('contact', data))
+            .then(response => {
+                this.setState({showLoader: false});
+                this.notif.success(this.tr(`info_${saveType}_record`, `${response.items[0].id}`));
+                this.onFetchAll(this.state.queryOption);
+                this.props.history.goBack();
+            })
+            .catch(error => {
+                this.setState({showLoader: false, validationErrors: error.violations});
+                this.notif.error(error.message);
+            })
+    }
 
+    public render() {
+        let {showLoader, contacts, queryOption, validationErrors} = this.state;
+        delete this.access.add;
         return (
             <div className="page contact-page has-navbar">
                 <PageTitle title={this.tr('mdl_contact')}/>
@@ -94,13 +115,18 @@ export class Contact extends PageComponent<ContactProps, ContactState> {
                 <div className="crud-wrapper">
                     <DynamicRouter>
                         <Switch>
+                            {this.access.add ?
+                                <Route path="/contact/add"
+                                       render={this.tz(ContactAdd, {contact: ['add']}, {
+                                           onSave: this.onSave, validationErrors
+                                       })}/> : null}
                             <Route path="/contact/detail/:id"
                                    render={this.tz(ContactDetail, {contact: ['read']}, {
-                                       fetch: this.fetch
+                                       onFetch: this.onFetch
                                    })}/>
                         </Switch>
                     </DynamicRouter>
-                    <ContactList access={this.access} fetch={this.fetchAll} queryOption={queryOption}
+                    <ContactList access={this.access} onFetch={this.onFetchAll} queryOption={queryOption}
                                  contacts={contacts}/>
                 </div>
             </div>

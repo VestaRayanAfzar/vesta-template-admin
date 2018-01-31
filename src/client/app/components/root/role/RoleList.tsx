@@ -31,19 +31,15 @@ export class RoleList extends PageComponent<RoleListProps, RoleListState> {
         this.props.fetch(this.props.queryOption);
     }
 
-    public del = (e) => {
-        e.preventDefault();
-        let match = e.target.href.match(/(\d+)$/);
-        if (match) {
-            this.api.del<IDeleteResult>('acl/role', +match[0])
-                .then(response => {
-                    this.notif.success(this.tr('info_delete_record', response.items[0]));
-                    this.props.fetch(this.props.queryOption);
-                })
-                .catch(error => {
-                    this.notif.error(this.tr(error.message));
-                })
-        }
+    public del = (id) => {
+        this.api.del<IDeleteResult>('acl/role', id)
+            .then(response => {
+                this.notif.success(this.tr('info_delete_record', response.items[0]));
+                this.props.fetch(this.props.queryOption);
+            })
+            .catch(error => {
+                this.notif.error(this.tr(error.message));
+            })
     }
 
     public render() {

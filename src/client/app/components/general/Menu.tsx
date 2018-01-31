@@ -2,6 +2,7 @@ import React, {PureComponent} from "react";
 import {Link} from "react-router-dom";
 import {RouteItem} from "../../config/route";
 import {BaseComponentProps} from "../BaseComponent";
+import {Icon} from "./Icon";
 
 export interface MenuItem extends RouteItem {
 
@@ -15,6 +16,7 @@ export interface MenuProps extends BaseComponentProps {
 }
 
 export class Menu extends PureComponent<MenuProps, null> {
+    public static defaultProps = {horizontal: false};
     private keyCounter = 1;
 
     private renderMenuItems(routeItems: Array<RouteItem>, prefix: string) {
@@ -25,9 +27,10 @@ export class Menu extends PureComponent<MenuProps, null> {
             const item = routeItems[i];
             if (!item.abstract && !item.hidden) {
                 let basePath = prefix ? `/${prefix}` : '';
+                let content = item.icon ? <Icon name={item.icon}/> : item.title;
                 links.push(
                     <li key={this.keyCounter++}>
-                        <Link to={`${basePath}/${item.link}`} onClick={onClick}>{item.title}</Link>
+                        <Link to={`${basePath}/${item.link}`} onClick={onClick}>{content}</Link>
                     </li>);
             }
             if (item.children) {
@@ -38,9 +41,9 @@ export class Menu extends PureComponent<MenuProps, null> {
     }
 
     public render() {
-        let {name, items, horizontal} = this.props;
+        const {name, items, horizontal} = this.props;
         const menuItems = this.renderMenuItems(items, '');
-        const className = `menu-component ${name} ${horizontal ? 'horizontal' : 'vertical'}`;
+        const className = `menu ${name ? `${name}-menu` : ''} ${horizontal ? 'menu-hr' : 'menu-vr'}`;
 
         return (
             <nav className={className}>

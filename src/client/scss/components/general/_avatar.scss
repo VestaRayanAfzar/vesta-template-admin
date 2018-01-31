@@ -1,7 +1,7 @@
 $avatar-default-width: 64px;
 $avatar-holder-bg: $color-default;
 
-.avatar-component {
+.avatar {
     position: relative;
     overflow: hidden;
     display: flex;
@@ -12,8 +12,8 @@ $avatar-holder-bg: $color-default;
     border-radius: 50%;
     //border: 2px solid $border-color;
     img {
-        width: 100%;
-        height: auto;
+        width: auto;
+        height: 100%;
     }
     .avatar-holder {
         width: 100%;

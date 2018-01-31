@@ -1,9 +1,63 @@
-.preloader-component {
-    //border: 2px solid green;
+$pl-modal-bg: transparentize($white, .9);
+$pl-wrapper-size: 30vh;
+$pl-circular-size: $pl-wrapper-size;
+$pl-circular-border-color: $color-primary;
+
+.preloader {
     text-align: center;
-    padding: 20px;
-    h2 {
+
+    .pl-wrapper {
+        width: $pl-wrapper-size;
+        height: $pl-wrapper-size;
+        margin: auto;
+        position: relative;
+    }
+
+    .pl-circular {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid $color-default;
+        border-top-color: $pl-circular-border-color;
+        background: transparentize($color-default, .25);
+        @include animation-rotate(4s, linear);
+    }
+
+    .pl-text {
+        position: absolute;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        top: 50%;
+        left: 0;
+        right: 0;
+        @include translate3d(0, -50%, 0);
+    }
+
+    .pl-title {
         white-space: nowrap;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        font-weight: normal;
+    }
+
+    .pl-message {
+        font-weight: lighter;
+    }
+}
+
+.modal.preloader-modal {
+    background: $pl-modal-bg;
+
+    .dialog {
+        position: relative;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dialog-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 }

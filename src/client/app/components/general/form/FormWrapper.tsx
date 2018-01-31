@@ -6,20 +6,21 @@ export interface ChangeEventHandler {
 }
 
 export interface FormOption {
+    id: number;
     title: string;
-    value: any;
 }
 
 export interface FormWrapperProps extends BaseComponentProps {
     name?: string;
-    onSubmit: (e: Event) => void;
+    onSubmit?: (e: Event) => void;
 }
 
 export class FormWrapper extends PureComponent<FormWrapperProps, null> {
 
     private onSubmit = (e) => {
+        const {onSubmit} = this.props
         e.preventDefault();
-        this.props.onSubmit(e);
+        onSubmit && onSubmit(e);
     }
 
     public render() {

@@ -41,7 +41,7 @@ export class SidenavContent extends PureComponent<SideNavContentProps, null> {
                     </div>
                 </header>
                 <main>
-                    <Menu name="nav-menu" items={menuItems} onClick={this.closeSidenav}/>
+                    <Menu name="nav" items={menuItems} onClick={this.closeSidenav}/>
                 </main>
             </div>
         );

@@ -1,3 +1,4 @@
+$dt-bg: $white;
 $dt-border-color: $border-color;
 $dt-border-radius: $border-radius;
 $dt-header-cell-padding: 14px 7px 5px 7px;
@@ -6,7 +7,8 @@ $dt-data-cell-padding: 7px;
 @mixin style-table() {
     width: 100%;
     table-layout: auto;
-    background: transparentize($color-light, .5);
+    border-collapse: collapse;
+    background: $dt-bg;
 
     thead {
         th {
@@ -24,9 +26,9 @@ $dt-data-cell-padding: 7px;
             //transition: all 200ms linear;
             //&:nth-child(odd) {
             //}
-            //&:nth-child(even) {
-            //    background: transparentize($light, .5);
-            //}
+            &:nth-child(even) {
+                background: transparentize($color-light, .5);
+            }
             //&:hover {
             //    background: transparentize($color-dark, .7);
             //    color: $color-light;
@@ -48,7 +50,7 @@ $dt-data-cell-padding: 7px;
     }
 }
 
-.dataTable-component {
+.data-table {
     overflow: hidden;
     border: 1px solid $dt-border-color;
     border-radius: $dt-border-radius;

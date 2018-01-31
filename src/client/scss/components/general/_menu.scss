@@ -2,7 +2,7 @@ $menu-z-index: $z-index-header;
 $menu-item-padding-horizontal: 3px 5px;
 $menu-item-padding-vertical: 10px;
 
-.menu-component {
+.menu {
     position: relative;
     z-index: $menu-z-index;
     li {
@@ -13,7 +13,7 @@ $menu-item-padding-vertical: 10px;
         display: block;
         width: 100%;
     }
-    &.horizontal {
+    &.menu-hr {
         li {
             display: inline-block;
             a {
@@ -21,10 +21,10 @@ $menu-item-padding-vertical: 10px;
             }
         }
     }
-    &.vertical {
+    &.menu-vr {
         li {
             border-top: 1px solid $border-color;
-            &:last-child{
+            &:last-child {
                 border-bottom: 1px solid $border-color;
             }
             a {

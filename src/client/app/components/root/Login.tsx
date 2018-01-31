@@ -9,6 +9,7 @@ import {FormTextInput} from "../general/form/FormTextInput";
 import {FieldValidationMessage, ModelValidationMessage, validationMessage} from "../../util/Util";
 import {Alert} from "../general/Alert";
 import {IValidationError} from "../../cmn/core/Validator";
+import {StorageService} from "../../service/StorageService";
 
 export interface LoginParams {
 }
@@ -33,7 +34,7 @@ export class Login extends PageComponent<LoginProps, LoginState> {
     public componentDidMount() {
         if (!this.auth.isGuest()) {
             // if it's a user logout first
-            this.props.history.replace('/logout');
+            this.props.history.push('/logout');
         }
     }
 
@@ -52,7 +53,6 @@ export class Login extends PageComponent<LoginProps, LoginState> {
         this.api.post<IUser>('account/login', user.getValues('username', 'password'))
             .then(response => {
                 this.auth.login(response.items[0]);
-                this.props.history.replace('/');
             })
             .catch(error => {
                 this.setState({showLoader: false, error: this.tr('err_wrong_user_pass')});

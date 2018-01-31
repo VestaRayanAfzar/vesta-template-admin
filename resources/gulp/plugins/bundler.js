@@ -7,7 +7,6 @@ const PluginError = util.PluginError;
 const PLUGIN_NAME = 'bundler';
 
 module.exports = function (config, entry, destination) {
-    // let filePath = `${config.dir.root}/vesta.json`;
     if (!fse.existsSync(entry)) {
         throw new PluginError(PLUGIN_NAME, `Entry file was not found at '${entry}'`);
     }

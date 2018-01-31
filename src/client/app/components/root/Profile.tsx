@@ -155,8 +155,8 @@ export class Profile extends PageComponent<ProfileProps, ProfileState> {
             }
         };
         const genderOptions: Array<FormOption> = [
-            {value: UserGender.Male, title: this.tr('enum_male')},
-            {value: UserGender.Female, title: this.tr('enum_female')}];
+            {id: UserGender.Male, title: this.tr('enum_male')},
+            {id: UserGender.Female, title: this.tr('enum_female')}];
         const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
 
         return (

@@ -15,11 +15,11 @@ print_status(){
 }
 
 cd ${CLONE_PATH}
-git checkout dev
+git checkout master
 print_status "Cloning SubModules"
 git submodule update --init src/client/app/cmn
 git submodule foreach git checkout master
-mv resources/gitignore/config.var.ts src/client/app/config/config.var.ts
+cp resources/gitignore/config.var.ts src/client/app/config/config.var.ts
 
 print_status "Executing pre-deploy Script"
 chmod +x resources/ci/scripts/pre-deploy.js

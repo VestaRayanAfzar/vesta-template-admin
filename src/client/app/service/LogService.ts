@@ -1,24 +1,37 @@
+import {ApiService} from "./ApiService";
+import {ILog, Log, LogLevel} from "../cmn/models/Log";
+
 export class LogService {
-    private static LogType = {Log: 'log', Info: 'info', Warn: 'warn', Error: 'error'};
 
-    public static log(log: any, method?: string, file?: string) {
-        LogService.echo(LogService.LogType.Log, method, file, log);
+    public static info(info: ILog | string, method?: string, file?: string) {
+        LogService.log('log', method, file, info);
     }
 
-    public static warn(warning: any, method?: string, file?: string) {
-        LogService.echo(LogService.LogType.Warn, method, file, warning);
+    public static warn(warning: ILog | string, method?: string, file?: string) {
+        LogService.log('warn', method, file, warning);
+        //<production>
+        LogService.save(LogLevel.Warn, warning, method, file);
+        //</production>
     }
 
-    public static info(information: any, method?: string, file?: string) {
-        LogService.echo(LogService.LogType.Info, method, file, information);
+    public static error(error: ILog | string, method?: string, file?: string) {
+        LogService.log('error', method, file, error);
+        //<production>
+        LogService.save(LogLevel.Error, error, method, file);
+        //</production>
     }
 
-    public static error(error: any, method?: string, file?: string) {
-        LogService.echo(LogService.LogType.Error, method, file, error);
-    }
-
-    private static echo(logType: string, method: string, file: string, log: any) {
-        // todo what to do ???
+    private static log(logType: string, method: string, file: string, log: any) {
         console[logType](`[${file || ''}::${method || ''}]`, log);
+    }
+
+    private static save(level: LogLevel, log: ILog | string, method?: string, file?: string) {
+        //<production>
+        const message = "string" === typeof log ? log : log.message;
+        const logModel = new Log({level, message, method, file});
+        // saving log to api server
+        ApiService.getInstance().post<ILog>('log', logModel.getValues())
+            .catch(error => console.log(`[LogService::save]`, error));
+        //</production>
     }
 }

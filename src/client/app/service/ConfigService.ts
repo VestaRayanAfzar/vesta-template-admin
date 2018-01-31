@@ -1,7 +1,7 @@
 export interface IVariantClientAppConfig {
     env: string;
     api: string;
-    asset: string;
+    sw: string;
     cache: {
         api: number;
     };

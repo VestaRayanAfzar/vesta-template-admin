@@ -26,10 +26,10 @@ export class Burger extends PureComponent<BurgerProps, BurgerState> {
     }
 
     public render() {
-        const {className} = this.props;
+        const {className = ''} = this.props;
 
         return (
-            <a className={`burger-component${className ? ` ${className}` : ''}`} onClick={this.onClick}>
+            <a className={`burger ${className}`} onClick={this.onClick}>
                 <span></span>
                 <span></span>
                 <span></span>

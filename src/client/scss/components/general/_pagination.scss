@@ -3,12 +3,15 @@ $pagination-input-width: 64px;
 .pagination {
     text-align: center;
     white-space: nowrap;
+    background: $white;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
 
     form {
         display: inline-block;
 
         input {
-            //border: 1px solid $border-color;
+            border: 1px solid $border-color;
             text-align: center;
             width: $pagination-input-width;
             border-radius: 0;

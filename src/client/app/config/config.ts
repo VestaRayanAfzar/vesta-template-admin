@@ -9,7 +9,7 @@ export const Config: IClientAppConfig = {
     },
     locale: 'fa-IR',
     api: VariantConfig.api,
-    asset: VariantConfig.asset,
+    sw: VariantConfig.sw,
     env: VariantConfig.env,
     cache: VariantConfig.cache,
     viewport: VariantConfig.viewport,
