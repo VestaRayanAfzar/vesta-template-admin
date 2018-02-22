@@ -1,8 +1,8 @@
 import React, {EventHandler, PureComponent, ReactChild} from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 import {Modal} from "./Modal";
 
-export interface DialogProps extends BaseComponentProps {
+export interface DialogProps extends IBaseComponentProps {
     title?: string;
     show: boolean;
     onClose?: EventHandler<any>;
@@ -15,7 +15,7 @@ export class Dialog extends PureComponent<DialogProps, null> {
     private renderHeader() {
         const {title, onClose} = this.props;
         const titlebar = title ? <h3>{title}</h3> : null;
-        const closeBtn = onClose ? <button className="btn" onClick={close}>X</button> : null;
+        const closeBtn = onClose ? <span className="btn" onClick={onClose}>X</span> : null;
         return titlebar || closeBtn ? <div className="dialog-header">
             {titlebar}
             {closeBtn}

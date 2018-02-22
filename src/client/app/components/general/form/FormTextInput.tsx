@@ -1,35 +1,33 @@
-import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../../BaseComponent";
-import {ChangeEventHandler} from "./FormWrapper";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../../BaseComponent";
+import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
 
-export interface FormTextInputProps extends BaseComponentProps {
-    label: string;
-    name: string;
-    value?: string;
-    onChange?: ChangeEventHandler;
-    error?: string;
+export interface IFormTextInputProps extends IBaseComponentProps, IFromControlProps {
+    dir?: "ltr" | "rtl";
     type?: string;
-    dir?: 'ltr' | 'rtl';
-    placeholder?: boolean;
+    value?: string;
 }
 
-export class FormTextInput extends PureComponent<FormTextInputProps, null> {
-
-    private onChange = (e) => {
-        this.props.onChange(this.props.name, e.target.value);
-    }
+export class FormTextInput extends PureComponent<IFormTextInputProps, null> {
 
     public render() {
-        let {label, name, value, dir, error, type, placeholder} = this.props;
-        type = type || 'text';
-        let extClassName = dir ? ` dir-${dir}` : '';
+        const { label, name, value, dir, error, placeholder } = this.props;
+        const type = this.props.type || "text";
+        const extClassName = dir ? `dir-${dir}` : "";
+
         return (
-            <div className={`form-group text-input${extClassName}${error ? ' has-error' : ''}`}>
+            <div className={`form-group text-input ${extClassName} ${error ? "has-error" : ""}`}>
                 {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <input className="form-control" type={type} name={name} id={name} placeholder={placeholder ? label : ''}
-                       value={value || ''} onChange={this.onChange}/>
-                <p className="form-error">{error || ''}</p>
+                <input className="form-control" type={type} name={name} id={name} placeholder={placeholder ? label : ""} value={value || ""} onChange={this.onChange} />
+                <p className="form-error">{error || ""}</p>
             </div>
-        )
+        );
+    }
+
+    private onChange = (e) => {
+        const { onChange, name } = this.props;
+        if (onChange) {
+            onChange(name, e.target.value);
+        }
     }
 }

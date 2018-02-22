@@ -1,9 +1,9 @@
 import React, {PureComponent} from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 import {ConfigService} from "../../service/ConfigService";
 
-export interface ModalProps extends BaseComponentProps {
+export interface ModalProps extends IBaseComponentProps {
     show: boolean;
     name?: string;
     className?: string;

@@ -1,23 +1,22 @@
-import {VariantConfig} from "./config.var";
-import {IClientAppConfig} from "../service/ConfigService";
+import { IClientAppConfig } from "../service/ConfigService";
+import { VariantConfig } from "./config.var";
 
 export const Config: IClientAppConfig = {
-    name: 'vestaTemplateCpanel',
-    version: {
-        app: '0.1.0',
-        api: 'v1'
-    },
-    locale: 'fa-IR',
     api: VariantConfig.api,
-    sw: VariantConfig.sw,
     env: VariantConfig.env,
-    cache: VariantConfig.cache,
-    viewport: VariantConfig.viewport,
+    locale: "fa-IR",
+    name: "vesta",
     pagination: {
-        itemsPerPage: 20
+        itemsPerPage: 20,
     },
+    sw: VariantConfig.sw,
     transition: {
         enter: 150,
-        leave: 100
-    }
+        leave: 100,
+    },
+    version: {
+        api: "v1",
+        app: "0.8.1",
+    },
+    viewport: VariantConfig.viewport,
 };

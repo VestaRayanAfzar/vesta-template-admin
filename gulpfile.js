@@ -1,6 +1,7 @@
-let gulp = require('gulp');
-let path = require('path');
-let config = require('./resources/gulp/config');
+const gulp = require('gulp');
+const runSequence = require("run-sequence");
+const path = require('path');
+const config = require('./resources/gulp/config');
 
 let setting = Object.assign({target: 'web', production: false}, config);
 let {dir, targets} = setting;
@@ -17,7 +18,7 @@ gulp.task('production', () => {
     setting.production = true;
 });
 
-createTasks(...loadTasks(['server']), true);
+// createTasks(...loadTasks(['server']), true);
 createTasks(...loadTasks(['asset', 'sass', 'client', 'model']), false);
 
 function loadTasks(modules) {
@@ -44,8 +45,11 @@ function createTasks(tasks, watches, isServerTasks) {
         Object.keys(targets).forEach(target => {
             let targetSpec = targets[target];
             if (targetSpec.elimination) {
-                gulp.task(`dev:${target}`, [target].concat(tasks.concat(watches)));
-                gulp.task(`deploy:${target}`, ['production', target].concat(tasks));
+                // all watches can run in parallel
+                const devTasks = [target].concat(tasks.concat([watches]));
+                const prodTasks = ["production", target].concat(tasks);
+                gulp.task(`dev:${target}`, () => runSequence(...devTasks));
+                gulp.task(`deploy:${target}`, () => runSequence(...prodTasks));
             }
         });
     }

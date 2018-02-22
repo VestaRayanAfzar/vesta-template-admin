@@ -1,5 +1,5 @@
 import React from "react";
-import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
+import {PageComponent, IPageComponentProps} from "../PageComponent";
 import {IUser} from "../../cmn/models/User";
 import {Preloader} from "../general/Preloader";
 import {LogService} from "../../service/LogService";
@@ -7,10 +7,10 @@ import {LogService} from "../../service/LogService";
 export interface LogoutParams {
 }
 
-export interface LogoutProps extends PageComponentProps<LogoutParams> {
+export interface LogoutProps extends IPageComponentProps<LogoutParams> {
 }
 
-export interface LogoutState extends PageComponentState {
+export interface LogoutState {
 }
 
 export class Logout extends PageComponent<LogoutProps, LogoutState> {

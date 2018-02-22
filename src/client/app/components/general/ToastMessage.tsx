@@ -1,9 +1,9 @@
 import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 import {IToastData, MessageType} from "../../service/NotificationService";
 import {Dispatcher} from "../../service/Dispatcher";
 
-export interface ToastMessageProps extends BaseComponentProps {
+export interface ToastMessageProps extends IBaseComponentProps {
 }
 
 export interface ToastMessageState {

@@ -2,13 +2,16 @@ $pl-modal-bg: transparentize($white, .9);
 $pl-wrapper-size: 30vh;
 $pl-circular-size: $pl-wrapper-size;
 $pl-circular-border-color: $color-primary;
+$pl-wrapper-min-size: 200px;
 
 .preloader {
     text-align: center;
 
     .pl-wrapper {
         width: $pl-wrapper-size;
+        min-width: $pl-wrapper-min-size;
         height: $pl-wrapper-size;
+        min-height: $pl-wrapper-min-size;
         margin: auto;
         position: relative;
     }

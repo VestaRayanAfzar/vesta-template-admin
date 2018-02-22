@@ -1,35 +1,35 @@
 import React from "react";
-import {PageComponent, PageComponentProps, PageComponentState, Save} from "../../PageComponent";
-import {RoleForm} from "./RoleForm";
-import {IRole} from "../../../cmn/models/Role";
-import {IExtPermission} from "../Role";
-import {IValidationError} from "../../../cmn/core/Validator";
+import { IRole } from "../../../cmn/models/Role";
+import { IValidationError } from "../../../medium";
+import { IPageComponentProps, PageComponent, Save } from "../../PageComponent";
+import { IExtPermission } from "../Role";
+import { RoleForm } from "./RoleForm";
 
-export interface RoleAddParams {
+export interface IRoleAddParams {
 }
 
-export interface RoleAddProps extends PageComponentProps<RoleAddParams> {
+export interface IRoleAddProps extends IPageComponentProps<IRoleAddParams> {
+    permissions: IExtPermission;
     save: Save<IRole>;
     validationErrors: IValidationError;
-    permissions: IExtPermission;
 }
 
-export interface RoleAddState extends PageComponentState {
+export interface IRoleAddState {
 }
 
-export class RoleAdd extends PageComponent<RoleAddProps, RoleAddState> {
+export class RoleAdd extends PageComponent<IRoleAddProps, IRoleAddState> {
 
     public render() {
         return (
             <div className="crud-page">
-                <h1>{this.tr('title_record_add', this.tr('mdl_role'))}</h1>
+                <h2>{this.tr("title_record_add", this.tr("role"))}</h2>
                 <RoleForm {...this.props}>
                     <div className="btn-group">
-                        <button className="btn btn-primary" type="submit">Add New Role</button>
-                        <button className="btn" type="button" onClick={this.props.history.goBack}>Cancel</button>
+                        <button className="btn btn-primary" type="submit">{this.tr("save")}</button>
+                        <button className="btn btn-outline" type="button" onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </RoleForm>
             </div>
-        )
+        );
     }
 }

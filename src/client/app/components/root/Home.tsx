@@ -1,20 +1,20 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {PageComponent, PageComponentProps, PageComponentState} from "../PageComponent";
+import { Link } from "react-router-dom";
 import Navbar from "../general/Navbar";
+import { IPageComponentProps, PageComponent } from "../PageComponent";
 
-export interface HomeParams {
+interface IHomeParams {
 }
 
-export interface HomeProps extends PageComponentProps<HomeParams> {
+interface IHomeProps extends IPageComponentProps<IHomeParams> {
 }
 
-export interface HomeState extends PageComponentState {
+interface IHomeState {
 }
 
-export class Home extends PageComponent<HomeProps, HomeState> {
+export class Home extends PageComponent<IHomeProps, IHomeState> {
 
-    constructor(props: HomeProps) {
+    constructor(props: IHomeProps) {
         super(props);
         this.state = {};
     }
@@ -22,7 +22,7 @@ export class Home extends PageComponent<HomeProps, HomeState> {
     public render() {
         return (
             <div className="page home-page has-navbar">
-                <Navbar title={this.tr('home')} showBurger={true}/>
+                <Navbar title={this.tr("home")} showBurger={true} />
                 <h1>Home Component</h1>
             </div>
         );

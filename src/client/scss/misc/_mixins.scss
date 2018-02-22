@@ -1,19 +1,20 @@
 @mixin debug($value) {
-    body:before {
+    body::before {
+        background: $white;
+        border: 2px solid $red;
+        content: $value;
         display: block;
         position: fixed;
-        border: 2px solid red;
-        background: white;
         top: 0;
         width: 100%;
-        content: $value;
     }
 }
 
 @mixin rtl($prop, $value, $rtl-value) {
-    @if ($direction == ltr) {
+    @if ($direction==ltr) {
         #{$prop}: $value;
-    } @else {
+    }
+    @else {
         #{$prop}: $rtl-value;
     }
 }
@@ -41,7 +42,6 @@
 
 @mixin filter($filter) {
     filter: $filter;
-    -webkit-filter: $filter;
 }
 
 @mixin animation-rotate($duration, $effect: $transition-effect-default) {
@@ -52,65 +52,67 @@
 }
 
 // Media queries
-@mixin mediaQuery($minWidth, $maxWidth:0) {
-    @if ($minWidth > 0 and $maxWidth > 0) {
-        @media screen and (min-width: $minWidth) and (max-width: $maxWidth) {
-            @content;
-        }
-    } @else if ($minWidth > 0) {
-        @media screen and (min-width: $minWidth) {
-            @content;
-        }
-    } @else {
-        @media screen and (max-width: $maxWidth) {
+@mixin media-query($min-width, $max-width: 0) {
+    @if ($min-width > 0 and $max-width > 0) {
+        @media screen and (min-width: $min-width) and (max-width: $max-width) {
             @content;
         }
     }
+    @else if ($min-width > 0) {
+        @media screen and (min-width: $min-width) {
+            @content;
+        }
+    }
+    @else {
+        @media screen and (max-width: $max-width) {
+            @content;
+        }
+    }
 }
 
-@mixin mediaQuerySmall() {
-    @include mediaQuery(0, $layout-small-max) {
+@mixin media-query-small() {
+    @include media-query(0, $layout-small-max) {
         @content;
     }
 }
 
-@mixin mediaQueryMedium() {
-    @include mediaQuery($layout-medium-min, $layout-medium-max) {
+@mixin media-query-medium() {
+    @include media-query($layout-medium-min, $layout-medium-max) {
         @content;
     }
 }
 
-@mixin mediaQueryLarge() {
-    @include mediaQuery($layout-large-min, $layout-large-max) {
+@mixin media-query-large() {
+    @include media-query($layout-large-min, $layout-large-max) {
         @content;
     }
 }
 
-@mixin mediaQueryXLarge() {
-    @include mediaQuery($layout-xlarge-min) {
+@mixin media-query-xlarge() {
+    @include media-query($layout-xlarge-min) {
         @content;
     }
 }
 
-@mixin mediaQueryBelow() {
-    @include mediaQuery(0, $layout-medium-max) {
+@mixin media-query-below() {
+    @include media-query(0, $layout-medium-max) {
         @content;
     }
 }
 
-@mixin mediaQueryAbove() {
-    @include mediaQuery($layout-large-min) {
+@mixin media-query-above() {
+    @include media-query($layout-large-min) {
         @content;
     }
 }
 
-@mixin mediaQueryLandscape() {
+@mixin media-query-landscape() {
     @media screen and (orientation: landscape) {
         @content;
     }
 }
 
-@mixin mediaQueryPortrait() {
+@mixin media-query-portrait() {
     @media screen and (orientation: portrait) {
         @content;
     }

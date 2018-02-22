@@ -1,15 +1,12 @@
-import {IVariantClientAppConfig} from "../service/ConfigService";
+import { IVariantClientAppConfig } from "../service/ConfigService";
 
 export const VariantConfig: IVariantClientAppConfig = {
-    env: 'production',
-    api: 'https://api.vesta.bz',
-    sw: 'service-worker',
-    cache: {
-        api: 0
-    },
+    api: "https://api.vesta.bz",
+    env: "production",
+    sw: "service-worker",
     viewport: {
-        Small: 425,
+        Large: 1024,
         Medium: 768,
-        Large: 1024
-    }
+        Small: 425,
+    },
 };

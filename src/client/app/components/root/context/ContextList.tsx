@@ -1,29 +1,29 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
 import {IContext} from "../../../cmn/models/Context";
-import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
+import { IDeleteResult } from "../../../medium";
 import {IAccess} from "../../../service/AuthService";
-import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
+import {DataTable, IColumn, IDataTableQueryOption} from "../../general/DataTable";
 import {DataTableOperations} from "../../general/DataTableOperations";
+import {IPageComponentProps, PageComponent} from "../../PageComponent";
 
-export interface ContextListParams {
+export interface IContextListParams {
 }
 
-export interface ContextListProps extends PageComponentProps<ContextListParams> {
-    contexts: Array<IContext>;
+export interface IContextListProps extends IPageComponentProps<IContextListParams> {
     access: IAccess;
+    contexts: Array<IContext>;
     fetch: (queryOption: IDataTableQueryOption<IContext>) => void;
     queryOption: IDataTableQueryOption<IContext>;
 }
 
-export interface ContextListState extends PageComponentState {
+export interface IContextListState {
     contexts: Array<IContext>;
 }
 
-export class ContextList extends PageComponent<ContextListProps, ContextListState> {
+export class ContextList extends PageComponent<IContextListProps, IContextListState> {
 
-    constructor(props: ContextListProps) {
+    constructor(props: IContextListProps) {
         super(props);
         this.state = {contexts: []};
     }
@@ -32,32 +32,32 @@ export class ContextList extends PageComponent<ContextListProps, ContextListStat
         this.props.fetch(this.props.queryOption);
     }
 
-    public del = (id) => {
-        this.api.del<IDeleteResult>('context', id)
-            .then(response => {
-                this.notif.success(this.tr('info_delete_record', response.items[0]));
-                this.props.fetch(this.props.queryOption);
-            })
-            .catch(error => {
-                this.notif.error(this.tr(error.message));
-            })
-    }
-
     public render() {
         const access = this.props.access;
-        const columns: Array<Column<IContext>> = [
-            {name: 'id', title: this.tr('fld_id')},
-            {name: 'key', title: this.tr('fld_key')},
+        const columns: Array<IColumn<IContext>> = [
+            {name: "id", title: this.tr("fld_id")},
+            {name: "key", title: this.tr("fld_key")},
             {
-                title: this.tr('operations'),
-                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="context"/>
-            }
+                render: (r) => <DataTableOperations access={access} id={r.id} onDelete={this.onDelete} path="context"/>,
+                title: this.tr("operations"),
+            },
         ];
         return (
             <div className="crud-page">
                 <DataTable queryOption={this.props.queryOption} columns={columns} records={this.props.contexts}
                            fetch={this.props.fetch} pagination={true}/>
             </div>
-        )
+        );
+    }
+
+    private onDelete = (id) => {
+        this.api.del<IDeleteResult>(`context/${id}`)
+            .then((response) => {
+                this.notif.success(this.tr("info_delete_record", response.items[0]));
+                this.props.fetch(this.props.queryOption);
+            })
+            .catch((error) => {
+                this.notif.error(this.tr(error.message));
+            });
     }
 }

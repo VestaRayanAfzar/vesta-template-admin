@@ -1,10 +1,10 @@
-import * as React from "react";
-import {PageComponentProps} from "../PageComponent";
+import React from "react";
+import {IPageComponentProps} from "../PageComponent";
 
 export interface ScriptParams {
 }
 
-export interface ScriptProps extends PageComponentProps<ScriptParams> {
+export interface ScriptProps extends IPageComponentProps<ScriptParams> {
     src: string;
     success: () => void;
     error?: () => void;

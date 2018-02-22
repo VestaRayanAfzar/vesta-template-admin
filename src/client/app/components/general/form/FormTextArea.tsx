@@ -1,32 +1,29 @@
-import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../../BaseComponent";
-import {ChangeEventHandler} from "./FormWrapper";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../../BaseComponent";
+import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
 
-export interface FormTextAreaProps extends BaseComponentProps {
-    label: string;
-    name: string;
+interface IFormTextAreaProps extends IBaseComponentProps, IFromControlProps {
     value?: string;
-    onChange?: ChangeEventHandler;
-    error?: string;
-    placeholder?: boolean;
 }
 
-export class FormTextArea extends PureComponent<FormTextAreaProps, null> {
-
-    private onChange = (e) => {
-        this.props.onChange(this.props.name, e.target.value)
-    }
+export class FormTextArea extends PureComponent<IFormTextAreaProps, null> {
 
     public render() {
-        let {label, name, value, error, placeholder} = this.props;
+        const { label, name, value, error, placeholder } = this.props;
+
         return (
-            <div className={`form-group text-area${error ? ' has-error' : ''}`}>
+            <div className={`form-group text-area${error ? " has-error" : ""}`}>
                 {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <textarea className="form-control" name={name} id={name} placeholder={placeholder ? label : ''}
-                          value={value} onChange={this.onChange}/>
-                <p className="form-error">{error || ''}</p>
+                <textarea className="form-control" name={name} id={name} placeholder={placeholder ? label : ""} value={value || ""} onChange={this.onChange} />
+                <p className="form-error">{error || ""}</p>
             </div>
-        )
+        );
+    }
+
+    private onChange = (e) => {
+        const { name, onChange } = this.props;
+        if (onChange) {
+            onChange(name, e.target.value);
+        }
     }
 }
-

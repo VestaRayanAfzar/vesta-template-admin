@@ -8,13 +8,13 @@ $layout-large-max: 1024px;
 $layout-xlarge-min: $layout-large-max;
 
 // font
-$font-size-xsmall: fontSize(.65);
-$font-size-small: fontSize(.85);
-$font-size-base: fontSize(1);
-$font-size-medium: fontSize(1.25);
-$font-size-large: fontSize(1.5);
-$font-size-xlarge: fontSize(2);
-$font-size-xxlarge: fontSize(4);
+$font-size-xsmall: font-size(.65);
+$font-size-small: font-size(.85);
+$font-size-base: font-size(1);
+$font-size-medium: font-size(1.25);
+$font-size-large: font-size(1.5);
+$font-size-xlarge: font-size(2);
+$font-size-xxlarge: font-size(4);
 
 // timing
 $transition-duration-short: 150ms;
@@ -33,7 +33,7 @@ $z-index-sidenav: 11;
 $z-index-navbar: 11;
 $z-index-dialog: 12;
 $z-index-date-picker: 12;
-$z-index-actionSheet: 13;
+$z-index-actionsheet: 13;
 $z-index-splash: 90;
 $z-index-notification: 99;
 
@@ -44,6 +44,7 @@ $header-padding: 16px; // from google
 $breadcrumb-height: 45px;
 $footer-height: 32px;
 $sidenav-width: 300px;
+$page-max-width: $layout-medium-max;
 
 // colors
 $color-primary: #6b036b;

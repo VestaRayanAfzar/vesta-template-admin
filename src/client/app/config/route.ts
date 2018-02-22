@@ -1,44 +1,47 @@
-import {ComponentClass} from "react";
-import {IPermissionCollection} from "../service/AuthService";
-import {TranslateService} from "../service/TranslateService";
-import {Login} from "../components/root/Login";
-import {Forget} from "../components/root/Forget";
-import {Logout} from "../components/root/Logout";
-import {Home} from "../components/root/Home";
-import {Contact} from "../components/root/Contact";
-import {Context} from "../components/root/Context";
-import {User} from "../components/root/User";
-import {Role} from "../components/root/Role";
-import {Profile} from "../components/root/Profile";
+import { ComponentClass } from "react";
+import { Context } from "../components/root/Context";
+import { Forget } from "../components/root/Forget";
+import { Home } from "../components/root/Home";
+import { Log } from "../components/root/Log";
+import { Login } from "../components/root/Login";
+import { Logout } from "../components/root/Logout";
+import { Profile } from "../components/root/Profile";
+import { Role } from "../components/root/Role";
+import { Support } from "../components/root/Support";
+import { User } from "../components/root/User";
+import { IPermissionCollection } from "../service/AuthService";
+import { TranslateService } from "../service/TranslateService";
 
-export interface RouteItem {
-    link: string;
-    title: string;
-    exact?: boolean;
+export interface IRouteItem {
     abstract?: boolean;
-    children?: Array<RouteItem>;
+    children?: Array<IRouteItem>;
     component?: ComponentClass<any>;
-    permissions?: IPermissionCollection;
+    exact?: boolean;
     // show/hide this item in menu list
     hidden?: boolean;
     // show icon on menu
     icon?: string;
+    link: string;
+    permissions?: IPermissionCollection;
+    title: string;
 }
 
-export function getRoutes(isLoggedIn: boolean): Array<RouteItem> {
+export function getRoutes(isLoggedIn: boolean): Array<IRouteItem> {
     const tr = TranslateService.getInstance().translate;
 
-    return isLoggedIn ? [
-        {link: '', title: tr('home'), component: Home, exact: true},
-        {link: 'contact', title: tr('mdl_contact'), component: Contact, permissions: {contact: ['read']}},
-        {link: 'context', title: tr('mdl_context'), component: Context, permissions: {context: ['read']}},
-        {link: 'user', title: tr('mdl_user'), component: User, permissions: {user: ['read']}},
-        {link: 'role', title: tr('mdl_role'), component: Role, permissions: {role: ['read']}},
-        {link: 'log', title: tr('mdl_log'), component: Log, permissions: {log: ['read']}},
-        {link: 'profile', title: tr('profile'), component: Profile, hidden: true},
-        {link: 'logout', title: tr('logout'), component: Logout}
-    ] : [
-        {link: '', title: tr('login'), component: Login, exact: true},
-        {link: 'forget', title: tr('forget_pass'), component: Forget, hidden: true},
-    ]
+    const userRoutes = [
+        { link: "", title: tr("home"), component: Home, exact: true },
+        { link: "support", title: tr("mdl_support"), component: Support, permissions: { contact: ["read"] } },
+        { link: "context", title: tr("mdl_context"), component: Context, permissions: { context: ["read"] } },
+        { link: "user", title: tr("mdl_user"), component: User, permissions: { user: ["read"] } },
+        { link: "role", title: tr("mdl_role"), component: Role, permissions: { role: ["read"] } },
+        { link: "log", title: tr("mdl_log"), component: Log, permissions: { log: ["read"] } },
+        { link: "profile", title: tr("profile"), component: Profile, hidden: true },
+        { link: "logout", title: tr("logout"), component: Logout },
+    ];
+    const guestRoutes = [
+        { link: "", title: tr("login"), component: Login, exact: true },
+        { link: "forget", title: tr("forget_pass"), component: Forget, hidden: true },
+    ];
+    return isLoggedIn ? userRoutes : guestRoutes;
 }

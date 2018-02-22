@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 
-export interface PageTitleProps extends BaseComponentProps {
+export interface PageTitleProps extends IBaseComponentProps {
     title: string;
     append?: boolean;
 }

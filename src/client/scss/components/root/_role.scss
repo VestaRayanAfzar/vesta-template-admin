@@ -1,27 +1,48 @@
 .role-page {
     .permission-list {
-        margin: 20px 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        > li {
-            //display: inline-block;
-            //vertical-align: top;
-            width: 45%;
-            border: 1px solid $white;
-            border-radius: $border-radius;
-            margin: 10px;
-        }
-        .formMultichoice-component {
-            > label {
-                font-weight: bold;
+        // margin: 20px 10px;
+        // width: 100%;
+        li {}
+        .multichoice-input {
+            label {
+                // color: $color-primary;
+                display: block;
+                // font-weight: bold;
+                padding: 10px;
+                text-align: $float;
             }
             ul {
-                white-space: nowrap;
+                margin: 0;
+                padding: 10px;
             }
             li {
+                color: $color-dark;
                 display: inline-block;
             }
-        }
+        } // display: flex;
+        // flex-wrap: wrap;
+        // justify-content: center;
+        // >li {
+        //     //display: inline-block;
+        //     //vertical-align: top;
+        //     // width: 45%;
+        //     border: 1px solid $white;
+        //     border-radius: $border-radius;
+        //     margin: 10px;
+        // }
+        // .formMultichoice-component {
+        //     margin: 0;
+        //     >label {
+        //         font-weight: bold;
+        //     }
+        //     ul {
+        //         white-space: nowrap;
+        //         margin: 0;
+        //         padding: 5px 10px;
+        //     }
+        //     li {
+        //         display: inline-block;
+        //     }
+        // }
     }
 }

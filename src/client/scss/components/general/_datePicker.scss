@@ -21,6 +21,7 @@ $dp-cell-padding: 5px;
             //border: 2px solid red;
             flex: 1;
             padding: (4 * $dp-cell-padding) $dp-cell-padding;
+            white-space: nowrap;
         }
         h2, a {
             display: inline-block;
@@ -31,7 +32,6 @@ $dp-cell-padding: 5px;
         h2 {
             margin: auto 7px;
             font-weight: lighter;
-            width: 80px;
         }
     }
     .time-select {
@@ -78,15 +78,15 @@ $dp-cell-padding: 5px;
     td {
         cursor: pointer;
         height: $dp-cell-size;
+        width: $dp-cell-size;
     }
     i {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: inline-block;
         font-style: normal;
         font-weight: lighter;
-        width: 100%;
-        height: 100%;
+        width: $dp-cell-size;
+        height: $dp-cell-size;
+        line-height: $dp-cell-size;
         border-radius: 50%;
         transition: background $transition-duration-short $transition-effect-default;
         background: $white;

@@ -1,11 +1,11 @@
 import React, {PureComponent} from "react";
 import {Dialog} from "./Dialog";
 import {TranslateService} from "../../service/TranslateService";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 
 export const enum PreloaderType {Text = 1, Linear, Circular, Progress}
 
-export interface PreloaderProps extends BaseComponentProps {
+export interface PreloaderProps extends IBaseComponentProps {
     show: boolean;
     type?: PreloaderType;
     title?: string;

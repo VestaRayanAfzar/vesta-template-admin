@@ -18,6 +18,9 @@ $dt-data-cell-padding: 7px;
             background: $color-light;
             border: 1px solid $dt-border-color;
             border-bottom: 2px solid $color-dark;
+            &:last-child{
+                width:1px;
+            }
         }
     }
     tbody {

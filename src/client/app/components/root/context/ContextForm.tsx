@@ -1,46 +1,45 @@
 import React from "react";
-import {FetchById, PageComponent, PageComponentProps, Save} from "../../PageComponent";
-import {FieldValidationMessage, ModelValidationMessage, validationMessage} from "../../../util/Util";
-import {FormWrapper} from "../../general/form/FormWrapper";
-import {IContext} from "../../../cmn/models/Context";
-import {FormTextInput} from "../../general/form/FormTextInput";
-import {FormTextArea} from "../../general/form/FormTextArea";
-import {IValidationError} from "../../../cmn/core/Validator";
+import { IContext } from "../../../cmn/models/Context";
+import { IValidationError } from "../../../medium";
+import { IFieldValidationMessage, IModelValidationMessage, validationMessage } from "../../../util/Util";
+import { FormTextArea } from "../../general/form/FormTextArea";
+import { FormTextInput } from "../../general/form/FormTextInput";
+import { FormWrapper } from "../../general/form/FormWrapper";
+import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 
-export interface ContextFormParams {
+export interface IContextFormParams {
 }
 
-export interface ContextFormProps extends PageComponentProps<ContextFormParams> {
-    id?: number;
+export interface IContextFormProps extends IPageComponentProps<IContextFormParams> {
     fetch?: FetchById<IContext>;
+    id?: number;
     save: Save<IContext>;
     validationErrors: IValidationError;
 }
 
-export interface ContextFormState {
+export interface IContextFormState {
     context: IContext;
 }
 
-export class ContextForm extends PageComponent<ContextFormProps, ContextFormState> {
+export class ContextForm extends PageComponent<IContextFormProps, IContextFormState> {
 
-    constructor(props: ContextFormProps) {
+    constructor(props: IContextFormProps) {
         super(props);
-        this.state = {context: {}};
+        this.state = { context: {} };
     }
 
     public componentDidMount() {
         const id = +this.props.id;
-        if (isNaN(id)) return;
+        if (isNaN(id)) { return; }
         this.props.fetch(id)
-            .then(context => {
-
-                this.setState({context});
+            .then((context) => {
+                this.setState({ context });
             });
     }
 
     public onChange = (name: string, value: any) => {
         this.state.context[name] = value;
-        this.setState({context: this.state.context});
+        this.setState({ context: this.state.context });
     }
 
     public onSubmit = (e: Event) => {
@@ -48,29 +47,29 @@ export class ContextForm extends PageComponent<ContextFormProps, ContextFormStat
     }
 
     public render() {
-        const requiredErrorMessage = this.tr('err_required');
-        const formErrorsMessages: ModelValidationMessage = {
+        const requiredErrorMessage = this.tr("err_required");
+        const formErrorsMessages: IModelValidationMessage = {
             key: {
+                maxLength: this.tr("err_max_length", 10),
+                minLength: this.tr("err_min_length", 3),
                 required: requiredErrorMessage,
-                minLength: this.tr('err_min_length', 3),
-                maxLength: this.tr('err_max_length', 10)
             },
             value: {
-                required: requiredErrorMessage
-            }
+                required: requiredErrorMessage,
+            },
         };
-        const {validationErrors} = this.props;
-        const errors: FieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
+        const { validationErrors } = this.props;
+        const errors: IFieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
 
-        let context = this.state.context;
+        const context = this.state.context;
         return (
             <FormWrapper name="contextForm" onSubmit={this.onSubmit}>
-                <FormTextInput name="key" label={this.tr('fld_key')} value={context.key} placeholder={true}
-                               error={errors.key} onChange={this.onChange}/>
-                <FormTextArea name="value" label={this.tr('fld_value')} value={context.value} placeholder={true}
-                              error={errors.value} onChange={this.onChange}/>
+                <FormTextInput name="key" label={this.tr("fld_key")} value={context.key} placeholder={true}
+                    error={errors.key} onChange={this.onChange} />
+                <FormTextArea name="value" label={this.tr("fld_value")} value={context.value} placeholder={true}
+                    error={errors.value} onChange={this.onChange} />
                 {this.props.children}
             </FormWrapper>
-        )
+        );
     }
 }

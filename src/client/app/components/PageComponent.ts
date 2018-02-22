@@ -1,44 +1,32 @@
-import {Component} from "react";
-import {BaseComponentProps} from "./BaseComponent";
-import {match} from "react-router";
-import {IQueryRequest} from "../cmn/core/ICRUDResult";
-import {ApiService} from "../service/ApiService";
-import {NotificationService} from "../service/NotificationService";
-import {TransitionService} from "../service/TransitionService";
-import {TranslateService} from "../service/TranslateService";
-import {AuthService} from "../service/AuthService";
-import {ConfigService, IPaginationConfig} from "../service/ConfigService";
+import { Component } from "react";
+import { match } from "react-router";
+import { IQueryRequest } from "../medium";
+import { ApiService } from "../service/ApiService";
+import { AuthService } from "../service/AuthService";
+import { ConfigService, IPaginationConfig } from "../service/ConfigService";
+import { NotificationService } from "../service/NotificationService";
+import { TransitionService } from "../service/TransitionService";
+import { TranslateService } from "../service/TranslateService";
+import { IBaseComponentProps } from "./BaseComponent";
+import { IDataTableQueryOption } from "./general/DataTable";
 
-export interface FetchById<T> {
-    (id: number): Promise<T>;
-}
+export type FetchById<T> = (id: number) => Promise<T>;
 
-export interface Search<T> {
-    (term: string): Promise<Array<T>>;
-}
+export type Search<T> = (term: string) => Promise<Array<T>>;
 
-export interface FetchAll<T> {
-    (query: IQueryRequest<T>): void;
-}
+export type FetchAll<T> = (query: IQueryRequest<T> | IDataTableQueryOption<T>) => void;
 
-export interface Save<T> {
-    (model: T): void;
-}
+export type Save<T> = (model: T) => void;
 
-export interface PageComponentProps<T> extends BaseComponentProps {
+export interface IPageComponentProps<T> extends IBaseComponentProps {
     match?: match<T>;
 }
 
-export interface PageComponentState {
-}
-
 export abstract class PageComponent<P, S> extends Component<P, S> {
-
-    protected tr = TranslateService.getInstance().translate;
-    protected tz = TransitionService.getInstance().willTransitionTo;
     protected api: ApiService = ApiService.getInstance();
     protected auth: AuthService = AuthService.getInstance();
     protected notif: NotificationService = NotificationService.getInstance();
-    //
     protected pagination: IPaginationConfig = ConfigService.getConfig().pagination;
+    protected tr = TranslateService.getInstance().translate;
+    protected tz = TransitionService.getInstance().willTransitionTo;
 }

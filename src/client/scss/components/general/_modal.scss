@@ -20,10 +20,6 @@ $modal-transition-effect: $transition-effect-default;
     align-content: center;
     z-index: $z-index-dialog;
     @include translate3d(0);
-
-    > * {
-        //flex: 1;
-    }
 }
 
 .modal-enter {

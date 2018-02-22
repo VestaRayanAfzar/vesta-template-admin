@@ -1,6 +1,5 @@
 $form-file-input-padding: 5px;
-$form-file-input-del-width: 16px;
-
+$form-file-input-del-width: 24px;
 .file-input {
     input {
         opacity: 0.5;
@@ -22,34 +21,54 @@ $form-file-input-del-width: 16px;
         display: flex;
         padding: $form-file-input-padding;
     }
-    .img-wrapper {
+    .file-wrapper {
         margin: $form-file-input-padding;
         flex: 1;
         justify-content: space-around;
         text-align: end;
         position: relative;
-        .img-del {
+        .file-del {
             position: absolute;
             #{$opposite-float}: -1 * floor($form-file-input-del-width / 3);
             top: -1 * floor($form-file-input-del-width / 3);
             border-radius: 50%;
-            font-size: $font-size-small;
+            text-align: center;
+            font-size: $font-size-base;
             width: $form-file-input-del-width;
             height: $form-file-input-del-width;
-            color: $color-light;
-            background: $color-error;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: $color-error;
+            border: 1px solid $color-error;
+            line-height: $form-file-input-del-width;
             cursor: pointer;
+            background: $white;
         }
-        img {
+        img,
+        video {
             max-height: 15vh;
             max-width: 15vh;
             width: 98%;
             border: 2px solid $border-color;
             border-radius: $border-radius;
             overflow: hidden;
+        }
+        .file {
+            display: inline-block;
+            height: 10vh;
+            width: 15vh;
+            border: 2px solid $border-color;
+            background: $color-semilight;
+            border-radius: $border-radius;
+            overflow: hidden;
+            position: relative;
+            &:after {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+                color: $white;
+                content: "no preview";
+            }
         }
     }
 }

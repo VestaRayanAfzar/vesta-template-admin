@@ -1,9 +1,9 @@
 import * as React from "react";
 import {PureComponent} from "react";
 import {Dispatcher} from "../../service/Dispatcher";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 
-export interface BurgerProps extends BaseComponentProps {
+export interface BurgerProps extends IBaseComponentProps {
     event?: string;
     className?: string;
     onClick?: (e) => void;

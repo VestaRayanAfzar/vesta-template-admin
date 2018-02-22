@@ -1,31 +1,33 @@
 $sidenav-header-avatar-width: 100px;
 $sidenav-padding: 20px;
-$sidenav-top-padding: $header-height + $sidenav-padding;
-
+$sidenav-top-padding: $header-height;
+$sidenav-menu-bg: rgba($white, .5);
 .sidenav-content {
     header {
-        position: relative;
-        background: url(../img/bg-main.jpg) no-repeat center;
-        background-size: cover;
-        padding: $sidenav-top-padding $sidenav-padding $sidenav-padding $sidenav-padding;
         color: $white;
+        padding: $sidenav-top-padding $sidenav-padding $sidenav-padding;
+        position: relative;
         .icon {
-            font-size: $font-size-large;
-            position: absolute;
             #{$opposite-float}: $sidenav-padding;
             bottom: $sidenav-padding;
             color: $white;
+            font-size: $font-size-large;
+            position: absolute;
         }
     }
-
-    .avatar-component {
-        width: $sidenav-header-avatar-width;
-        height: $sidenav-header-avatar-width;
+    .avatar {
         border: 2px solid $border-color;
+        height: $sidenav-header-avatar-width;
+        width: $sidenav-header-avatar-width;
     }
-
     .name-wrapper {
         $name-padding: ceil($sidenav-padding / 2);
-        margin: getValueByDirection($name-padding 0 0 3*$name-padding, $name-padding 3*$name-padding 0 0);
+        margin: get-value-by-direction($name-padding 0 0 3 * $name-padding, $name-padding 3 * $name-padding 0 0);
+    }
+    .menu {
+        background: $sidenav-menu-bg;
+        a {
+            color: $color-dark;
+        }
     }
 }

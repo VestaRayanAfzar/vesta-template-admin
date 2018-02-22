@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 
-export interface AvatarProps extends BaseComponentProps {
+export interface AvatarProps extends IBaseComponentProps {
     src: string;
     defaultSrc?: string;
 }

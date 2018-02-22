@@ -1,5 +1,5 @@
 import React from "react";
-import {FetchById, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
+import {FetchById, PageComponent, IPageComponentProps} from "../../PageComponent";
 import {IRole} from "../../../cmn/models/Role";
 import {IPermission} from "../../../cmn/models/Permission";
 import {IPermissionCollection} from "../../../service/AuthService";
@@ -8,11 +8,11 @@ export interface RoleDetailParams {
     id: number;
 }
 
-export interface RoleDetailProps extends PageComponentProps<RoleDetailParams> {
+export interface RoleDetailProps extends IPageComponentProps<RoleDetailParams> {
     fetch: FetchById<IRole>;
 }
 
-export interface RoleDetailState extends PageComponentState {
+export interface RoleDetailState {
     role: IRole;
 }
 

@@ -1,53 +1,65 @@
-$navbar-bg-color: $color-primary;
-$navbar-title-margin: 20px;
+$navbar-bg-color: rgba(0,0,0,.65);
+$navbar-title-margin: 10px;
 $navbar-back-btn-size: $btn-height;
 
 .navbar {
     //border: 2px solid red;
-    height: $header-height;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: $z-index-navbar;
-    padding: $header-padding;
-    display: flex;
     align-items: center;
-
-    color: $color-light;
     background: $navbar-bg-color;
+    color: $color-light;
+    display: flex;
+    height: $header-height;
+    left: 0;
+    padding: $header-padding;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: $z-index-navbar;
 
     &.navbar-transparent {
-        background: transparent;
-        // make elements under navbar clickable
+        background: transparent; // make elements under navbar clickable
         pointer-events: none;
+
         .nav-btn {
             pointer-events: auto;
         }
     }
 
     .nav-title {
+        // $navbar-title-back-margin: floor(2 * $navbar-title-margin / 3);
+        color: $white;
         flex: 1;
-        text-align: $float;
         overflow: hidden;
+        padding: 0 $navbar-title-margin;
+        text-align: $float;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding: 0 $navbar-title-margin;
     }
 
     .navbar-btn-group {
         position: absolute;
         #{$opposite-float}: $header-padding;
+
         .btn {
             background: transparent;
             border: 0;
+            cursor: pointer;
             min-width: auto;
+
+            .icon {
+                top: 0;
+            }
         }
+
         .icon {
-            font-size: ceil(1.6 * $font-size-medium);
             color: $white;
+            cursor: pointer;
+            font-size: ceil(1.6 * $font-size-medium);
+            position: relative;
+            top: 3px;
         }
     }
+
     .nav-btn {
         cursor: pointer;
     }

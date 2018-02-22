@@ -1,5 +1,5 @@
 import React from "react";
-import {FetchById, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
+import {FetchById, PageComponent, IPageComponentProps} from "../../PageComponent";
 import {IUser} from "../../../cmn/models/User";
 import {IRole} from "../../../cmn/models/Role";
 import {getFileUrl} from "../../../util/Util";
@@ -8,12 +8,12 @@ export interface UserDetailParams {
     id: number;
 }
 
-export interface UserDetailProps extends PageComponentProps<UserDetailParams> {
+export interface UserDetailProps extends IPageComponentProps<UserDetailParams> {
     fetch: FetchById<IUser>;
     roles: Array<IRole>;
 }
 
-export interface UserDetailState extends PageComponentState {
+export interface UserDetailState {
     user: IUser;
 }
 

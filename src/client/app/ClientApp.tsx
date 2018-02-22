@@ -1,82 +1,98 @@
 import React from "react";
-import {render} from "react-dom";
-import {Route, Switch} from "react-router";
-import {DynamicRouter} from "./components/general/DynamicRouter";
-import {AuthService} from "./service/AuthService";
-import {AclPolicy} from "./cmn/enum/Acl";
-import {Dispatcher} from "./service/Dispatcher";
-import {NotFound} from "./components/root/NotFound";
+import { render } from "react-dom";
+import { Route, Switch } from "react-router";
+import { AclPolicy } from "./cmn/enum/Acl";
+import { IUser } from "./cmn/models/User";
+import { DynamicRouter } from "./components/general/DynamicRouter";
+import { Preloader } from "./components/general/Preloader";
 import Root from "./components/Root";
-import {IUser} from "./cmn/models/User";
-import {TransitionService} from "./service/TransitionService";
-import {getRoutes, RouteItem} from "./config/route";
-import {LogService} from "./service/LogService";
-import {ConfigService} from "./service/ConfigService";
+import { NotFound } from "./components/root/NotFound";
+import { getRoutes, IRouteItem } from "./config/route";
+import { SplashPlugin } from "./plugin/SplashPlugin";
+import { AuthService } from "./service/AuthService";
+import { ConfigService, IVersion } from "./service/ConfigService";
+import { Dispatcher } from "./service/Dispatcher";
+import { LogService } from "./service/LogService";
+import { TransitionService } from "./service/TransitionService";
+import { TranslateService } from "./service/TranslateService";
 
 export class ClientApp {
-    private tz = TransitionService.getInstance().willTransitionTo;
     private auth = AuthService.getInstance();
     private dispatcher = Dispatcher.getInstance();
+    private showAppUpdate = false;
+    private tr = TranslateService.getInstance().translate;
+    private tz = TransitionService.getInstance().willTransitionTo;
+
+    public init() {
+        this.auth.setDefaultPolicy(AclPolicy.Deny);
+        this.registerServiceWorker();
+        // auth event registration
+        this.dispatcher.register<IUser>(AuthService.Events.Update, () => this.run());
+    }
+
+    public run() {
+        const routeItems = getRoutes(!this.auth.isGuest());
+        const appName = ConfigService.get<string>("name");
+        const version = ConfigService.get<IVersion>("version").app;
+        const splashTimeout = ConfigService.get<number>("splashTimeout");
+        const routes = this.renderRoutes(routeItems, "");
+
+        render(
+            <DynamicRouter>
+                <Root routeItems={routeItems}>
+                    <Switch>
+                        {routes}
+                        <Route component={NotFound} />
+                    </Switch>
+                    <Preloader show={this.showAppUpdate} title={this.tr("app_update")} message={`${appName} v${version}`} />
+                </Root>
+            </DynamicRouter>,
+            document.getElementById("root"),
+            () => {
+                // removing splash screen
+                setTimeout(SplashPlugin.hide, splashTimeout);
+            },
+        );
+    }
 
     private registerServiceWorker() {
-        if (!('serviceWorker' in navigator)) return;
+        if (!("serviceWorker" in navigator)) { return; }
+        const splashTimeout = ConfigService.get<number>("splashTimeout");
         const swScript = ConfigService.getConfig().sw;
         navigator.serviceWorker.register(`/${swScript}.js`)
             .then((reg: ServiceWorkerRegistration) => {
-                try {
-                    reg.update().catch(error => LogService.error(error, 'reg.update', 'ClientApp'));
-                } catch (error) {
-                    LogService.error(error, 'registerServiceWorker', 'ClientApp');
-                }
+                reg.addEventListener("updatefound", () => {
+                    const installingWorker = reg.installing;
+                    installingWorker.addEventListener("statechange", () => {
+                        if (installingWorker.state == "installed" && navigator.serviceWorker.controller) {
+                            //<production>
+                            this.showAppUpdate = true;
+                            this.run();
+                            setTimeout(window.location.reload, splashTimeout);
+                            //</production>
+                            //<development>
+                            LogService.info("New version available!", "registerServiceWorker", "ClientApp");
+                            //</development>
+                        }
+                    });
+                });
             })
-            .catch(err => LogService.error(err.message, 'registerServiceWorker', 'ClientApp'));
+            .catch((error) => LogService.error(error.message, "registerServiceWorker", "ClientApp"));
     }
 
-    private renderRoutes(routeItems: Array<RouteItem>, prefix: string) {
+    private renderRoutes(routeItems: Array<IRouteItem>, prefix: string) {
         let links = [];
         const routeCount = routeItems.length;
         for (let i = 0, il = routeCount; i < il; ++i) {
             const item = routeItems[i];
             if (!item.abstract) {
-                let basePath = prefix ? `/${prefix}` : '';
-                links.push(<Route path={`${basePath}/${item.link}`} key={i}
-                                  exact={item.exact} render={this.tz(item.component, item.permissions)}/>);
+                const basePath = prefix ? `/${prefix}` : "";
+                links.push(<Route path={`${basePath}/${item.link}`} key={i} exact={item.exact} render={this.tz(item.component, item.permissions)} />);
             }
             if (item.children) {
                 links = links.concat(this.renderRoutes(item.children, item.link));
             }
         }
         return links;
-    }
-
-    public init() {
-        this.auth.setDefaultPolicy(AclPolicy.Deny);
-        this.registerServiceWorker();
-        // auth event registration
-        this.dispatcher.register<IUser>(AuthService.Events.Update, (user) => {
-            this.run();
-        });
-    }
-
-    public run() {
-        const routeItems = getRoutes(!this.auth.isGuest());
-        let routes = this.renderRoutes(routeItems, '');
-        render(
-            <DynamicRouter>
-                <Root routeItems={routeItems}>
-                    <Switch>
-                        {routes}
-                        <Route component={NotFound}/>
-                    </Switch>
-                </Root>
-            </DynamicRouter>,
-            document.getElementById("root"),
-            () => {
-                // removing splash screen
-                setTimeout(() => {
-                    document.body.classList.remove('has-splash');
-                }, 1000);
-            }
-        );
     }
 }

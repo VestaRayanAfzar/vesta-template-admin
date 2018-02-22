@@ -14,8 +14,10 @@ module.exports = function (setting) {
         let target = setting.buildPath(setting.target);
         let serviceWorkers = ['service-worker.js'];
         let timestamp = Date.now();
+        const files = getFilesList(`${dir.buildClient}/${target}`, '').join('","');
         for (let i = 0, il = serviceWorkers.length; i < il; ++i) {
             setting.findInFileAndReplace(`${dir.srcClient}/${serviceWorkers[i]}`, /__TIMESTAMP__/g, timestamp, `${dir.buildClient}/${target}`);
+            setting.findInFileAndReplace(`${dir.buildClient}/${target}/${serviceWorkers[i]}`, "__FILES__", `"${files}"`, `${dir.buildClient}/${target}`);
         }
     });
 
@@ -27,7 +29,7 @@ module.exports = function (setting) {
             .pipe(gulp.dest(tmpClient))
     });
 
-    gulp.task('client:build', ['client:preBuild', 'client:sw'], () => {
+    gulp.task('client:build', ['client:preBuild'], () => {
         // copying conf.var to target on production mode [in case of not using deploy system]
         if (setting.production) {
             fs.copySync(`${setting.dir.resource}/gitignore/config.var.ts`, `${tmpClient}/client/app/config/config.var.ts`);
@@ -63,7 +65,7 @@ module.exports = function (setting) {
     });
 
     gulp.task(`client:watch`, () => {
-        gulp.watch([`${dir.srcClient}/**/*.ts*`], [`client:build`]);
+        gulp.watch([`${dir.srcClient}/**/*.ts*`], [`client:build`, `client:sw`]);
     });
 
     gulp.task(`sw:watch`, () => {
@@ -72,7 +74,7 @@ module.exports = function (setting) {
 
     return {
         watch: ['client:watch', 'sw:watch'],
-        tasks: ['client:build', 'client:run']
+        tasks: ['client:build', "client:sw", 'client:run']
     };
 
     function getWebpackConfig() {
@@ -92,7 +94,7 @@ module.exports = function (setting) {
         if (setting.production) {
             plugins = plugins.concat([
                 new webpack.DefinePlugin({
-                    'process.env': {NODE_ENV: '"production"'}
+                    'process.env': { NODE_ENV: '"production"' }
                 }),
                 new webpack.LoaderOptionsPlugin({
                     minimize: true,
@@ -119,8 +121,8 @@ module.exports = function (setting) {
             },
             module: {
                 rules: [
-                    {test: /\.tsx?$/, loader: `awesome-typescript-loader?sourceMap=${!setting.production}`},
-                    {enforce: "pre", test: /\.js$/, loader: "source-map-loader"}
+                    { test: /\.tsx?$/, loader: `awesome-typescript-loader?sourceMap=${!setting.production}` },
+                    { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
                 ]
             },
             plugins,
@@ -151,5 +153,20 @@ module.exports = function (setting) {
         gulp.watch([assets], function () {
             gulp.src(assets).pipe(webConnect.reload());
         });
+    }
+
+    function getFilesList(dir, base) {
+        let files = [];
+        const thisList = fs.readdirSync(dir);
+        for (let i = 0, il = thisList.length; i < il; ++i) {
+            const thisPath = `${dir}/${thisList[i]}`;
+            const stat = fs.statSync(thisPath);
+            if (stat.isFile()) {
+                files.push(`${base}${thisList[i]}`);
+            } else {
+                files = files.concat(getFilesList(`${dir}/${thisList[i]}`, `${base}${thisList[i]}/`));
+            }
+        }
+        return files;
     }
 };

@@ -8,20 +8,20 @@ export interface IServerConfig {
     ssl?: {
         key: string;
         cert: string;
-    }
+    };
     port: number;
     env: string;
 }
 
 export const Config: IServerConfig = {
     dir: {
-        html: '/app/www'
+        html: "/app/www",
     },
+    env: env.NODE_ENV,
     http2: false,
-    ssl: {
-        key: '/app/ssl/privkey.pem',
-        cert: '/app/ssl/fullchain.pem'
-    },
     port: +env.PORT || 3000,
-    env: env.NODE_ENV
+    ssl: {
+        cert: "/app/ssl/fullchain.pem",
+        key: "/app/ssl/privkey.pem",
+    },
 };

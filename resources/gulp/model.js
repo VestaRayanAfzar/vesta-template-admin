@@ -15,8 +15,5 @@ module.exports = function (setting) {
         return tsResult.js.pipe(gulp.dest(`${buildPath}/model`));
     });
 
-    return {
-        tasks: ['model:compile'],
-        watch: []
-    };
+    return {};
 };

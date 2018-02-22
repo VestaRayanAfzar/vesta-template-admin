@@ -1,16 +1,16 @@
 import React from "react";
-import {FetchById, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
+import {FetchById, PageComponent, IPageComponentProps} from "../../PageComponent";
 import {IContext} from "../../../cmn/models/Context";
 
 export interface ContextDetailParams {
     id: number;
 }
 
-export interface ContextDetailProps extends PageComponentProps<ContextDetailParams> {
+export interface ContextDetailProps extends IPageComponentProps<ContextDetailParams> {
     fetch: FetchById<IContext>;
 }
 
-export interface ContextDetailState extends PageComponentState {
+export interface ContextDetailState {
     context: IContext;
 }
 

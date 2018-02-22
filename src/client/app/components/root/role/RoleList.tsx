@@ -1,28 +1,28 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {FetchAll, PageComponent, PageComponentProps, PageComponentState} from "../../PageComponent";
-import {IRole} from "../../../cmn/models/Role";
-import {Column, DataTable, IDataTableQueryOption} from "../../general/DataTable";
-import {IAccess} from "../../../service/AuthService";
-import {IDeleteResult} from "../../../cmn/core/ICRUDResult";
-import {DataTableOperations} from "../../general/DataTableOperations";
+import { Link } from "react-router-dom";
+import { IRole } from "../../../cmn/models/Role";
+import { IDeleteResult } from "../../../medium";
+import { IAccess } from "../../../service/AuthService";
+import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
+import { DataTableOperations } from "../../general/DataTableOperations";
+import { FetchAll, IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface RoleListParams {
+export interface IRoleListParams {
 }
 
-export interface RoleListProps extends PageComponentProps<RoleListParams> {
-    roles: Array<IRole>;
+export interface IRoleListProps extends IPageComponentProps<IRoleListParams> {
     access: IAccess;
     fetch: FetchAll<IRole>;
     queryOption: IDataTableQueryOption<IRole>;
+    roles: Array<IRole>;
 }
 
-export interface RoleListState extends PageComponentState {
+export interface IRoleListState {
 }
 
-export class RoleList extends PageComponent<RoleListProps, RoleListState> {
+export class RoleList extends PageComponent<IRoleListProps, IRoleListState> {
 
-    constructor(props: RoleListProps) {
+    constructor(props: IRoleListProps) {
         super(props);
         this.state = {};
     }
@@ -32,30 +32,30 @@ export class RoleList extends PageComponent<RoleListProps, RoleListState> {
     }
 
     public del = (id) => {
-        this.api.del<IDeleteResult>('acl/role', id)
-            .then(response => {
-                this.notif.success(this.tr('info_delete_record', response.items[0]));
+        this.api.del<IDeleteResult>(`acl/role/${id}`)
+            .then((response) => {
+                this.notif.success(this.tr("info_delete_record", response.items[0]));
                 this.props.fetch(this.props.queryOption);
             })
-            .catch(error => {
+            .catch((error) => {
                 this.notif.error(this.tr(error.message));
-            })
+            });
     }
 
     public render() {
         const access = this.props.access;
-        const statusOptions = {1: this.tr('enum_active'), 0: this.tr('enum_inactive')};
-        const columns: Array<Column<IRole>> = [
-            {name: 'id', title: this.tr('fld_id')},
-            {name: 'name', title: this.tr('fld_name')},
-            {name: 'status', title: this.tr('fld_status'), render: r => this.tr(statusOptions[r.status])},
+        const statusOptions = { 1: this.tr("enum_active"), 0: this.tr("enum_inactive") };
+        const columns: Array<IColumn<IRole>> = [
+            { name: "id", title: this.tr("fld_id") },
+            { name: "name", title: this.tr("fld_name") },
+            { name: "status", title: this.tr("fld_status"), render: (r) => this.tr(statusOptions[r.status]) },
             {
-                title: this.tr('operations'),
-                render: r => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="role"/>
-            }
+                render: (r) => <DataTableOperations access={access} id={r.id} onDelete={this.del} path="role" />,
+                title: this.tr("operations"),
+            },
         ];
         return <div className="crud-page">
-            <DataTable fetch={this.props.fetch} columns={columns} records={this.props.roles} pagination={false}/>
-        </div>
+            <DataTable fetch={this.props.fetch} columns={columns} records={this.props.roles} pagination={false} />
+        </div>;
     }
 }

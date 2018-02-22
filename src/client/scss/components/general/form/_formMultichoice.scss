@@ -2,9 +2,9 @@ $multichoice-margin-top: 20px;
 $multichoice-margin-side: 10%;
 
 .multichoice-input {
-    border-radius: $form-control-border-radius;
-    border: 1px solid $border-color;
     background-color: $form-control-bg;
+    border: 1px solid $border-color;
+    border-radius: $form-control-border-radius;
     display: block;
 
     &.has-error {
@@ -12,12 +12,12 @@ $multichoice-margin-side: 10%;
     }
 
     label {
-        font-size: $font-size-xsmall;
         color: $color-semilight;
+        font-size: $font-size-xsmall;
     }
 
     ul {
-        margin: getValueByDirection($multichoice-margin-top auto $multichoice-margin-top $multichoice-margin-side, $multichoice-margin-top $multichoice-margin-side $multichoice-margin-top auto);
+        margin: get-value-by-direction($multichoice-margin-top auto $multichoice-margin-top $multichoice-margin-side, $multichoice-margin-top $multichoice-margin-side $multichoice-margin-top auto);
     }
 
     li {
@@ -32,10 +32,10 @@ $multichoice-margin-side: 10%;
         }
 
         label, input {
-            display: inline-block;
-            vertical-align: middle;
-            margin: auto 5px;
             cursor: pointer;
+            display: inline-block;
+            margin: auto 5px;
+            vertical-align: middle;
         }
     }
 }

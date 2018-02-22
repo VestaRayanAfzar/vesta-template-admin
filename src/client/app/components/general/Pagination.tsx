@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 
-export interface PaginationProps extends BaseComponentProps {
+export interface PaginationProps extends IBaseComponentProps {
     recordsPerPage: number;
     currentPage: number;
     totalRecords?: number;

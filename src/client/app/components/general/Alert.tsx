@@ -1,15 +1,19 @@
-import React from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface AlertProps extends BaseComponentProps {
+interface IAlertProps extends IBaseComponentProps {
     type?: string;
 }
 
-export const Alert = (props: AlertProps) => {
-    const className = `alert-component alert-${props.type}`;
-    return (
-        <p className={className}>
-            {props.children}
-        </p>
-    )
-};
+export class Alert extends PureComponent<IAlertProps, null> {
+
+    public render() {
+        const { type, children } = this.props;
+
+        return (
+            <p className={`alert alert-${type}`}>
+                {children}
+            </p>
+        );
+    }
+}

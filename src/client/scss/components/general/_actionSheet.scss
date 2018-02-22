@@ -1,74 +1,71 @@
-$actionSheet-transition-enter-duration: $transition-duration-default;
-$actionSheet-transition-leave-duration: floor(2 * $sidenav-transition-enter-duration / 3);
-$actionSheet-transition-effect: $transition-effect-default;
-$actionSheet-bg-color: transparentize($color-light, .1);
-$actionSheet-offset: 5%;
-$actionSheet-item-padding: 15px;
-
-.actionSheet-component {
-}
+$actionsheet-transition-enter-duration: $transition-duration-default;
+$actionsheet-transition-leave-duration: floor(2 * $sidenav-transition-enter-duration / 3);
+$actionsheet-transition-effect: $transition-effect-default;
+$actionsheet-bg-color: transparentize($color-light, .1);
+$actionsheet-offset: 5%;
+$actionsheet-item-padding: 15px;
 
 .action-list {
-    position: fixed;
-    bottom: 0;
-    left: $actionSheet-offset;
-    right: $actionSheet-offset;
-    z-index: $z-index-actionSheet;
-    //border: 1px solid red;
+    background: $actionsheet-bg-color;
     border-radius: $border-radius $border-radius 0 0;
-    background: $actionSheet-bg-color;
+    bottom: 0;
+    left: $actionsheet-offset;
+    position: fixed;
+    right: $actionsheet-offset;
     text-align: center;
+    z-index: $z-index-actionsheet; //border: 1px solid red;
+
     li {
-        padding: $actionSheet-item-padding;
-        cursor: pointer;
         border-bottom: 1px solid $border-color;
+        cursor: pointer;
+        padding: $actionsheet-item-padding;
     }
 }
 
-.actionSheet-backdrop {
-    will-change: opacity;
-    position: fixed;
-    background: transparentize($black, 0.5);
-    top: 0;
-    left: 0;
-    right: 0;
+.actionsheet-backdrop {
+    background: transparentize($black, .5);
     bottom: 0;
-    z-index: $z-index-actionSheet - 1;
+    left: 0;
     opacity: 1;
+    position: fixed;
+    right: 0;
+    top: 0;
+    will-change: opacity;
+    z-index: $z-index-actionsheet - 1;
 }
 
-.actionSheet-enter {
-
+.actionsheet-enter {
     .action-list {
         @include translate3d(0, 100%, 0);
     }
-    .actionSheet-backdrop {
-        opacity: 0.1;
+
+    .actionsheet-backdrop {
+        opacity: .1;
     }
 
-    &.actionSheet-enter-active {
+    &.actionsheet-enter-active {
         .sidenav {
-            transition: transform $actionSheet-transition-enter-duration $actionSheet-transition-effect;
             @include translate3d(0, 0, 0);
+            transition: transform $actionsheet-transition-enter-duration $actionsheet-transition-effect;
         }
-        .actionSheet-backdrop {
-            transition: opacity $actionSheet-transition-enter-duration $actionSheet-transition-effect;
+
+        .actionsheet-backdrop {
             opacity: 1;
+            transition: opacity $actionsheet-transition-enter-duration $actionsheet-transition-effect;
         }
     }
 }
 
-.actionSheet-leave {
-
-    &.actionSheet-leave-active {
+.actionsheet-leave {
+    &.actionsheet-leave-active {
         .action-list {
-            transition: transform $sidenav-transition-leave-duration $sidenav-transition-effect;
             @include translate3d(0, 100%, 0);
+            transition: transform $sidenav-transition-leave-duration $sidenav-transition-effect;
         }
-        .actionSheet-backdrop {
+
+        .actionsheet-backdrop {
+            opacity: .1;
             transition: opacity $sidenav-transition-leave-duration $sidenav-transition-effect;
-            opacity: 0.1;
         }
     }
 }
-

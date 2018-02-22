@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import {BaseComponentProps} from "../BaseComponent";
+import {IBaseComponentProps} from "../BaseComponent";
 import {Dispatcher} from "../../service/Dispatcher";
 import {ConfigService} from "../../service/ConfigService";
 import Navbar from "./Navbar";
 
-export interface SideNavProps extends BaseComponentProps {
+export interface SideNavProps extends IBaseComponentProps {
     name: string;
 }
 

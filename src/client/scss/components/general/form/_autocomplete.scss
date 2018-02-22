@@ -1,28 +1,78 @@
 //$autocomplete-list-top-offset: 2 * ($form-group-margin + $form-group-padding) + $form-control-height + 2 * ($form-control-padding);
 $autocomplete-list-top-offset: $form-control-height;
+$autocomplete-clear-btn-size: 24px;
 
 .autocomplete-input {
     position: relative;
+
+    &.has-list {
+        input {
+            border-bottom-#{$float}-radius: 0;
+        }
+    }
+
+    &.is-multi {
+
+    }
+
     .list-wrapper {
         padding: 0;
         border: 0;
         width: 80%;
         position: absolute;
         top: $autocomplete-list-top-offset;
-        #{$opposite-float}: 3px;
+        #{$float}: 2px;
         z-index: $z-index-content;
+        border-radius: 0;
     }
+
     .list-item {
         //border: 1px solid blue;
         display: block;
         cursor: pointer;
         background: $form-control-bg;
-        border-top: 1px solid $border-color;
+        border: 1px solid $border-color;
+        border-bottom: 0;
         padding: $form-control-padding;
+
+        &.has-hover {
+            background: $color-semidark;
+            color: $white;
+        }
+
         &:last-child {
             border-bottom: 1px solid $border-color;
-            border-bottom-left-radius: $border-radius;
-            border-bottom-right-radius: $border-radius;
+            //    border-bottom-left-radius: $border-radius;
+            //    border-bottom-right-radius: $border-radius;
+        }
+    }
+
+    .selected-items {
+        max-width: 50%;
+
+        span {
+            display: inline-block;
+            position: relative;
+            border: 1px solid $border-color;
+            border-radius: $border-radius;
+            padding: 2px 7px;
+            margin: 5px;
+            cursor: pointer;
+            vertical-align: middle;
+
+            &:after {
+                position: absolute;
+                top: ceil(-$autocomplete-clear-btn-size/2);
+                left: ceil(-$autocomplete-clear-btn-size/2);
+                border-radius: 50%;
+                width: $autocomplete-clear-btn-size;
+                height: $autocomplete-clear-btn-size;
+                text-align: center;
+                content: "X";
+                color: $color-error;
+                border: 1px solid $color-error;
+                background: $white;
+            }
         }
     }
 }

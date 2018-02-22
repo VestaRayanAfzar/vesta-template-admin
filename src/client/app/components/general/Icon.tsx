@@ -1,16 +1,20 @@
-import React from "react";
-import {BaseComponentProps} from "../BaseComponent";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface IconProps extends BaseComponentProps {
+export interface IconProps extends IBaseComponentProps {
     name: string;
-    size?: string;
     onClick?: (e) => void;
+    size?: string;
 }
 
-export const Icon = (props: IconProps) => {
-    const {name, size, onClick} = props;
-    let sizeClass = size ? ` size-${size}` : '';
-    return (
-        <span className={`icon${sizeClass}`} onClick={onClick}>{name}</span>
-    )
+export class Icon extends PureComponent<IconProps, null>{
+
+    public render() {
+        const { name, size, onClick } = this.props;
+        let sizeClass = size ? `size-${size}` : '';
+
+        return (
+            <span className={`icon ${sizeClass}`} onClick={onClick}>{name}</span>
+        );
+    }
 };

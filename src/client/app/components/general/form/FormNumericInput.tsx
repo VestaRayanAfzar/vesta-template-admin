@@ -1,40 +1,36 @@
-import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../../BaseComponent";
-import {ChangeEventHandler} from "./FormWrapper";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../../BaseComponent";
+import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
 
-export interface FormNumericInputProps extends BaseComponentProps {
-    label: string;
-    name: string;
-    value?: number | string;
-    onChange?: ChangeEventHandler;
-    error?: string;
-    step?: number;
+interface IFormNumericInputProps extends IBaseComponentProps, IFromControlProps {
     format?: boolean;
-    placeholder?: boolean;
+    step?: number;
+    value?: number | string;
 }
 
-export class FormNumericInput extends PureComponent<FormNumericInputProps, null> {
+export class FormNumericInput extends PureComponent<IFormNumericInputProps, null> {
+
+    public render() {
+        const { label, name, value, step = 1, error, placeholder } = this.props;
+        const displayValue = this.format(value || "");
+
+        return (
+            <div className={`form-group numeric-input${error ? " has-error" : ""}`}>
+                {placeholder ? null : <label htmlFor={name}>{label}</label>}
+                <input className="form-control" name={name} type="number" placeholder={placeholder ? label : ""} value={displayValue} onChange={this.onChange} step={step} />
+                <p className="form-error">{error || ""}</p>
+            </div>
+        );
+    }
 
     private format(value): string {
-        if (!value) return value;
+        if (!value) {
+            return value;
+        }
         return this.props.format ? (+value).toLocaleString() : value;
     }
 
     private onChange = (e) => {
         this.props.onChange(this.props.name, +e.target.value);
-    }
-
-    public render() {
-        let {label, name, value, step, error, placeholder} = this.props;
-        step = step || 1;
-        return (
-            <div className={`form-group numeric-input${error ? ' has-error' : ''}`}>
-                {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <input className="form-control" name={name} id={name} type="number"
-                       placeholder={placeholder ? label : ''}
-                       value={this.format(value || '')} onChange={this.onChange} step={step}/>
-                <p className="form-error">{error || ''}</p>
-            </div>
-        )
     }
 }

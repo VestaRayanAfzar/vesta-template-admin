@@ -1,98 +1,93 @@
-import React, {PureComponent} from "react";
-import {BaseComponentProps} from "../../BaseComponent";
-import {ChangeEventHandler} from "./FormWrapper";
-import {TranslateService} from "../../../service/TranslateService";
+import React, { PureComponent } from "react";
+import { TranslateService } from "../../../service/TranslateService";
+import { IBaseComponentProps } from "../../BaseComponent";
+import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
 
-export interface FormMultichoiceProps extends BaseComponentProps {
-    name: string;
-    label: string;
+interface IFormMultichoiceProps extends IBaseComponentProps, IFromControlProps {
     options: Array<{}>;
-    titleKey?: string;
-    valueKey?: string;
-    value?: Array<any>;
-    onChange?: ChangeEventHandler;
-    error?: string;
     showSelectAll?: boolean;
+    titleKey?: string;
+    value?: Array<any>;
+    valueKey?: string;
 }
 
-export class FormMultichoice extends PureComponent<FormMultichoiceProps, null> {
+export class FormMultichoice extends PureComponent<IFormMultichoiceProps, null> {
+    public static defaultProps = { valueKey: "id", titleKey: "title" };
     private selectAllText: string;
-    public static defaultProps = {valueKey: 'id', titleKey: 'title'};
 
-    constructor(props: FormMultichoiceProps) {
+    constructor(props: IFormMultichoiceProps) {
         super(props);
         const tr = TranslateService.getInstance();
-        this.selectAllText = tr.translate('select_all');
+        this.selectAllText = tr.translate("select_all");
+    }
+
+    public render() {
+        const { label, error } = this.props;
+        const choices = this.renderCheckboxes();
+
+        return (
+            <div className={`form-group multichoice-input ${error ? "has-error" : ""}`}>
+                <label>{label}</label>
+                <p className="form-error">{error || ""}</p>
+                <ul>{choices}</ul>
+            </div>
+        );
     }
 
     private onChange = (e) => {
-        const {value, valueKey, options} = this.props;
+        const { name, value, valueKey, options } = this.props;
         let selectedValues = [].concat(value || []);
-        let checked = e.currentTarget.checked;
-        let thisValue = e.currentTarget.value;
-        let isSelectAll = e.currentTarget.hasAttribute('data-select-all');
-        let numericValue = +thisValue;
+        const checked = e.currentTarget.checked;
+        const isSelectAll = e.currentTarget.hasAttribute("data-select-all");
+        const index = e.currentTarget.value;
+        const thisItem = options[isSelectAll ? null : index];
 
         if (checked) {
             if (isSelectAll) {
                 // select all checkbox is checked
-                selectedValues = options.map(option => option[valueKey]);
+                selectedValues = options.map((option) => option[valueKey]);
             } else {
-                selectedValues.push(isNaN(numericValue) ? thisValue : numericValue);
+                selectedValues.push(thisItem[valueKey]);
             }
         } else {
             // finding index of selected checkbox's value
-            let index = selectedValues.indexOf(isNaN(numericValue) ? thisValue : numericValue);
-            if (index >= 0) {
-                selectedValues.splice(index, 1);
+            const selectedIndex = thisItem ? selectedValues.indexOf(thisItem[valueKey]) : -1;
+            if (selectedIndex >= 0) {
+                selectedValues.splice(selectedIndex, 1);
             } else {
                 // select all unchecked
                 selectedValues = [];
             }
         }
 
-        this.props.onChange(this.props.name, selectedValues.length ? selectedValues : null);
+        this.props.onChange(name, selectedValues.length ? selectedValues : null);
     }
 
     private renderCheckboxes() {
-        const {options, value, titleKey, valueKey, showSelectAll} = this.props;
+        const { options, value, titleKey, valueKey, showSelectAll } = this.props;
         let isAllSelected = true;
-        let choices = options.map((o, i) => {
-            const selected = value && value.indexOf(o[valueKey]) >= 0;
-            if (!selected) {
+        const choices = (options || []).map((o, i) => {
+            const checked = !!(value && value.indexOf(o[valueKey]) >= 0);
+            if (!checked) {
                 isAllSelected = false;
             }
             return (
-                <li key={i + 1}>
+                <li key={i}>
                     <label>
-                        <input name={name} type="checkbox" value={o[valueKey]} checked={selected}
-                               onChange={this.onChange}/> {o[titleKey]}
+                        <input name={name} type="checkbox" value={i} checked={checked} onChange={this.onChange} /> {o[titleKey]}
                     </label>
-                </li>)
+                </li>);
         });
+        // select all option
         if (showSelectAll && choices.length) {
             choices.splice(0, 0, (
-                <li key={0} className="select-all-choice">
+                <li key={-1} className="select-all-choice">
                     <label>
-                        <input name={name} type="checkbox" value="" checked={isAllSelected} data-select-all
-                               onChange={this.onChange}/> {this.selectAllText}
+                        <input name={name} type="checkbox" checked={isAllSelected} data-select-all={true} onChange={this.onChange} /> {this.selectAllText}
                     </label>
                 </li>
             ));
         }
         return choices;
-    }
-
-    public render() {
-        const {label, error} = this.props;
-        let choices = this.renderCheckboxes();
-
-        return (
-            <div className={`form-group multichoice-input ${error ? 'has-error' : ''}`}>
-                <label>{label}</label>
-                <p className="form-error">{error || ''}</p>
-                <ul>{choices}</ul>
-            </div>
-        )
     }
 }

@@ -1,12 +1,13 @@
 import React from "react";
-import {BaseComponentProps} from "../../BaseComponent";
+import { IBaseComponentProps } from "../../BaseComponent";
 
-export interface FormErrorProps extends BaseComponentProps {
+interface IFormErrorProps extends IBaseComponentProps {
     error: string;
 }
 
-export const FormError = (props: FormErrorProps) => {
-    if (!props.error) return null;
+export const FormError = (props: IFormErrorProps) => {
+    if (!props.error) {
+        return null;
+    }
     return <p className="formError-component">{props.error}</p>;
 };
-

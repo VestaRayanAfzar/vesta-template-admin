@@ -1,11 +1,11 @@
 import React, {PureComponent} from "react";
 import {NavLink} from "react-router-dom";
-import {PageComponentProps} from "../PageComponent";
+import {IPageComponentProps} from "../PageComponent";
 
 export interface ForbiddenParams {
 }
 
-export interface ForbiddenProps extends PageComponentProps<ForbiddenParams> {
+export interface ForbiddenProps extends IPageComponentProps<ForbiddenParams> {
 }
 
 export interface ForbiddenState {

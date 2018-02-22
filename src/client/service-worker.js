@@ -1,35 +1,21 @@
-var cacheName = 'autoapp-panel-__TIMESTAMP__';
-var filesToCache = [
-    '/index.html',
-    '/img/bg-main.jpg',
-    '/img/sidenav-header.jpg',
-    '/img/vesta-logo.png',
-    '/img/vesta-logo-white.png',
-    '/img/icons/36x36.png',
-    '/img/icons/48x48.png',
-    '/img/icons/72x72.png',
-    '/img/icons/96x96.png',
-    '/img/icons/144x144.png',
-    '/img/icons/192x192.png',
-    '/img/splash/768x1024.jpg',
-    '/img/splash/1024x768.jpg',
-];
+var cacheName = 'autoapp-eu-__TIMESTAMP__';
+var filesToCache = [__FILES__];
 
 self.addEventListener('install', function (e) {
     console.log('[ServiceWorker] install');
     e.waitUntil(
         caches.open(cacheName)
-            .then(function (cache) {
-                console.log('[ServiceWorker] Caching static files');
-                return cache.addAll(filesToCache);
-            })
-            .then(function () {
-                return self.skipWaiting();
-            })
-            .catch(function (error) {
-                console.error('[ServiceWorker] install', error);
-                self.skipWaiting();
-            })
+        .then(function (cache) {
+            console.log('[ServiceWorker] cache.addAll');
+            return cache.addAll(filesToCache);
+        })
+        .then(function () {
+            console.log('[ServiceWorker] self.skipWaiting');
+            return self.skipWaiting();
+        })
+        .catch(function (error) {
+            console.error('[ServiceWorker] install', error);
+        })
     );
 });
 
@@ -46,17 +32,23 @@ self.addEventListener('activate', function (e) {
                 console.error('[ServiceWorker] activate', error);
             });
         })
+        .then(function () {
+            console.log('[ServiceWorker] self.clients.claim');
+            return self.clients.claim();
+        })
     );
-    return self.clients.claim();
 });
 
 self.addEventListener('fetch', function (event) {
     event.respondWith(
         caches.open(cacheName).then(function (cache) {
             return cache.match(event.request).then(function (cacheResponse) {
+                // console.log("[ServiceWorker] checking match for [" + event.request.url + "]");
                 if (cacheResponse) return cacheResponse;
+                // console.log("[ServiceWorker] no match found");
                 return fetch(event.request).then(function (response) {
                     if (shouldCache(event.request.url)) {
+                        // console.log("[ServiceWorker] Caching the response for [" + event.request.url + "]");
                         cache.put(event.request, response.clone());
                     }
                     return response;
