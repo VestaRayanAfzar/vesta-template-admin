@@ -12,13 +12,13 @@ import Navbar from "../general/Navbar";
 import { Preloader } from "../general/Preloader";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
 
-export interface IProfileParams {
+interface IProfileParams {
 }
 
-export interface IProfileProps extends IPageComponentProps<IProfileParams> {
+interface IProfileProps extends IPageComponentProps<IProfileParams> {
 }
 
-export interface IProfileState {
+interface IProfileState {
     imagePreview: string;
     showLoader?: boolean;
     user: IUser;

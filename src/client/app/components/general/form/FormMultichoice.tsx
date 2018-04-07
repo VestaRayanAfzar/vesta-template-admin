@@ -7,7 +7,7 @@ interface IFormMultichoiceProps extends IBaseComponentProps, IFromControlProps {
     options: Array<{}>;
     showSelectAll?: boolean;
     titleKey?: string;
-    value?: Array<any>;
+    value?: any[];
     valueKey?: string;
 }
 
@@ -64,7 +64,7 @@ export class FormMultichoice extends PureComponent<IFormMultichoiceProps, null> 
     }
 
     private renderCheckboxes() {
-        const { options, value, titleKey, valueKey, showSelectAll } = this.props;
+        const { options, name, value, titleKey, valueKey, showSelectAll } = this.props;
         let isAllSelected = true;
         const choices = (options || []).map((o, i) => {
             const checked = !!(value && value.indexOf(o[valueKey]) >= 0);

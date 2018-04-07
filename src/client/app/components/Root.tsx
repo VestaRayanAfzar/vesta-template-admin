@@ -15,7 +15,7 @@ import { ToastMessage } from "./general/ToastMessage";
 interface IRootParams { }
 
 interface IRootProps extends RouteComponentProps<IRootParams> {
-    routeItems: Array<IRouteItem>;
+    routeItems: IRouteItem[];
 }
 
 interface IRootState {

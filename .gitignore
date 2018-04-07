@@ -4,6 +4,7 @@
 node_modules
 npm-debug.log
 /src/client/app/config/config.var.ts
+/src/client/app/config/variantConfig.ts
 /vesta/client/web/www
 /vesta/server/app
 /vesta/tmp

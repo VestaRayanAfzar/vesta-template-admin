@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { ConfigService } from "../../service/ConfigService";
+import { Config } from "../../service/Config";
 import { IBaseComponentProps } from "../BaseComponent";
 
 export interface IActionSheetItem {
@@ -10,12 +10,12 @@ export interface IActionSheetItem {
 }
 
 interface IActionSheetProps extends IBaseComponentProps {
-    actions: Array<IActionSheetItem>;
+    actions: IActionSheetItem[];
     show: boolean;
 }
 
 export class ActionSheet extends PureComponent<IActionSheetProps, null> {
-    private transTime = ConfigService.getConfig().transition;
+    private transTime = Config.getConfig().transition;
 
     constructor(props: IActionSheetProps) {
         super(props);
@@ -26,7 +26,8 @@ export class ActionSheet extends PureComponent<IActionSheetProps, null> {
         const actionsList = this.renderActionsList();
 
         return (
-            <ReactCSSTransitionGroup transitionName="actionsheet" transitionEnterTimeout={enter / 2} transitionLeaveTimeout={leave / 2}>
+            <ReactCSSTransitionGroup transitionName="actionsheet"
+                transitionEnterTimeout={enter / 2} transitionLeaveTimeout={leave / 2}>
                 {actionsList}
             </ReactCSSTransitionGroup>
         );

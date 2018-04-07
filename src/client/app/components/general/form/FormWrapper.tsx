@@ -9,6 +9,7 @@ export interface IFromControlProps {
     name?: string;
     onChange?: ChangeEventHandler;
     placeholder?: boolean;
+    readonly?: boolean;
     value?: any;
 }
 

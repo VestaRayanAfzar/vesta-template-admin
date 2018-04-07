@@ -1,12 +1,13 @@
-import React, {PureComponent} from "react";
-import {IBaseComponentProps} from "../BaseComponent";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface AvatarProps extends IBaseComponentProps {
+export interface IAvatarProps extends IBaseComponentProps {
     src: string;
     defaultSrc?: string;
+    onClick?: (e) => void;
 }
 
-export class Avatar extends PureComponent<AvatarProps, null> {
+export class Avatar extends PureComponent<IAvatarProps, null> {
     private wrapper;
     private loadDefault = false;
     private faileCount = 0;
@@ -16,23 +17,31 @@ export class Avatar extends PureComponent<AvatarProps, null> {
         this.loadDefault = false;
     }
 
+    public render() {
+        const { src, defaultSrc, onClick } = this.props;
+        const imageSrc = this.loadDefault ? defaultSrc : (src || defaultSrc);
+        const avatar = imageSrc ? <img src={imageSrc} onError={this.imageLoadError} /> :
+            <div className="avatar-holder" />;
+
+        return (
+            <div className="avatar" ref={(el) => this.wrapper = el} onClick={this.onClick}>
+                {avatar}
+                {this.props.children}
+            </div>
+        );
+    }
+
     private imageLoadError = (e) => {
         ++this.faileCount;
-        if (this.faileCount > 3) return;
+        if (this.faileCount > 3) { return; }
         this.loadDefault = true;
         this.forceUpdate();
     }
 
-    public render() {
-        const {src, defaultSrc} = this.props;
-        let imageSrc = this.loadDefault ? defaultSrc : (src || defaultSrc);
-        let avatar = imageSrc ? <img src={imageSrc} onError={this.imageLoadError}/> :
-            <div className="avatar-holder"/>
-        return (
-            <div className="avatar" ref={el => this.wrapper = el}>
-                {avatar}
-                {this.props.children}
-            </div>
-        )
+    private onClick = (e) => {
+        const { onClick } = this.props;
+        if (onClick) {
+            onClick(e);
+        }
     }
 }

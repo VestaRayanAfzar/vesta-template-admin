@@ -26,7 +26,8 @@ export class RoleAdd extends PageComponent<IRoleAddProps, IRoleAddState> {
                 <RoleForm {...this.props}>
                     <div className="btn-group">
                         <button className="btn btn-primary" type="submit">{this.tr("save")}</button>
-                        <button className="btn btn-outline" type="button" onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
+                        <button className="btn btn-outline" type="button"
+                            onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </RoleForm>
             </div>

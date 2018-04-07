@@ -1,9 +1,10 @@
-import React, { PureComponent } from "react";
+import React, { InputHTMLAttributes, PureComponent } from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
 
 interface IFormNumericInputProps extends IBaseComponentProps, IFromControlProps {
     format?: boolean;
+    size?: number;
     step?: number;
     value?: number | string;
 }
@@ -11,13 +12,23 @@ interface IFormNumericInputProps extends IBaseComponentProps, IFromControlProps 
 export class FormNumericInput extends PureComponent<IFormNumericInputProps, null> {
 
     public render() {
-        const { label, name, value, step = 1, error, placeholder } = this.props;
+        const { label, name, value, step, error, placeholder, size } = this.props;
         const displayValue = this.format(value || "");
+        const attrs: InputHTMLAttributes<HTMLInputElement> = { className: "form-control", name, type: "number" };
+        if (placeholder) {
+            attrs.placeholder = label;
+        }
+        if (step) {
+            attrs.step = step;
+        }
+        if (size) {
+            attrs.size = size;
+        }
 
         return (
-            <div className={`form-group numeric-input${error ? " has-error" : ""}`}>
+            <div className={`form-group numeric-input ${error ? "has-error" : ""}`}>
                 {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <input className="form-control" name={name} type="number" placeholder={placeholder ? label : ""} value={displayValue} onChange={this.onChange} step={step} />
+                <input {...attrs} value={displayValue} onChange={this.onChange} />
                 <p className="form-error">{error || ""}</p>
             </div>
         );

@@ -1,38 +1,36 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import {IBaseComponentProps} from "../BaseComponent";
-import {Dispatcher} from "../../service/Dispatcher";
-import {ConfigService} from "../../service/ConfigService";
-import Navbar from "./Navbar";
+import { Config } from "../../service/Config";
+import { Dispatcher } from "../../service/Dispatcher";
+import { IBaseComponentProps } from "../BaseComponent";
+import Navbar, { NavBarMainButtonType } from "./Navbar";
 
-export interface SideNavProps extends IBaseComponentProps {
+export interface ISideNavProps extends IBaseComponentProps {
     name: string;
 }
 
-export interface SideNavState {
+export interface ISideNavState {
     open: boolean;
 }
 
-export class Sidenav extends Component<SideNavProps, SideNavState> {
+export class Sidenav extends Component<ISideNavProps, ISideNavState> {
+    public name = "";
     private dispatcher = Dispatcher.getInstance();
-    public name = '';
-    private transTime = ConfigService.getConfig().transition;
+    private transTime = Config.getConfig().transition;
 
-    constructor(props: SideNavProps) {
+    constructor(props: ISideNavProps) {
         super(props);
-        this.state = {
-            open: false
-        };
+        this.state = { open: false };
     }
 
     public close = () => {
-        this.setState({open: false});
-        document.documentElement.classList.remove('sidenav-open');
+        this.setState({ open: false });
+        document.documentElement.classList.remove("sidenav-open");
     }
 
     public open = () => {
-        this.setState({open: true});
-        document.documentElement.classList.add('sidenav-open');
+        this.setState({ open: true });
+        document.documentElement.classList.add("sidenav-open");
     }
 
     public toggle = () => {
@@ -40,7 +38,7 @@ export class Sidenav extends Component<SideNavProps, SideNavState> {
     }
 
     public componentWillMount() {
-        let name = this.props.name;
+        const name = this.props.name;
         this.dispatcher.register(`${name}-toggle`, this.toggle);
         this.dispatcher.register(`${name}-open`, this.open);
         this.dispatcher.register(`${name}-close`, this.close);
@@ -48,21 +46,20 @@ export class Sidenav extends Component<SideNavProps, SideNavState> {
 
     public render() {
         let navContent = null;
-        let {enter, leave} = this.transTime;
+        const { enter, leave } = this.transTime;
         if (this.state.open) {
             navContent = <aside className="sidenav-component">
-                <Navbar className="navbar-transparent" backAction={this.close}/>
+                <Navbar className="navbar-transparent" backAction={this.close}
+                    mainButtonType={NavBarMainButtonType.Close} />
                 <div onClick={this.close} className="sidenav-backdrop">&nbsp;</div>
                 <div className="sidenav">{this.props.children}</div>
-            </aside>
+            </aside>;
         }
         return (
             <ReactCSSTransitionGroup transitionName="sidenav" transitionEnterTimeout={enter / 2}
-                                     transitionLeaveTimeout={leave / 2}>
+                transitionLeaveTimeout={leave / 2}>
                 {navContent}
             </ReactCSSTransitionGroup>
         );
     }
 }
-
-

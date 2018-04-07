@@ -1,20 +1,41 @@
-import React, {PureComponent} from "react";
+import React, { PureComponent } from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import {IBaseComponentProps} from "../BaseComponent";
-import {ConfigService} from "../../service/ConfigService";
+import { Config } from "../../service/Config";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface ModalProps extends IBaseComponentProps {
+interface IModalProps extends IBaseComponentProps {
     show: boolean;
     name?: string;
     className?: string;
     onClick?: (e) => void;
 }
 
-export class Modal extends PureComponent<ModalProps, null> {
-    static count = 0;
+export class Modal extends PureComponent<IModalProps, null> {
+    public static count = 0;
     // because of this property, this component can not be stateless
     private isOpen = false;
-    private transTime = ConfigService.getConfig().transition;
+    private transTime = Config.getConfig().transition;
+
+    public componentWillUnmount() {
+        this.updateStatus(false);
+    }
+
+    public render() {
+        const { name, show, children, className = "" } = this.props;
+        const { enter, leave } = this.transTime;
+        this.updateStatus(show);
+        const content = show ?
+            <div className={`modal ${className}`} onClick={this.onModalClicked}>
+                {children}
+            </div> : null;
+
+        return (
+            <ReactCSSTransitionGroup transitionName={name || "modal"} transitionEnterTimeout={enter}
+                transitionLeaveTimeout={leave}>
+                {content}
+            </ReactCSSTransitionGroup>
+        );
+    }
 
     private updateStatus(show: boolean) {
         if (show) {
@@ -28,36 +49,18 @@ export class Modal extends PureComponent<ModalProps, null> {
                 --Modal.count;
             }
         }
-        if (Modal.count == 1) document.documentElement.classList.add('modal-open');
-        else if (!Modal.count) document.documentElement.classList.remove('modal-open');
-    }
-
-    public componentWillUnmount() {
-        this.updateStatus(false);
+        if (Modal.count == 1) {
+            document.documentElement.classList.add("modal-open");
+        } else if (!Modal.count) {
+            document.documentElement.classList.remove("modal-open");
+        }
     }
 
     private onModalClicked = (e) => {
-        const {onClick} = this.props;
+        const { onClick } = this.props;
         if (onClick) {
             e.stopPropagation();
             onClick(e);
         }
-    }
-
-    public render() {
-        let {name, show, children, className} = this.props;
-        let {enter, leave} = this.transTime;
-        this.updateStatus(show);
-        let content = show ?
-            <div className={`modal ${className}`} onClick={this.onModalClicked}>
-                {children}
-            </div> : null;
-
-        return (
-            <ReactCSSTransitionGroup transitionName={name || "modal"} transitionEnterTimeout={enter}
-                                     transitionLeaveTimeout={leave}>
-                {content}
-            </ReactCSSTransitionGroup>
-        )
     }
 }

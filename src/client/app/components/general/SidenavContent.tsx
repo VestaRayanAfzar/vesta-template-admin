@@ -9,7 +9,7 @@ import { Icon } from "./Icon";
 import { IMenuItem, Menu } from "./Menu";
 
 interface ISideNavContentProps extends IBaseComponentProps {
-    menuItems: Array<IMenuItem>;
+    menuItems: IMenuItem[];
     name: string;
     user: IUser;
 }
@@ -35,7 +35,7 @@ export class SidenavContent extends PureComponent<ISideNavContentProps, null> {
                     </div>
                 </header>
                 <main>
-                    <Menu name="nav" items={menuItems} onClick={this.closeSidenav} />
+                    <Menu name="nav" items={menuItems} onItemSelect={this.closeSidenav} />
                 </main>
             </div>
         );

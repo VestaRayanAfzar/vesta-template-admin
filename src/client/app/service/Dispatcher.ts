@@ -1,13 +1,19 @@
-export interface IDispatcherCallBack<T> {
-    (payload: T): boolean | void;
-}
+export type IDispatcherCallBack<T> = (payload: T) => boolean | void;
 
 interface IDispatcherRegistry<T> {
     [eventName: string]: Array<IDispatcherCallBack<T>>;
 }
 
 export class Dispatcher {
-    static instances: Array<Dispatcher> = [];
+
+    public static getInstance(name: string = "main"): Dispatcher {
+        if (!Dispatcher.instances[name]) {
+            Dispatcher.instances[name] = new Dispatcher(name);
+        }
+        return Dispatcher.instances[name];
+    }
+
+    private static instances: Array<Dispatcher> = [];
     private registry: IDispatcherRegistry<any> = {};
 
     constructor(name: string) {
@@ -21,7 +27,7 @@ export class Dispatcher {
         this.registry[eventName].push(callback);
     }
 
-    public unregister(eventName: string, callback: Function): boolean {
+    public unregister(eventName: string, callback: any): boolean {
         if (!this.registry[eventName]) {
             return true;
         }
@@ -41,12 +47,5 @@ export class Dispatcher {
         for (let i = 0, il = this.registry[eventName].length; i < il; ++i) {
             this.registry[eventName][i](payload);
         }
-    }
-
-    public static getInstance(name: string = 'main'): Dispatcher {
-        if (!Dispatcher.instances[name]) {
-            Dispatcher.instances[name] = new Dispatcher(name);
-        }
-        return Dispatcher.instances[name];
     }
 }

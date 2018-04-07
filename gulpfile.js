@@ -1,10 +1,13 @@
 const gulp = require('gulp');
 const runSequence = require("run-sequence");
 const path = require('path');
+const rimraf = require("rimraf");
 const config = require('./resources/gulp/config');
 
 let setting = Object.assign({target: 'web', production: false}, config);
 let {dir, targets} = setting;
+// removing tmp directory at the begining
+rimraf.sync(`${dir.build}/tmp`);
 
 /** foreach target creates new task that changes the setting.target */
 Object.keys(targets).forEach(target => {

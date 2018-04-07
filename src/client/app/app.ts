@@ -1,14 +1,14 @@
-import { Culture } from "./medium";
-import { IrDate, IrLocale} from "@vesta/culture-ir";
+import { IrDate, IrLocale } from "@vesta/culture-ir";
 import { ClientApp } from "./ClientApp";
-import { ConfigService } from "./service/ConfigService";
-import { Config } from "./config/config";
-import { IrVocabs } from "./cmn/vocabs/IrVocabs";
 import { SourceApp } from "./cmn/models/User";
+import { IrVocabs } from "./cmn/vocabs/IrVocabs";
+import { appConfig } from "./config/appConfig";
+import { Culture } from "./medium";
+import { Config } from "./service/Config";
 
 // initial configurations
-ConfigService.init(Config);
-ConfigService.set("sourceApp", SourceApp.Panel);
+Config.init(appConfig);
+Config.set("sourceApp", SourceApp.Panel);
 
 // initiating locale
 Culture.register(IrLocale, IrVocabs, IrDate);

@@ -1,8 +1,8 @@
-import React, {EventHandler, PureComponent, ReactChild} from "react";
-import {IBaseComponentProps} from "../BaseComponent";
-import {Modal} from "./Modal";
+import React, { EventHandler, PureComponent, ReactChild } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
+import { Modal } from "./Modal";
 
-export interface DialogProps extends IBaseComponentProps {
+export interface IDialogProps extends IBaseComponentProps {
     title?: string;
     show: boolean;
     onClose?: EventHandler<any>;
@@ -10,21 +10,11 @@ export interface DialogProps extends IBaseComponentProps {
     modalClassName?: string;
 }
 
-export class Dialog extends PureComponent<DialogProps, null> {
-
-    private renderHeader() {
-        const {title, onClose} = this.props;
-        const titlebar = title ? <h3>{title}</h3> : null;
-        const closeBtn = onClose ? <span className="btn" onClick={onClose}>X</span> : null;
-        return titlebar || closeBtn ? <div className="dialog-header">
-            {titlebar}
-            {closeBtn}
-        </div> : null;
-    }
+export class Dialog extends PureComponent<IDialogProps, null> {
 
     public render() {
-        const {show, className, modalClassName} = this.props;
-        const children: Array<ReactChild> = this.props.children as Array<ReactChild>;
+        const { show, className, modalClassName } = this.props;
+        const children: ReactChild[] = this.props.children as ReactChild[];
         let content = null;
         let footer = null;
         if (children && children.length) {
@@ -37,12 +27,22 @@ export class Dialog extends PureComponent<DialogProps, null> {
 
         return (
             <Modal show={show} name="modal-zoom" className={modalClassName}>
-                <div className={`dialog ${className ? `${className}` : ''}`}>
+                <div className={`dialog ${className ? `${className}` : ""}`}>
                     {header}
                     <div className="dialog-content">{content}</div>
                     {footer}
                 </div>
             </Modal>
         );
+    }
+
+    private renderHeader() {
+        const { title, onClose } = this.props;
+        const titlebar = title ? <h3>{title}</h3> : null;
+        const closeBtn = onClose ? <span className="btn" onClick={onClose}>X</span> : null;
+        return titlebar || closeBtn ? <div className="dialog-header">
+            {titlebar}
+            {closeBtn}
+        </div> : null;
     }
 }

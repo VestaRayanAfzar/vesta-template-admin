@@ -15,7 +15,7 @@ $btn-group-active-bg: lighten($color-primary, 15%);
     color: $text-color;
 
     &:hover {
-        background: darken($color, $btn-border-darken-ratio/2);
+        background: darken($color, $btn-border-darken-ratio / 2);
         border-color: darken($color, $btn-border-darken-ratio);
         transition: all $transition-duration-short;
     }
@@ -47,7 +47,7 @@ $btn-group-active-bg: lighten($color-primary, 15%);
     font-size: $btn-font-size;
     height: $btn-height;
     line-height: $btn-height;
-    min-width: $btn-min-width; // padding: 0 $btn-padding;
+    min-width: $btn-min-width;
     outline: 0;
     text-align: center;
     user-select: none;

@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { Search } from "../../PageComponent";
 import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
-
-export enum KeyCode { Backspace = 8, Enter = 13, Escape = 27, ArrowLeft = 37, ArrowUp = 38, ArrowRight = 39, ArrowDown = 40 }
+import { KeyCode } from "../../../cmn/enum/KeyCode";
 
 interface IAutocompleteProps extends IBaseComponentProps, IFromControlProps {
     multi?: boolean;
@@ -52,7 +51,8 @@ export class Autocomplete extends Component<IAutocompleteProps, IAutocompleteSta
         return (
             <div className={`form-group autocomplete-input ${className}`}>
                 {placeholder ? null : <label>{label}</label>}
-                <input className="form-control" onChange={this.onChange} onKeyDown={this.onKeyDown} value={inputValue} name={name} placeholder={placeholder ? label : ""} />
+                <input className="form-control" onChange={this.onChange} onKeyDown={this.onKeyDown}
+                    value={inputValue} name={name} placeholder={placeholder ? label : ""} />
                 {list}
                 {selectedItems}
                 <p className="form-error">{error || ""}</p>
@@ -140,7 +140,8 @@ export class Autocomplete extends Component<IAutocompleteProps, IAutocompleteSta
         if (!items.length || !showDropDown) { return null; }
         const menuItems = (items || []).map((item, index) => {
             const className = index === menuIndex ? "has-hover" : "";
-            return <a className={`list-item ${className}`} onClick={this.onItemSelect} key={index} data-index={index}>{item[titleKey]}</a>;
+            return <a className={`list-item ${className}`} onClick={this.onItemSelect}
+                key={index} data-index={index}>{item[titleKey]}</a>;
         });
         return (
             <div className="list-wrapper form-control">
@@ -155,7 +156,9 @@ export class Autocomplete extends Component<IAutocompleteProps, IAutocompleteSta
         if (!this.selectedItems.length) { return null; }
         const selectedItems = [];
         for (let i = 0, il = this.selectedItems.length; i < il; ++i) {
-            selectedItems.push(<span key={i} data-index={i} onClick={this.onItemDelete}>{this.selectedItems[i][titleKey]}</span>);
+            selectedItems.push((
+                <span key={i} data-index={i} onClick={this.onItemDelete}>{this.selectedItems[i][titleKey]}</span>
+            ));
         }
         return <div className="selected-items">{selectedItems}</div>;
     }

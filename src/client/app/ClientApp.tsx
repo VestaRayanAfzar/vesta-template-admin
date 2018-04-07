@@ -10,6 +10,7 @@ import { NotFound } from "./components/root/NotFound";
 import { getRoutes, IRouteItem } from "./config/route";
 import { SplashPlugin } from "./plugin/SplashPlugin";
 import { AuthService } from "./service/AuthService";
+import { Config } from "./service/Config";
 import { ConfigService, IVersion } from "./service/ConfigService";
 import { Dispatcher } from "./service/Dispatcher";
 import { LogService } from "./service/LogService";
@@ -32,9 +33,9 @@ export class ClientApp {
 
     public run() {
         const routeItems = getRoutes(!this.auth.isGuest());
-        const appName = ConfigService.get<string>("name");
-        const version = ConfigService.get<IVersion>("version").app;
-        const splashTimeout = ConfigService.get<number>("splashTimeout");
+        const appName = Config.get<string>("name");
+        const version = Config.get<IVersion>("version").app;
+        const splashTimeout = Config.get<number>("splashTimeout");
         const routes = this.renderRoutes(routeItems, "");
 
         render(
@@ -44,7 +45,8 @@ export class ClientApp {
                         {routes}
                         <Route component={NotFound} />
                     </Switch>
-                    <Preloader show={this.showAppUpdate} title={this.tr("app_update")} message={`${appName} v${version}`} />
+                    <Preloader show={this.showAppUpdate} title={this.tr("app_update")}
+                        message={`${appName} v${version}`} />
                 </Root>
             </DynamicRouter>,
             document.getElementById("root"),
@@ -57,8 +59,8 @@ export class ClientApp {
 
     private registerServiceWorker() {
         if (!("serviceWorker" in navigator)) { return; }
-        const splashTimeout = ConfigService.get<number>("splashTimeout");
-        const swScript = ConfigService.getConfig().sw;
+        const splashTimeout = Config.get<number>("splashTimeout");
+        const swScript = Config.getConfig().sw;
         navigator.serviceWorker.register(`/${swScript}.js`)
             .then((reg: ServiceWorkerRegistration) => {
                 reg.addEventListener("updatefound", () => {
@@ -80,14 +82,17 @@ export class ClientApp {
             .catch((error) => LogService.error(error.message, "registerServiceWorker", "ClientApp"));
     }
 
-    private renderRoutes(routeItems: Array<IRouteItem>, prefix: string) {
+    private renderRoutes(routeItems: IRouteItem[], prefix: string) {
         let links = [];
         const routeCount = routeItems.length;
         for (let i = 0, il = routeCount; i < il; ++i) {
             const item = routeItems[i];
             if (!item.abstract) {
                 const basePath = prefix ? `/${prefix}` : "";
-                links.push(<Route path={`${basePath}/${item.link}`} key={i} exact={item.exact} render={this.tz(item.component, item.permissions)} />);
+                links.push((
+                    <Route path={`${basePath}/${item.link}`} key={i} exact={item.exact}
+                        render={this.tz(item.component, item.permissions)} />
+                ));
             }
             if (item.children) {
                 links = links.concat(this.renderRoutes(item.children, item.link));

@@ -1,11 +1,11 @@
-import {IUser} from "../cmn/models/User";
-import {IPermission} from "../cmn/models/Permission";
-import {IRole} from "../cmn/models/Role";
-import {Dispatcher} from "./Dispatcher";
-import {AclAction, AclPolicy} from "../cmn/enum/Acl";
+import { AclAction, AclPolicy } from "../cmn/enum/Acl";
+import { IPermission } from "../cmn/models/Permission";
+import { IRole } from "../cmn/models/Role";
+import { IUser } from "../cmn/models/User";
+import { Dispatcher } from "./Dispatcher";
 
 export interface IPermissionCollection {
-    [resource: string]: Array<string>;
+    [resource: string]: string[];
 }
 
 interface IStateResourceMap {
@@ -17,21 +17,29 @@ export interface IAccess {
 }
 
 export class AuthService {
-    static instance: AuthService = null;
-    static Events = {Update: 'auth-update'};
-    private tokenKeyName: string = 'auth-token';
-    private userKeyName: string = 'userData';
+    public static Events = { Update: "auth-update" };
+
+    public static getInstance(): AuthService {
+        if (!AuthService.instance) {
+            AuthService.instance = new AuthService();
+        }
+        return AuthService.instance;
+    }
+
+    private static instance: AuthService;
+    public stateResourceMap: IStateResourceMap = {};
+    private tokenKeyName: string = "auth-token";
+    private userKeyName: string = "userData";
     private dispatch = Dispatcher.getInstance().dispatch;
     private storage: Storage = localStorage;
     private user: IUser = null;
     private permissions: IPermissionCollection = {};
     private defaultPolicy: AclPolicy = AclPolicy.Deny;
-    public stateResourceMap: IStateResourceMap = {};
 
     constructor() {
         try {
             this.user = JSON.parse(this.storage.getItem(this.userKeyName));
-            if (!this.user) this.user = {};
+            if (!this.user) { this.user = {}; }
             this.updatePermissions();
         } catch (e) {
             this.logout();
@@ -49,20 +57,6 @@ export class AuthService {
         this.updatePermissions();
     }
 
-    private updatePermissions() {
-        this.permissions = {};
-        let role = <IRole>this.user.role;
-        if (!role) return this.dispatch(AuthService.Events.Update, this.user);
-        for (let k = role.permissions.length; k--;) {
-            let permission = <IPermission>role.permissions[k];
-            if (!(permission.resource in this.permissions)) {
-                this.permissions[permission.resource] = [];
-            }
-            this.permissions[permission.resource].push(permission.action);
-        }
-        this.dispatch(AuthService.Events.Update, this.user);
-    }
-
     public isGuest(): boolean {
         return !(this.user && this.user.id);
     }
@@ -76,46 +70,47 @@ export class AuthService {
     }
 
     public getToken(): string {
-        return <string>this.storage.getItem(this.tokenKeyName);
+        return this.storage.getItem(this.tokenKeyName) as string;
     }
 
     /**
-     Check if user has access to all actions of all resources
+     * Check if user has access to all actions of all resources
      */
     public hasAccessToState(state: number): boolean {
-        if (!state) return true;
-        let requiredPermissions = this.stateResourceMap[state];
-        if (!requiredPermissions) return this.defaultPolicy == AclPolicy.Allow;
+        if (!state) { return true; }
+        const requiredPermissions = this.stateResourceMap[state];
+        if (!requiredPermissions) { return this.defaultPolicy == AclPolicy.Allow; }
         for (let resources = Object.keys(requiredPermissions), i = resources.length; i--;) {
-            let resource = resources[i];
-            let actions = requiredPermissions[resource];
+            const resource = resources[i];
+            const actions = requiredPermissions[resource];
             for (let j = actions.length; j--;) {
-                if (!this.isAllowed(resource, actions[j])) return false;
+                if (!this.isAllowed(resource, actions[j])) { return false; }
             }
         }
         return true;
     }
 
     /**
-     Check if user has access to the action of resource
+     * Check if user has access to the action of resource
      */
     public isAllowed(resource: string, action: string): boolean {
-        let userPermissions = this.permissions;
-        let userActions = userPermissions[resource];
-        if ((userActions && (userActions.indexOf('*') >= 0 || userActions.indexOf(action) >= 0)) ||
-            (userPermissions['*'] && (userPermissions['*'].indexOf('*') >= 0 || userPermissions['*'].indexOf(action) >= 0))) {
-            return true
+        const userPermissions = this.permissions;
+        const userActions = userPermissions[resource];
+        if ((userActions && (userActions.indexOf("*") >= 0 || userActions.indexOf(action) >= 0)) ||
+            // tslint:disable-next-line:max-line-length
+            (userPermissions["*"] && (userPermissions["*"].indexOf("*") >= 0 || userPermissions["*"].indexOf(action) >= 0))) {
+            return true;
         }
         return this.defaultPolicy == AclPolicy.Allow;
     }
 
-    public getAccessList(resource: string, ...actions: Array<string>): IAccess {
+    public getAccessList(resource: string, ...actions: string[]): IAccess {
         if (!actions.length) {
             actions = [AclAction.Read, AclAction.Add, AclAction.Edit, AclAction.Delete];
         }
-        let access = {};
+        const access = {};
         for (let i = actions.length; i--;) {
-            if (this.isAllowed(resource, actions[i])) access[actions[i]] = true;
+            if (this.isAllowed(resource, actions[i])) { access[actions[i]] = true; }
         }
         return access;
     }
@@ -131,10 +126,17 @@ export class AuthService {
         this.defaultPolicy = policy;
     }
 
-    public static getInstance(): AuthService {
-        if (!AuthService.instance) {
-            AuthService.instance = new AuthService();
+    private updatePermissions() {
+        this.permissions = {};
+        const role = this.user.role as IRole;
+        if (!role) { return this.dispatch(AuthService.Events.Update, this.user); }
+        for (let k = role.permissions.length; k--;) {
+            const permission = role.permissions[k] as IPermission;
+            if (!(permission.resource in this.permissions)) {
+                this.permissions[permission.resource] = [];
+            }
+            this.permissions[permission.resource].push(permission.action);
         }
-        return AuthService.instance;
+        this.dispatch(AuthService.Events.Update, this.user);
     }
 }

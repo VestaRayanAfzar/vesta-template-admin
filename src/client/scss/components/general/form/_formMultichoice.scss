@@ -6,6 +6,8 @@ $multichoice-margin-side: 10%;
     border: 1px solid $border-color;
     border-radius: $form-control-border-radius;
     display: block;
+    margin-left: 0;
+    margin-right: 0;
 
     &.has-error {
         border-color: $color-error;

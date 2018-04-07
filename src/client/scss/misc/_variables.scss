@@ -63,9 +63,9 @@ $color-classes: primary success error warning info;
 
 //shadow
 $shadow-color: $color-dark;
-$shadow-horizontal-offset:1px;
-$shadow-vertical-offset:1px;
-$shadow-radius:3px;
+$shadow-horizontal-offset: 1px;
+$shadow-vertical-offset: 1px;
+$shadow-radius: 3px;
 $shadow-default: $shadow-horizontal-offset $shadow-vertical-offset $shadow-radius $shadow-color;
 
 // element colors

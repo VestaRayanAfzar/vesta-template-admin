@@ -12,7 +12,7 @@ export class FormSelect extends PureComponent<IFormSelectProps, null> {
     public static defaultProps = { valueKey: "id", titleKey: "title" };
 
     public render() {
-        const { label, name, options, error, placeholder, titleKey } = this.props;
+        const { label, name, options, error, placeholder, titleKey, readonly } = this.props;
         // finding index of selected value
         const selectedIndex = this.getSelectedIndex();
 
@@ -22,7 +22,8 @@ export class FormSelect extends PureComponent<IFormSelectProps, null> {
         return (
             <div className={`form-group select-input ${error ? "has-error" : ""}`}>
                 {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <select className="form-control" name={name} id={name} value={selectedIndex} onChange={this.onChange}>
+                <select className="form-control" name={name} id={name} value={selectedIndex}
+                    onChange={this.onChange} disabled={readonly}>
                     {optionsList}
                 </select>
                 <p className="form-error">{error || ""}</p>
@@ -45,9 +46,11 @@ export class FormSelect extends PureComponent<IFormSelectProps, null> {
     }
 
     private onChange = (e) => {
-        const { name, onChange, options, valueKey } = this.props;
+        const { name, onChange, options, valueKey, readonly } = this.props;
         const index = e.target.value;
         const item = options[index];
-        onChange(name, item ? item[valueKey] : null);
+        if (onChange && !readonly) {
+            onChange(name, item ? item[valueKey] : null);
+        }
     }
 }

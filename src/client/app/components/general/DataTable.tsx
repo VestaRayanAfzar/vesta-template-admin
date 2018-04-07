@@ -14,7 +14,7 @@ export interface IDataTableQueryOption<T> extends IQueryRequest<T> {
     total?: number;
 }
 
-export interface IDataTableProps<T> extends IBaseComponentProps {
+interface IDataTableProps<T> extends IBaseComponentProps {
     columns: Array<IColumn<T>>;
     fetch?: (option: IDataTableQueryOption<T>) => void;
     pagination?: boolean;
@@ -24,7 +24,7 @@ export interface IDataTableProps<T> extends IBaseComponentProps {
     showIndex?: boolean;
 }
 
-export interface IDataTableState {
+interface IDataTableState {
 }
 
 export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState> {
@@ -39,17 +39,12 @@ export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState>
         this.createHeader();
     }
 
-    // public shouldComponentUpdate(nextProps, nextState) {
-    //     // todo
-    //     return true;
-    // }
-
     public render() {
-        const { pagination, queryOption } = this.props;
         const rows = this.createRows();
-        const paging = pagination ?
-            <Pagination totalRecords={queryOption.total} currentPage={queryOption.page} fetch={this.onPaginationChange} recordsPerPage={queryOption.limit} /> : null;
-
+        const queryOption = this.props.queryOption;
+        const pagination = this.props.pagination ? (
+            <Pagination totalRecords={queryOption.total} currentPage={queryOption.page} fetch={this.onPaginationChange}
+                recordsPerPage={queryOption.limit} />) : null;
         return (
             <div>
                 <div className="data-table">
@@ -58,7 +53,7 @@ export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState>
                         <tbody>{rows}</tbody>
                     </table>
                 </div>
-                {paging}
+                {pagination}
             </div>
         );
     }

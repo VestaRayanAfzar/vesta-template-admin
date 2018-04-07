@@ -5,8 +5,9 @@ $sidenav-menu-bg: rgba($white, .5);
 .sidenav-content {
     header {
         color: $white;
-        padding: $sidenav-top-padding $sidenav-padding $sidenav-padding;
+        padding: $sidenav-top-padding $sidenav-padding 0 $sidenav-padding;
         position: relative;
+
         .icon {
             #{$opposite-float}: $sidenav-padding;
             bottom: $sidenav-padding;
@@ -20,14 +21,13 @@ $sidenav-menu-bg: rgba($white, .5);
         height: $sidenav-header-avatar-width;
         width: $sidenav-header-avatar-width;
     }
+
     .name-wrapper {
         $name-padding: ceil($sidenav-padding / 2);
-        margin: get-value-by-direction($name-padding 0 0 3 * $name-padding, $name-padding 3 * $name-padding 0 0);
-    }
-    .menu {
-        background: $sidenav-menu-bg;
-        a {
-            color: $color-dark;
+        padding: $name-padding $name-padding 0 0;
+
+        h4 {
+            font-weight: normal;
         }
     }
 }
