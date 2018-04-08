@@ -10,7 +10,8 @@ Do NOT clone this repository directly, use [vesta](https://github.com/VestaRayan
 use `vesta create --help` for more information
 
 ### Development
-Change `api` value to your api server address from `src/client/app/config/config.var.ts`.
+Change `api` value to your api server address from `src/client/app/config/variantConfig.ts`.
+Also modify the common Configurations from `src/client/app/cmn/config/cmnConfig.ts`.
 
 This project has only `web` target. 
 For more information about targets, please visit [vesta-template-client](https://github.com/VestaRayanAfzar/vesta-template-client)
@@ -45,7 +46,7 @@ your production specific code goes here...
 All these code eliminations occur at build time using `resources/gulp/plugins/eliminator` gulp plugin.
 
 ### Production
-Production mode configuration file is located at `resources/gitignore/config.var.ts`.
+Production mode configuration file is located at `resources/gitignore/variantConfig.ts`.
 There is a bash script in `resources/ci/deploy.sh` (change it to cover your needs).
 
 On target system (production) you have to install [vesta](https://github.com/VestaRayanAfzar/vesta) platform. Then run `vesta deploy [https://git/repo.git]`.
