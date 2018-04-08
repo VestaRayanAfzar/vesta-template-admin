@@ -10,7 +10,7 @@ export interface IVariantConfig {
 }
 
 export const variantConfig: IVariantConfig = {
-    api: "http://192.168.99.100:3000",
+    api: "http://localhost:3000",
     env: "production",
     sw: "service-worker",
     viewport: {
