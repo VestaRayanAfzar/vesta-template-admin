@@ -37,11 +37,19 @@ module.exports = function (setting) {
  * This tasks is called by npm script for starting api server in docker env
  */
 gulp.task('server:run', function () {
-    let {dir, debug} = require('./config');
+    let {
+        dir,
+        debug
+    } = require('./config');
     // let composeFile = `${dir.buildServer}/docker-compose.yml`;
-    let delay = 500, debuggerDelay = 500, timer, debuggerTimer;
+    let delay = 500,
+        debuggerDelay = 500,
+        timer, debuggerTimer;
     let port = debug.ports[debug.type];
-    server.listen({path: `${dir.buildServer}/app.js`, execArgv: [`--${debug.type}=0.0.0.0:${port}`]});
+    server.listen({
+        path: `${dir.buildServer}/app.js`,
+        execArgv: [`--${debug.type}=0.0.0.0:${port}`]
+    });
     let isInspect = debug.type === 'inspect';
     isInspect && loadDebugger();
     gulp.watch([`${dir.buildServer}/**/*.js`, `!${dir.buildServer}/static/**/*.js`], function () {
@@ -74,6 +82,3 @@ gulp.task('server:run', function () {
         }
     }
 });
-
-
-

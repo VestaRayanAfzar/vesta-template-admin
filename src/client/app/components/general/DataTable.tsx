@@ -19,7 +19,7 @@ interface IDataTableProps<T> extends IBaseComponentProps {
     fetch?: (option: IDataTableQueryOption<T>) => void;
     pagination?: boolean;
     queryOption?: IDataTableQueryOption<T>;
-    records: Array<T>;
+    records: T[];
     selectable?: boolean;
     showIndex?: boolean;
 }

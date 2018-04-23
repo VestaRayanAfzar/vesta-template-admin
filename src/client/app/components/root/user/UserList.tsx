@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { IUser } from "../../../cmn/models/User";
 import { IDeleteResult } from "../../../medium";
 import { IAccess } from "../../../service/AuthService";
@@ -7,18 +6,18 @@ import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTab
 import { DataTableOperations } from "../../general/DataTableOperations";
 import { IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface IUserListParams {
+interface IUserListParams {
 }
 
-export interface IUserListProps extends IPageComponentProps<IUserListParams> {
+interface IUserListProps extends IPageComponentProps<IUserListParams> {
     access: IAccess;
     fetch: (queryOption: IDataTableQueryOption<IUser>) => void;
     queryOption: IDataTableQueryOption<IUser>;
-    users: Array<IUser>;
+    users: IUser[];
 }
 
-export interface IUserListState {
-    users: Array<IUser>;
+interface IUserListState {
+    users: IUser[];
 }
 
 export class UserList extends PageComponent<IUserListProps, IUserListState> {

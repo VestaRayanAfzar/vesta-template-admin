@@ -3,7 +3,7 @@ import { Culture } from "../../../medium";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { DatePicker } from "../DatePicker";
 import { Modal } from "../Modal";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IFormDateTimeInputProps extends IBaseComponentProps, IFromControlProps {
     hasTime?: boolean;
@@ -21,7 +21,8 @@ export class FormDateTimeInput extends PureComponent<IFormDateTimeInputProps, IF
 
     constructor(props: IFormDateTimeInputProps) {
         super(props);
-        this.dateTimeFormat = this.props.hasTime ? Culture.getLocale().defaultDateTimeFormat : Culture.getLocale().defaultDateFormat;
+        const locale = Culture.getLocale();
+        this.dateTimeFormat = this.props.hasTime ? locale.defaultDateTimeFormat : locale.defaultDateFormat;
         this.state = { value: this.format(props.value) };
     }
 

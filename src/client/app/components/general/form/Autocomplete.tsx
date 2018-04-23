@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { KeyCode } from "../../../cmn/enum/KeyCode";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { Search } from "../../PageComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
-import { KeyCode } from "../../../cmn/enum/KeyCode";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IAutocompleteProps extends IBaseComponentProps, IFromControlProps {
     multi?: boolean;
@@ -12,7 +12,7 @@ interface IAutocompleteProps extends IBaseComponentProps, IFromControlProps {
 }
 
 interface IAutocompleteState {
-    items: Array<any>;
+    items: any[];
     menuIndex: number;
     showDropDown: boolean;
     showLoader: boolean;
@@ -22,7 +22,7 @@ interface IAutocompleteState {
 export class Autocomplete extends Component<IAutocompleteProps, IAutocompleteState> {
     public static defaultProps = { valueKey: "id", titleKey: "title" };
     private hasStateChanged = false;
-    private selectedItems: Array<any> = [];
+    private selectedItems: any[] = [];
 
     constructor(props: IAutocompleteProps) {
         super(props);
@@ -46,7 +46,8 @@ export class Autocomplete extends Component<IAutocompleteProps, IAutocompleteSta
         const list = this.renderList();
         const selectedItems = multi ? this.renderSelectedItems() : null;
         const inputValue = term || (!multi && value && value[titleKey]) || "";
-        const className = `${list ? "has-list" : ""} ${error ? "has-error" : ""} ${multi ? "is-multi" : ""} ${showLoader ? "is-loading" : ""}`;
+        let className = `${list ? "has-list" : ""} ${error ? "has-error" : ""}`;
+        className += `${multi ? "is-multi" : ""} ${showLoader ? "is-loading" : ""}`;
 
         return (
             <div className={`form-group autocomplete-input ${className}`}>

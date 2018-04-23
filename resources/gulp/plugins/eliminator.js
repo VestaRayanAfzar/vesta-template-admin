@@ -6,7 +6,7 @@ const PluginError = util.PluginError;
 const PLUGIN_NAME = 'eliminator';
 
 module.exports = function (config) {
-    if (!config||!config.target) throw new PluginError(PLUGIN_NAME, `Invalid config`);
+    if (!config || !config.target) throw new PluginError(PLUGIN_NAME, `Invalid config`);
     let eliminationsArea = updateEliminationsArea(config.target);
 
     return through.obj(function (file, encoding, cb) {
@@ -60,19 +60,40 @@ module.exports = function (config) {
     }
 
     function updateEliminationsArea(target) {
-        const eliminationsArea = {html: [], others: []};
+        const eliminationsArea = {
+            html: [],
+            others: []
+        };
         // removing production/development
         const envEliminationTag = config.production ? 'development' : 'production';
-        eliminationsArea.html.push({start: `<!--${envEliminationTag}-->`, end: `<!--/${envEliminationTag}-->`});
-        eliminationsArea.others.push({start: `//<${envEliminationTag}>`, end: `//</${envEliminationTag}>`});
+        eliminationsArea.html.push({
+            start: `<!--${envEliminationTag}-->`,
+            end: `<!--/${envEliminationTag}-->`
+        });
+        eliminationsArea.others.push({
+            start: `//\s*<${envEliminationTag}>`,
+            end: `//\s*</${envEliminationTag}>`
+        });
         // removing non relevant target tags
-        eliminationsArea.html.push({start: `<!--!${target}-->`, end: `<!--/${target}-->`});
-        eliminationsArea.others.push({start: `//<!${target}>`, end: `//</${target}>`});
+        eliminationsArea.html.push({
+            start: `<!--!${target}-->`,
+            end: `<!--/${target}-->`
+        });
+        eliminationsArea.others.push({
+            start: `//\s*<!${target}>`,
+            end: `//\s*</${target}>`
+        });
 
         let eliminations = config.targets[target].elimination;
         eliminations && eliminations.forEach(elimination => {
-            eliminationsArea.html.push({start: `<!--${elimination}-->`, end: `<!--/${elimination}-->`});
-            eliminationsArea.others.push({start: `//<${elimination}>`, end: `//</${elimination}>`});
+            eliminationsArea.html.push({
+                start: `<!--${elimination}-->`,
+                end: `<!--/${elimination}-->`
+            });
+            eliminationsArea.others.push({
+                start: `//<${elimination}>`,
+                end: `//</${elimination}>`
+            });
         });
         return eliminationsArea;
     }

@@ -3,15 +3,15 @@ import { ISupport } from "../../../cmn/models/Support";
 import { Culture } from "../../../medium";
 import { FetchById, IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface ISupportDetailParams {
+interface ISupportDetailParams {
     id: number;
 }
 
-export interface ISupportDetailProps extends IPageComponentProps<ISupportDetailParams> {
+interface ISupportDetailProps extends IPageComponentProps<ISupportDetailParams> {
     onFetch: FetchById<ISupport>;
 }
 
-export interface ISupportDetailState {
+interface ISupportDetailState {
     contact: ISupport;
 }
 

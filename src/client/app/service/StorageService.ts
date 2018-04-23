@@ -1,7 +1,6 @@
-export enum StorageType {Local = 1, Session}
+export enum StorageType { Local = 1, Session }
 
 export class StorageService {
-    private static storage: Storage = localStorage;
 
     public static set<T>(key: string, value: T) {
         try {
@@ -13,12 +12,12 @@ export class StorageService {
     }
 
     public static get<T>(key: string): T {
-        let value: any = StorageService.storage.getItem(key),
-            object: T;
+        const value: any = StorageService.storage.getItem(key);
+        let object: T;
         try {
             object = JSON.parse(value);
         } catch (e) {
-            object = <T>value;
+            object = value as T;
         }
         return object;
     }
@@ -31,4 +30,6 @@ export class StorageService {
     public static setStorage(type: StorageType) {
         StorageService.storage = type == StorageType.Session ? sessionStorage : localStorage;
     }
+
+    private static storage: Storage = localStorage;
 }

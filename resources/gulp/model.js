@@ -10,6 +10,7 @@ module.exports = function (setting) {
         let stream = gulp.src(tsFiles);
         let tsResult = stream.pipe(ts({
             target: 'es5',
+            noEmitHelpers: false,
             module: 'commonjs'
         }));
         return tsResult.js.pipe(gulp.dest(`${buildPath}/model`));

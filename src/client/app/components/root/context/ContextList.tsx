@@ -1,31 +1,31 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {IContext} from "../../../cmn/models/Context";
+import { Link } from "react-router-dom";
+import { IContext } from "../../../cmn/models/Context";
 import { IDeleteResult } from "../../../medium";
-import {IAccess} from "../../../service/AuthService";
-import {DataTable, IColumn, IDataTableQueryOption} from "../../general/DataTable";
-import {DataTableOperations} from "../../general/DataTableOperations";
-import {IPageComponentProps, PageComponent} from "../../PageComponent";
+import { IAccess } from "../../../service/AuthService";
+import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
+import { DataTableOperations } from "../../general/DataTableOperations";
+import { IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface IContextListParams {
+interface IContextListParams {
 }
 
-export interface IContextListProps extends IPageComponentProps<IContextListParams> {
+interface IContextListProps extends IPageComponentProps<IContextListParams> {
     access: IAccess;
-    contexts: Array<IContext>;
+    contexts: IContext[];
     fetch: (queryOption: IDataTableQueryOption<IContext>) => void;
     queryOption: IDataTableQueryOption<IContext>;
 }
 
-export interface IContextListState {
-    contexts: Array<IContext>;
+interface IContextListState {
+    contexts: IContext[];
 }
 
 export class ContextList extends PageComponent<IContextListProps, IContextListState> {
 
     constructor(props: IContextListProps) {
         super(props);
-        this.state = {contexts: []};
+        this.state = { contexts: [] };
     }
 
     public componentDidMount() {
@@ -35,17 +35,18 @@ export class ContextList extends PageComponent<IContextListProps, IContextListSt
     public render() {
         const access = this.props.access;
         const columns: Array<IColumn<IContext>> = [
-            {name: "id", title: this.tr("fld_id")},
-            {name: "key", title: this.tr("fld_key")},
+            { name: "id", title: this.tr("fld_id") },
+            { name: "key", title: this.tr("fld_key") },
             {
-                render: (r) => <DataTableOperations access={access} id={r.id} onDelete={this.onDelete} path="context"/>,
+                render: (r) => (<DataTableOperations access={access} id={r.id}
+                    onDelete={this.onDelete} path="context" />),
                 title: this.tr("operations"),
             },
         ];
         return (
             <div className="crud-page">
                 <DataTable queryOption={this.props.queryOption} columns={columns} records={this.props.contexts}
-                           fetch={this.props.fetch} pagination={true}/>
+                    fetch={this.props.fetch} pagination={true} />
             </div>
         );
     }

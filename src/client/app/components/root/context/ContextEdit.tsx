@@ -4,17 +4,17 @@ import { IValidationError } from "../../../medium";
 import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 import { ContextForm } from "./ContextForm";
 
-export interface IContextEditParams {
+interface IContextEditParams {
     id: number;
 }
 
-export interface IContextEditProps extends IPageComponentProps<IContextEditParams> {
+interface IContextEditProps extends IPageComponentProps<IContextEditParams> {
     fetch: FetchById<IContext>;
     save: Save<IContext>;
     validationErrors: IValidationError;
 }
 
-export interface IContextEditState {
+interface IContextEditState {
 }
 
 export class ContextEdit extends PageComponent<IContextEditProps, IContextEditState> {
@@ -29,7 +29,8 @@ export class ContextEdit extends PageComponent<IContextEditProps, IContextEditSt
                 <ContextForm id={id} fetch={fetch} save={save} validationErrors={validationErrors}>
                     <div className="btn-group">
                         <button className="btn btn-primary" type="submit">{this.tr("save")}</button>
-                        <button className="btn" type="button" onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
+                        <button className="btn" type="button"
+                            onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </ContextForm>
             </div>

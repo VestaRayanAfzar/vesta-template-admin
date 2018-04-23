@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes, PureComponent } from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IFormNumericInputProps extends IBaseComponentProps, IFromControlProps {
     format?: boolean;

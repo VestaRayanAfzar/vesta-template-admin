@@ -5,7 +5,7 @@ import { IBaseComponentProps } from "../../BaseComponent";
 import { Dialog } from "../Dialog";
 import { FileManager } from "../FileManager";
 import { Icon } from "../Icon";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IToolbarAction {
     command: string;
@@ -23,7 +23,7 @@ export interface IWysiwygState {
 export class Wysiwyg extends Component<IWysiwygProps, IWysiwygState> {
     private content = "";
     private editor: HTMLDivElement;
-    private toolbarActions: Array<IToolbarAction> = [];
+    private toolbarActions: IToolbarAction[] = [];
     private tr = TranslateService.getInstance().translate;
 
     constructor(props: IWysiwygProps) {
@@ -58,7 +58,8 @@ export class Wysiwyg extends Component<IWysiwygProps, IWysiwygState> {
             <div className={`wysiwyg ${error ? "has-error" : ""}`}>
                 {label ? <label className="title">{label}</label> : null}
                 {toolbar}
-                <div className="editor" contentEditable={true} ref={(el) => this.editor = el} onBlur={this.onChange} dangerouslySetInnerHTML={{ __html: this.content }} />
+                <div className="editor" contentEditable={true} ref={(el) => this.editor = el} onBlur={this.onChange}
+                    dangerouslySetInnerHTML={{ __html: this.content }} />
                 {fileManager}
                 <p className="form-error">{error || ""}</p>
             </div>
@@ -98,7 +99,8 @@ export class Wysiwyg extends Component<IWysiwygProps, IWysiwygState> {
         const { showFileManager } = this.state;
         if (!showFileManager) { return <Dialog show={false} />; }
         return (
-            <Dialog show={true} title={this.tr("filemanager")} className="file-manager-dialog" onClose={this.hideFileManager}>
+            <Dialog show={true} title={this.tr("filemanager")} className="file-manager-dialog"
+                onClose={this.hideFileManager}>
                 <FileManager onFileSelect={this.onFileSelect} />
             </Dialog>
         );

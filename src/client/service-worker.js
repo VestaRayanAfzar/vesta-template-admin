@@ -1,4 +1,4 @@
-var cacheName = 'autoapp-eu-__TIMESTAMP__';
+var cacheName = 'vesta-panel-__TIMESTAMP__';
 var filesToCache = [__FILES__];
 
 self.addEventListener('install', function (e) {

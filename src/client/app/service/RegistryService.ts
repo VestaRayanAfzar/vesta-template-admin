@@ -1,8 +1,4 @@
 export class RegistryService {
-    private static storage: any = {};
-
-    private constructor() {
-    }
 
     public static set<T>(key: string, value: T) {
         RegistryService.storage[key] = value;
@@ -16,4 +12,8 @@ export class RegistryService {
         return defaultValue || null;
     }
 
+    private static storage: any = {};
+
+    private constructor() {
+    }
 }

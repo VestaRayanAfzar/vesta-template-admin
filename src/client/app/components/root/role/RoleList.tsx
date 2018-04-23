@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { IRole } from "../../../cmn/models/Role";
 import { IDeleteResult } from "../../../medium";
 import { IAccess } from "../../../service/AuthService";
@@ -7,17 +6,17 @@ import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTab
 import { DataTableOperations } from "../../general/DataTableOperations";
 import { FetchAll, IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface IRoleListParams {
+interface IRoleListParams {
 }
 
-export interface IRoleListProps extends IPageComponentProps<IRoleListParams> {
+interface IRoleListProps extends IPageComponentProps<IRoleListParams> {
     access: IAccess;
     fetch: FetchAll<IRole>;
     queryOption: IDataTableQueryOption<IRole>;
-    roles: Array<IRole>;
+    roles: IRole[];
 }
 
-export interface IRoleListState {
+interface IRoleListState {
 }
 
 export class RoleList extends PageComponent<IRoleListProps, IRoleListState> {

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Navbar from "../general/Navbar";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
 

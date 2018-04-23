@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { ISupport } from "../../../cmn/models/Support";
 import { Culture, IDeleteResult } from "../../../medium";
 import { IAccess } from "../../../service/AuthService";
@@ -7,18 +6,18 @@ import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTab
 import { DataTableOperations } from "../../general/DataTableOperations";
 import { IPageComponentProps, PageComponent } from "../../PageComponent";
 
-export interface ISupportListParams {
+interface ISupportListParams {
 }
 
-export interface ISupportListProps extends IPageComponentProps<ISupportListParams> {
+interface ISupportListProps extends IPageComponentProps<ISupportListParams> {
     access: IAccess;
-    contacts: Array<ISupport>;
+    contacts: ISupport[];
     onFetch: (queryOption: IDataTableQueryOption<ISupport>) => void;
     queryOption: IDataTableQueryOption<ISupport>;
 }
 
-export interface ISupportListState {
-    contacts: Array<ISupport>;
+interface ISupportListState {
+    contacts: ISupport[];
 }
 
 export class SupportList extends PageComponent<ISupportListProps, ISupportListState> {
@@ -50,7 +49,8 @@ export class SupportList extends PageComponent<ISupportListProps, ISupportListSt
             { name: "name", title: this.tr("fld_name") },
             { name: "phone", title: this.tr("fld_phone") },
             {
-                render: (r) => <DataTableOperations access={access} id={r.id} onDelete={this.onDelete} path="contact" />,
+                render: (r) => (<DataTableOperations access={access} id={r.id}
+                    onDelete={this.onDelete} path="contact" />),
                 title: this.tr("operations"),
             },
         ];

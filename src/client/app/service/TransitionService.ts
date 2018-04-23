@@ -17,7 +17,8 @@ export class TransitionService {
     constructor(private auth: AuthService) {
     }
 
-    public willTransitionTo = (componentClass: ComponentClass<any>, permissions?: IPermissionCollection, extraProps?: Attributes & any, children?: Array<ReactNode>) => {
+    // tslint:disable-next-line:max-line-length
+    public willTransitionTo = (componentClass: ComponentClass<any>, permissions?: IPermissionCollection, extraProps?: Attributes & any, children?: ReactNode[]) => {
         const id = this.idCounter++;
         this.auth.registerPermissions(id, permissions);
         extraProps = extraProps || {};

@@ -2,10 +2,10 @@ import React from "react";
 import { Route, Switch } from "react-router";
 import { Context as ContextModel, IContext } from "../../cmn/models/Context";
 import { IValidationError } from "../../medium";
+import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { IDataTableQueryOption } from "../general/DataTable";
-import { DynamicRouter } from "../general/DynamicRouter";
 import Navbar from "../general/Navbar";
 import { PageTitle } from "../general/PageTitle";
 import { Preloader } from "../general/Preloader";
@@ -15,14 +15,14 @@ import { ContextDetail } from "./context/ContextDetail";
 import { ContextEdit } from "./context/ContextEdit";
 import { ContextList } from "./context/ContextList";
 
-export interface IContextParams {
+interface IContextParams {
 }
 
-export interface IContextProps extends IPageComponentProps<IContextParams> {
+interface IContextProps extends IPageComponentProps<IContextParams> {
 }
 
-export interface IContextState {
-    contexts: Array<IContext>;
+interface IContextState {
+    contexts: IContext[];
     queryOption: IDataTableQueryOption<IContext>;
     showLoader?: boolean;
     validationErrors?: IValidationError;
@@ -49,20 +49,9 @@ export class Context extends PageComponent<IContextProps, IContextState> {
                 <div className="crud-wrapper">
                     <DynamicRouter>
                         <Switch>
-                            {this.access.add ?
-                                <Route path="/context/add"
-                                    render={this.tz(ContextAdd, { context: ["add"] }, {
-                                        save: this.save, validationErrors,
-                                    })} /> : null}
-                            {this.access.edit ?
-                                <Route path="/context/edit/:id"
-                                    render={this.tz(ContextEdit, { context: ["edit"] }, {
-                                        save: this.save, fetch: this.fetch, validationErrors,
-                                    })} /> : null}
-                            <Route path="/context/detail/:id"
-                                render={this.tz(ContextDetail, { context: ["read"] }, {
-                                    fetch: this.fetch,
-                                })} />
+                            {this.access.add ? <Route path="/context/add" render={this.tz(ContextAdd, { context: ["add"] }, { save: this.save, validationErrors })} /> : null}
+                            {this.access.edit ? <Route path="/context/edit/:id" render={this.tz(ContextEdit, { context: ["edit"] }, { save: this.save, fetch: this.fetch, validationErrors })} /> : null}
+                            <Route path="/context/detail/:id" render={this.tz(ContextDetail, { context: ["read"] }, { fetch: this.fetch })} />
                         </Switch>
                     </DynamicRouter>
                     <ContextList access={this.access} fetch={this.fetchAll} queryOption={queryOption}

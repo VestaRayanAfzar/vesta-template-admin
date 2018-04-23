@@ -1,60 +1,56 @@
-import React, {PureComponent} from "react";
-import {IBaseComponentProps} from "../BaseComponent";
-import {IToastData, MessageType} from "../../service/NotificationService";
-import {Dispatcher} from "../../service/Dispatcher";
+import React, { PureComponent } from "react";
+import { Dispatcher } from "../../service/Dispatcher";
+import { IToastData, MessageType } from "../../service/NotificationService";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface ToastMessageProps extends IBaseComponentProps {
+export interface IToastMessageProps extends IBaseComponentProps {
 }
 
-export interface ToastMessageState {
+export interface IToastMessageState {
     message: string;
     type: MessageType;
 }
 
-export class ToastMessage extends PureComponent<ToastMessageProps, ToastMessageState> {
+export class ToastMessage extends PureComponent<IToastMessageProps, IToastMessageState> {
 
     private timer;
     private delay = 2000;
 
-    constructor(props: ToastMessageProps) {
+    constructor(props: IToastMessageProps) {
         super(props);
-        Dispatcher.getInstance().register<IToastData>('toast', payload => {
-            this.toast(payload.message, payload.type);
+        Dispatcher.getInstance().register<IToastData>("toast", (payload) => {
+            this.setState({ message: payload.message, type: payload.type });
             return false;
         });
-        this.state = {message: null, type: null};
-    }
-
-    public toast(message: string, type: MessageType) {
-        this.setState({message, type});
-    }
-
-    private getToast() {
-        let className = 'info';
-        switch (this.state.type) {
-            case MessageType.Warning:
-                className = 'warning';
-                break;
-            case MessageType.Error:
-                className = 'error';
-                break;
-            case MessageType.Success:
-                className = 'success';
-                break;
-        }
-        className = `toast type-${className}`;
-        return <div className={className}>{this.state.message}</div>;
+        this.state = { message: null, type: null };
     }
 
     public render() {
-        let message = this.state.message ? this.getToast() : null;
+        const message = this.state.message ? this.getToast() : null;
         if (message) {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
-                this.setState({message: null});
+                this.setState({ message: null });
             }, this.delay);
             return <div className="toast-wrapper">{message}</div>;
         }
         return null;
+    }
+
+    private getToast() {
+        let className = "info";
+        switch (this.state.type) {
+            case MessageType.Warning:
+                className = "warning";
+                break;
+            case MessageType.Error:
+                className = "error";
+                break;
+            case MessageType.Success:
+                className = "success";
+                break;
+        }
+        className = `toast type-${className}`;
+        return <div className={className}>{this.state.message}</div>;
     }
 }

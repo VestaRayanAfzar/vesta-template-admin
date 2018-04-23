@@ -5,18 +5,18 @@ import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageC
 import { IExtPermission } from "../Role";
 import { RoleForm } from "./RoleForm";
 
-export interface IRoleEditParams {
+interface IRoleEditParams {
     id: number;
 }
 
-export interface IRoleEditProps extends IPageComponentProps<IRoleEditParams> {
+interface IRoleEditProps extends IPageComponentProps<IRoleEditParams> {
     fetch: FetchById<IRole>;
     permissions: IExtPermission;
     save: Save<IRole>;
     validationErrors?: IValidationError;
 }
 
-export interface IRoleEditState {
+interface IRoleEditState {
 }
 
 export class RoleEdit extends PageComponent<IRoleEditProps, IRoleEditState> {
@@ -28,10 +28,12 @@ export class RoleEdit extends PageComponent<IRoleEditProps, IRoleEditState> {
         return (
             <div className="crud-page">
                 <h1>{this.tr("title_record_edit", this.tr("mdl_role"))}</h1>
-                <RoleForm id={id} fetch={fetch} permissions={permissions} save={save} validationErrors={validationErrors}>
+                <RoleForm id={id} fetch={fetch} permissions={permissions} save={save}
+                    validationErrors={validationErrors}>
                     <div className="btn-group">
                         <button className="btn btn-primary" type="submit">Save Role</button>
-                        <button className="btn btn-outline" type="button" onClick={this.props.history.goBack}>Cancel</button>
+                        <button className="btn btn-outline" type="button"
+                            onClick={this.props.history.goBack}>Cancel</button>
                     </div>
                 </RoleForm>
             </div>

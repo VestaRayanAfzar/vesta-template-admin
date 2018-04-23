@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Mime } from "../../../medium";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IFormFileInputProps extends IBaseComponentProps, IFromControlProps {
     accept?: string;
@@ -12,7 +12,7 @@ interface IFormFileInputProps extends IBaseComponentProps, IFromControlProps {
 interface IFormFileInputState {
     files: Array<string | File>;
     // this holds the base64 src of selected images | src of files already uploaded to server
-    filesSrc: Array<string>;
+    filesSrc: string[];
 }
 
 export class FormFileInput extends PureComponent<IFormFileInputProps, IFormFileInputState> {
@@ -52,7 +52,7 @@ export class FormFileInput extends PureComponent<IFormFileInputProps, IFormFileI
         const { files, filesSrc } = this.state;
         if (value) {
             if (multiple) {
-                for (let i = 0, il = (value as Array<string>).length; i < il; ++i) {
+                for (let i = 0, il = (value as string[]).length; i < il; ++i) {
                     files.push(value[i]);
                     filesSrc.push(value[i]);
                 }

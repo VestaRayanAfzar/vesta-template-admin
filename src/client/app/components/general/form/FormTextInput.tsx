@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 export interface IFormTextInputProps extends IBaseComponentProps, IFromControlProps {
     dir?: "ltr" | "rtl";

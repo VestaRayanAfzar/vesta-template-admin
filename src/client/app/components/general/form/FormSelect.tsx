@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IFormSelectProps extends IBaseComponentProps, IFromControlProps {
     options: Array<{}>;

@@ -1,25 +1,24 @@
-import React, {PureComponent} from "react";
-import {NavLink} from "react-router-dom";
-import {IPageComponentProps} from "../PageComponent";
+import React, { PureComponent } from "react";
+import { IPageComponentProps } from "../PageComponent";
 
-export interface ForbiddenParams {
+interface IForbiddenParams {
 }
 
-export interface ForbiddenProps extends IPageComponentProps<ForbiddenParams> {
+interface IForbiddenProps extends IPageComponentProps<IForbiddenParams> {
 }
 
-export interface ForbiddenState {
+interface IForbiddenState {
 }
 
-export class Forbidden extends PureComponent<ForbiddenProps, ForbiddenState> {
+export class Forbidden extends PureComponent<IForbiddenProps, IForbiddenState> {
 
     public componentDidMount() {
-        this.props.history.replace('/');
+        this.props.history.replace("/");
     }
 
     public render() {
         return (
-            <div className="forbidden-page page has-navbar"/>
+            <div className="forbidden-page page has-navbar" />
         );
     }
 }

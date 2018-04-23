@@ -5,16 +5,16 @@ import { IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 import { IExtPermission } from "../Role";
 import { RoleForm } from "./RoleForm";
 
-export interface IRoleAddParams {
+interface IRoleAddParams {
 }
 
-export interface IRoleAddProps extends IPageComponentProps<IRoleAddParams> {
+interface IRoleAddProps extends IPageComponentProps<IRoleAddParams> {
     permissions: IExtPermission;
     save: Save<IRole>;
     validationErrors: IValidationError;
 }
 
-export interface IRoleAddState {
+interface IRoleAddState {
 }
 
 export class RoleAdd extends PageComponent<IRoleAddProps, IRoleAddState> {

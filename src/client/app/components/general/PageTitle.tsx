@@ -1,17 +1,16 @@
-import React, {PureComponent} from "react";
-import {IBaseComponentProps} from "../BaseComponent";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface PageTitleProps extends IBaseComponentProps {
+export interface IPageTitleProps extends IBaseComponentProps {
     title: string;
     append?: boolean;
 }
 
-
-export class PageTitle extends PureComponent<PageTitleProps, null> {
+export class PageTitle extends PureComponent<IPageTitleProps, null> {
     private static baseTitle = document.title;
 
     public componentDidMount() {
-        let {title, append} = this.props;
+        const { title, append } = this.props;
         document.title = append ? `${title}, ${PageTitle.baseTitle}` : title;
     }
 

@@ -3,40 +3,39 @@ import { Status } from "../../../cmn/enum/Status";
 import { IRole } from "../../../cmn/models/Role";
 import { IUser, UserGender, UserType } from "../../../cmn/models/User";
 import { IValidationError } from "../../../medium";
-import { IFieldValidationMessage, getFileUrl, IModelValidationMessage, validationMessage } from "../../../util/Util";
+import { getFileUrl, IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { FormDateTimeInput } from "../../general/form/FormDateTimeInput";
 import { FormFileInput } from "../../general/form/FormFileInput";
 import { FormMultichoice } from "../../general/form/FormMultichoice";
 import { FormSelect } from "../../general/form/FormSelect";
-import { FormTextArea } from "../../general/form/FormTextArea";
 import { FormTextInput } from "../../general/form/FormTextInput";
 import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";
 import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 
-export interface IUserFormParams {
+interface IUserFormParams {
 }
 
-export interface IUserFormProps extends IPageComponentProps<IUserFormParams> {
+interface IUserFormProps extends IPageComponentProps<IUserFormParams> {
     fetch?: FetchById<IUser>;
     id?: number;
-    roles: Array<IRole>;
+    roles: IRole[];
     save: Save<IUser>;
     validationErrors?: IValidationError;
 }
 
-export interface IUserFormState {
+interface IUserFormState {
     user: IUser;
 }
 
 export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
     private formErrorsMessages: IModelValidationMessage;
-    private genderOptions: Array<IFormOption> = [
+    private genderOptions: IFormOption[] = [
         { id: UserGender.Male, title: this.tr("enum_male") },
         { id: UserGender.Female, title: this.tr("enum_female") }];
-    private statusOptions: Array<IFormOption> = [
+    private statusOptions: IFormOption[] = [
         { id: Status.Active, title: this.tr("enum_active") },
         { id: Status.Inactive, title: this.tr("enum_inactive") }];
-    private typeOptions: Array<IFormOption> = [
+    private typeOptions: IFormOption[] = [
         { id: UserType.Admin, title: this.tr("enum_admin") },
         { id: UserType.User, title: this.tr("enum_user") }];
     // const dateTime = DateTimeFactory.create(ConfigService.getConfig().locale)

@@ -3,10 +3,10 @@ import { Route, Switch } from "react-router";
 import { IRole } from "../../cmn/models/Role";
 import { IUser, User as UserModel } from "../../cmn/models/User";
 import { IValidationError } from "../../medium";
+import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { IDataTableQueryOption } from "../general/DataTable";
-import { DynamicRouter } from "../general/DynamicRouter";
 import Navbar from "../general/Navbar";
 import { PageTitle } from "../general/PageTitle";
 import { Preloader } from "../general/Preloader";
@@ -16,17 +16,17 @@ import { UserDetail } from "./user/UserDetail";
 import { UserEdit } from "./user/UserEdit";
 import { UserList } from "./user/UserList";
 
-export interface IUserParams {
+interface IUserParams {
 }
 
-export interface IUserProps extends IPageComponentProps<IUserParams> {
+interface IUserProps extends IPageComponentProps<IUserParams> {
 }
 
-export interface IUserState {
+interface IUserState {
     queryOption: IDataTableQueryOption<IUser>;
-    roles: Array<IRole>;
+    roles: IRole[];
     showLoader?: boolean;
-    users: Array<IUser>;
+    users: IUser[];
     validationErrors?: IValidationError;
 }
 
@@ -57,8 +57,8 @@ export class User extends PageComponent<IUserProps, IUserState> {
                     <DynamicRouter>
                         <Switch>
                             {this.access.add ? <Route path="/user/add" render={this.tz(UserAdd, { user: ["add"] }, { save: this.save, validationErrors, roles })} /> : null}
-                            {this.access.edit ? <Route path="/user/edit/:id" render={this.tz(UserEdit, { user: ["edit"] }, { save: this.save, fetch: this.onFetch, validationErrors, roles, })} /> : null}
-                            <Route path="/user/detail/:id" render={this.tz(UserDetail, { user: ["read"] }, { fetch: this.onFetch, })} />
+                            {this.access.edit ? <Route path="/user/edit/:id" render={this.tz(UserEdit, { user: ["edit"] }, { save: this.save, fetch: this.onFetch, validationErrors, roles })} /> : null}
+                            <Route path="/user/detail/:id" render={this.tz(UserDetail, { user: ["read"] }, { fetch: this.onFetch })} />
                         </Switch>
                     </DynamicRouter>
                     <UserList access={this.access} fetch={this.onFetchAll} queryOption={queryOption}
@@ -140,6 +140,7 @@ export class User extends PageComponent<IUserProps, IUserState> {
         this.setState({ showLoader: true });
         const data = user.getValues<IUser>();
         (model.id ? this.api.put<IUser>("user", data) : this.api.post<IUser>("user", data))
+            // tslint:disable-next-line:max-line-length
             .then((response) => hasFile ? this.api.upload<IUser>(`user/file/${response.items[0].id}`, userFiles) : response)
             .then((response) => {
                 this.setState({ showLoader: false });

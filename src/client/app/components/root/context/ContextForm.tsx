@@ -1,23 +1,23 @@
 import React from "react";
 import { IContext } from "../../../cmn/models/Context";
 import { IValidationError } from "../../../medium";
-import { IFieldValidationMessage, IModelValidationMessage, validationMessage } from "../../../util/Util";
+import { IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { FormTextArea } from "../../general/form/FormTextArea";
 import { FormTextInput } from "../../general/form/FormTextInput";
 import { FormWrapper } from "../../general/form/FormWrapper";
 import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 
-export interface IContextFormParams {
+interface IContextFormParams {
 }
 
-export interface IContextFormProps extends IPageComponentProps<IContextFormParams> {
+interface IContextFormProps extends IPageComponentProps<IContextFormParams> {
     fetch?: FetchById<IContext>;
     id?: number;
     save: Save<IContext>;
     validationErrors: IValidationError;
 }
 
-export interface IContextFormState {
+interface IContextFormState {
     context: IContext;
 }
 
@@ -59,7 +59,7 @@ export class ContextForm extends PageComponent<IContextFormProps, IContextFormSt
             },
         };
         const { validationErrors } = this.props;
-        const errors: IFieldValidationMessage = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
+        const errors = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
 
         const context = this.state.context;
         return (

@@ -2,10 +2,10 @@ import React from "react";
 import { Route, Switch } from "react-router";
 import { ISupport, Support as SupportModel } from "../../cmn/models/Support";
 import { IValidationError } from "../../medium";
+import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { IDataTableQueryOption } from "../general/DataTable";
-import { DynamicRouter } from "../general/DynamicRouter";
 import Navbar from "../general/Navbar";
 import { PageTitle } from "../general/PageTitle";
 import { Preloader } from "../general/Preloader";
@@ -13,14 +13,14 @@ import { IPageComponentProps, PageComponent } from "../PageComponent";
 import { SupportDetail } from "./support/SupportDetail";
 import { SupportList } from "./support/SupportList";
 
-export interface ISupportParams {
+interface ISupportParams {
 }
 
-export interface ISupportProps extends IPageComponentProps<ISupportParams> {
+interface ISupportProps extends IPageComponentProps<ISupportParams> {
 }
 
-export interface ISupportState {
-    contacts: Array<ISupport>;
+interface ISupportState {
+    contacts: ISupport[];
     queryOption: IDataTableQueryOption<ISupport>;
     showLoader?: boolean;
     validationErrors?: IValidationError;

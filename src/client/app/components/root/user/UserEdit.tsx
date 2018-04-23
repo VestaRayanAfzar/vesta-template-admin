@@ -5,18 +5,18 @@ import { IValidationError } from "../../../medium";
 import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 import { UserForm } from "./UserForm";
 
-export interface IUserEditParams {
+interface IUserEditParams {
     id: number;
 }
 
-export interface IUserEditProps extends IPageComponentProps<IUserEditParams> {
+interface IUserEditProps extends IPageComponentProps<IUserEditParams> {
     fetch: FetchById<IUser>;
-    roles: Array<IRole>;
+    roles: IRole[];
     save: Save<IUser>;
     validationErrors: IValidationError;
 }
 
-export interface IUserEditState {
+interface IUserEditState {
 }
 
 export class UserEdit extends PageComponent<IUserEditProps, IUserEditState> {
@@ -31,7 +31,8 @@ export class UserEdit extends PageComponent<IUserEditProps, IUserEditState> {
                 <UserForm id={id} fetch={fetch} save={save} validationErrors={validationErrors} roles={roles}>
                     <div className="btn-group">
                         <button className="btn btn-primary" type="submit">{this.tr("save")}</button>
-                        <button className="btn btn-outline" type="button" onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
+                        <button className="btn btn-outline" type="button"
+                            onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </UserForm>
             </div>

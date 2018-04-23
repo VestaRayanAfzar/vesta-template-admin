@@ -31,6 +31,7 @@ export class LogService {
         const logModel = new Log({ level, message, method, file });
         // saving log to api server
         ApiService.getInstance().post<ILog>("log", logModel.getValues())
+            // tslint:disable-next-line:no-console
             .catch((error) => console.error("[LogService::save]", error));
         //</production>
     }

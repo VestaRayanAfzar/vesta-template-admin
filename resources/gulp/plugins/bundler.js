@@ -18,7 +18,9 @@ module.exports = function (config, entry, destination) {
         if (!fse.existsSync(file)) return;
         if (src.indexOf(file) >= 0) return;
         src.push(file);
-        let code = fse.readFileSync(file, {encoding: 'utf8'});
+        let code = fse.readFileSync(file, {
+            encoding: 'utf8'
+        });
         let directory = path.dirname(file);
         let regex = /import.+from\s+['|"](.+)['|"]/g;
         let match = null;
@@ -41,4 +43,3 @@ module.exports = function (config, entry, destination) {
         })
     }
 };
-

@@ -17,15 +17,16 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
     private dateTime: DateTime = Culture.getDateTimeInstance();
     private dateTimeFormat: string;
     private format;
-    private monthNames: Array<string> = [];
+    private monthNames: string[] = [];
     private selectedDateTime = Culture.getDateTimeInstance();
     // the datePicker should render the month in which the selected date exist
     private tr = TranslateService.getInstance().translate;
-    private weekDayNames: Array<string> = [];
+    private weekDayNames: string[] = [];
 
     constructor(props: IDatePickerProps) {
         super(props);
-        this.dateTimeFormat = props.hasTime ? Culture.getLocale().defaultDateTimeFormat : Culture.getLocale().defaultDateFormat
+        const locale = this.dateTime.locale;
+        this.dateTimeFormat = props.hasTime ? locale.defaultDateTimeFormat : locale.defaultDateFormat;
         // dateTime validation, also sets the correct values
         if (this.selectedDateTime.validate(props.value, props.hasTime)) {
             this.dateTime.setTime(this.selectedDateTime.getTime());
@@ -33,7 +34,6 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
             this.selectedDateTime.setTime(this.dateTime.getTime());
         }
         this.state = {};
-        const locale = this.dateTime.locale;
         this.format = locale.defaultDateFormat;
         this.weekDayNames = locale.weekDays;
         this.monthNames = locale.monthNames;
@@ -58,8 +58,10 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
                     </table>
                     {time}
                     <div className="btn-group">
-                        <button type="button" className="btn btn-primary" onClick={this.onSubmit}>{this.tr("select")}</button>
-                        <button type="button" className="btn btn-outline" onClick={onAbort}>{this.tr("cancel")}</button>
+                        <button type="button" className="btn btn-primary"
+                            onClick={this.onSubmit}>{this.tr("select")}</button>
+                        <button type="button" className="btn btn-outline"
+                            onClick={onAbort}>{this.tr("cancel")}</button>
                     </div>
                 </div>
             </div>
@@ -85,9 +87,12 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
         this.forceUpdate();
     }
 
-    private onYearSelect = () => { }
+    private onYearSelect = () => {
+        // tslint
+    }
 
     private onMonthSelect = () => {
+        // tslint
     }
 
     private onDaySelect = (e) => {
@@ -145,11 +150,13 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
 
     private renderWeekDays() {
         const tmpDate = Culture.getDateTimeInstance();
-        const isThisMonth = tmpDate.getFullYear() === this.dateTime.getFullYear() && tmpDate.getMonth() === this.dateTime.getMonth();
+        const isThisMonth = tmpDate.getFullYear() === this.dateTime.getFullYear() &&
+            tmpDate.getMonth() === this.dateTime.getMonth();
         const today = tmpDate.getDate();
         //
         tmpDate.setFullYear(this.dateTime.getFullYear(), this.dateTime.getMonth(), 1);
-        const isSelectedMonth = this.selectedDateTime.getFullYear() === this.dateTime.getFullYear() && this.selectedDateTime.getMonth() === this.dateTime.getMonth();
+        const isSelectedMonth = this.selectedDateTime.getFullYear() === this.dateTime.getFullYear() &&
+            this.selectedDateTime.getMonth() === this.dateTime.getMonth();
         const selectedDay = this.selectedDateTime.getDate();
         const rows = [];
         let rowCounter = 1;

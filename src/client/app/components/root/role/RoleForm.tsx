@@ -12,14 +12,14 @@ import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";
 import { FetchById, IPageComponentProps, Save } from "../../PageComponent";
 import { IAction, IExtPermission } from "../Role";
 
-export interface IRoleFormParams {
+interface IRoleFormParams {
 }
 
-export interface IPermissionCollection {
-    [name: string]: Array<number>;
+interface IPermissionCollection {
+    [name: string]: number[];
 }
 
-export interface IRoleFormProps extends IPageComponentProps<IRoleFormParams> {
+interface IRoleFormProps extends IPageComponentProps<IRoleFormParams> {
     fetch?: FetchById<IRole>;
     id?: number;
     permissions: IExtPermission;
@@ -27,7 +27,7 @@ export interface IRoleFormProps extends IPageComponentProps<IRoleFormParams> {
     validationErrors: IValidationError;
 }
 
-export interface IRoleFormState {
+interface IRoleFormState {
     role: IRole;
 }
 
@@ -77,7 +77,7 @@ export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
             },
         };
         const errors = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
-        const statusOptions: Array<IFormOption> = [
+        const statusOptions: IFormOption[] = [
             { id: Status.Active, title: tr("enum_active") },
             { id: Status.Inactive, title: tr("enum_inactive") }];
 
@@ -102,7 +102,6 @@ export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
                 </div>
             </FormWrapper>
         );
-
     }
 
     private getAllPermissionsValue() {

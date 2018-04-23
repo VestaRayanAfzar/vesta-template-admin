@@ -34,12 +34,15 @@ module.exports = function (setting) {
         'iOS >= 7',
         'Android >= 4',
         'Explorer >= 10',
-        'ExplorerMobile >= 11'];
+        'ExplorerMobile >= 11'
+    ];
 
     gulp.task('sass:postCss', ['sass:compile'], () => {
         let target = setting.buildPath(setting.target);
         let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.buildClient}/${target}/css`;
-        let preprocessors = [autoPrefixer({browsers: browsersToSupport})];
+        let preprocessors = [autoPrefixer({
+            browsers: browsersToSupport
+        })];
         if (setting.production) {
             preprocessors.push(mqpacker);
             preprocessors.push(csswring);

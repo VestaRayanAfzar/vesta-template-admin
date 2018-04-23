@@ -2,38 +2,38 @@ import React from "react";
 import { Route, Switch } from "react-router";
 import { ILog } from "../../cmn/models/Log";
 import { IUser, SourceApp } from "../../cmn/models/User";
+import { Culture } from "../../medium";
+import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { DataTable, IColumn, IDataTableQueryOption } from "../general/DataTable";
 import { DataTableOperations } from "../general/DataTableOperations";
-import { DynamicRouter } from "../general/DynamicRouter";
 import Navbar from "../general/Navbar";
 import { PageTitle } from "../general/PageTitle";
 import { Preloader } from "../general/Preloader";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
 import { LogDetail } from "./log/LogDetail";
-import { Culture } from "../../medium";
 
 export interface ILogger {
     duration: number;
     level: number;
-    logs: Array<ILog>;
+    logs: ILog[];
     sourceApp: SourceApp;
     start: number;
     user: number | IUser;
 }
 
-export interface ILogParams {
+interface ILogParams {
 }
 
-export interface ILogProps extends IPageComponentProps<ILogParams> {
+interface ILogProps extends IPageComponentProps<ILogParams> {
 }
 
-export interface ILogState {
-    logs: Array<string>;
+interface ILogState {
+    logs: string[];
     queryOption: IDataTableQueryOption<ILog>;
     showLoader?: boolean;
-    users: Array<IUser>;
+    users: IUser[];
 }
 
 export class Log extends PageComponent<ILogProps, ILogState> {
@@ -68,7 +68,8 @@ export class Log extends PageComponent<ILogProps, ILogState> {
             {
                 render: (r) => {
                     const timestamp = +(/^\d+/.exec(r)[0]);
-                    return <DataTableOperations access={this.access} id={timestamp} onDelete={this.onDelete} path="log" />;
+                    return <DataTableOperations access={this.access} id={timestamp}
+                        onDelete={this.onDelete} path="log" />;
                 },
                 title: this.tr("operations"),
             },

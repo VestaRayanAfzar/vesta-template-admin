@@ -13,7 +13,7 @@ export class Dispatcher {
         return Dispatcher.instances[name];
     }
 
-    private static instances: Array<Dispatcher> = [];
+    private static instances: Dispatcher[] = [];
     private registry: IDispatcherRegistry<any> = {};
 
     constructor(name: string) {

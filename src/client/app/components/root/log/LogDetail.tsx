@@ -1,19 +1,19 @@
 import React from "react";
-import {IUser} from "../../../cmn/models/User";
-import {FetchById, IPageComponentProps, PageComponent} from "../../PageComponent";
-import {ILogger} from "../Log";
+import { IUser } from "../../../cmn/models/User";
 import { Culture } from "../../../medium";
+import { FetchById, IPageComponentProps, PageComponent } from "../../PageComponent";
+import { ILogger } from "../Log";
 
-export interface ILogDetailParams {
+interface ILogDetailParams {
     id: number;
 }
 
-export interface ILogDetailProps extends IPageComponentProps<ILogDetailParams> {
+interface ILogDetailProps extends IPageComponentProps<ILogDetailParams> {
     onFetch: FetchById<string>;
-    users: Array<IUser>;
+    users: IUser[];
 }
 
-export interface ILogDetailState {
+interface ILogDetailState {
     log: string;
 }
 
@@ -21,12 +21,12 @@ export class LogDetail extends PageComponent<ILogDetailProps, ILogDetailState> {
 
     constructor(props: ILogDetailProps) {
         super(props);
-        this.state = {log: ""};
+        this.state = { log: "" };
     }
 
     public componentDidMount() {
         this.props.onFetch(+this.props.match.params.id)
-            .then((log) => this.setState({log}));
+            .then((log) => this.setState({ log }));
     }
 
     public render() {
@@ -55,16 +55,16 @@ export class LogDetail extends PageComponent<ILogDetailProps, ILogDetailState> {
         const dateTimeFormat = Culture.getLocale().defaultDateTimeFormat;
         dateTime.setTime(log.start);
         const logDate = dateTime.format(dateTimeFormat);
-        const sourceAppOptions = {1: this.tr("enum_panel"), 2: this.tr("enum_enduser"), 3: this.tr("enum_service")};
-        const logs = log.logs.map((log, index) => {
-            const messages = log.message.split("-;-").map((msg, index) => (
-                <li key={index} className={`alert alert-${log.level}`}>{msg}</li>
+        const sourceAppOptions = { 1: this.tr("enum_panel"), 2: this.tr("enum_enduser"), 3: this.tr("enum_service") };
+        const logs = log.logs.map((thisLog, i) => {
+            const messages = thisLog.message.split("-;-").map((msg, j) => (
+                <li key={j} className={`alert alert-${thisLog.level}`}>{msg}</li>
             ));
 
             return (
-                <li key={index} className="en">
+                <li key={i} className="en">
                     <code>
-                        {`@${log.file || ""}::${log.method || ""}`}
+                        {`@${thisLog.file || ""}::${thisLog.method || ""}`}
                         <ul>
                             {messages}
                         </ul>

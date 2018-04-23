@@ -94,7 +94,9 @@ module.exports = function (setting) {
         if (setting.production) {
             plugins = plugins.concat([
                 new webpack.DefinePlugin({
-                    'process.env': { NODE_ENV: '"production"' }
+                    'process.env': {
+                        NODE_ENV: '"production"'
+                    }
                 }),
                 new webpack.LoaderOptionsPlugin({
                     minimize: true,
@@ -120,9 +122,15 @@ module.exports = function (setting) {
                 extensions: [".ts", ".tsx", ".js", ".json"]
             },
             module: {
-                rules: [
-                    { test: /\.tsx?$/, loader: `awesome-typescript-loader?sourceMap=${!setting.production}` },
-                    { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+                rules: [{
+                        test: /\.tsx?$/,
+                        loader: `awesome-typescript-loader?sourceMap=${!setting.production}`
+                    },
+                    {
+                        enforce: "pre",
+                        test: /\.js$/,
+                        loader: "source-map-loader"
+                    }
                 ]
             },
             plugins,

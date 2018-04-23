@@ -1,22 +1,21 @@
-import React, {PureComponent} from "react";
-import {NavLink} from "react-router-dom";
-import {IPageComponentProps} from "../PageComponent";
+import React, { PureComponent } from "react";
+import { IPageComponentProps } from "../PageComponent";
 
-export interface NotFoundParams {
+interface INotFoundParams {
 }
 
-export interface NotFoundProps extends IPageComponentProps<NotFoundParams> {
+interface INotFoundProps extends IPageComponentProps<INotFoundParams> {
 }
 
-export class NotFound extends PureComponent<NotFoundProps, null> {
+export class NotFound extends PureComponent<INotFoundProps, null> {
 
     public componentDidMount() {
-        this.props.history.replace('/');
+        this.props.history.replace("/");
     }
 
     public render() {
         return (
-            <div className="notFound-page page has-navbar"/>
+            <div className="notFound-page page has-navbar" />
         );
     }
 }

@@ -1,6 +1,5 @@
 import React, { ComponentType, PureComponent } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Link } from "react-router-dom";
 import { Burger } from "./Burger";
 
 export enum NavBarMainButtonType { Burger = 1, Back, Close }

@@ -3,10 +3,10 @@ import { Route, Switch } from "react-router";
 import { IPermission } from "../../cmn/models/Permission";
 import { IRole, Role as RoleModel } from "../../cmn/models/Role";
 import { IValidationError } from "../../medium";
+import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { IDataTableQueryOption } from "../general/DataTable";
-import { DynamicRouter } from "../general/DynamicRouter";
 import Navbar from "../general/Navbar";
 import { PageTitle } from "../general/PageTitle";
 import { Preloader } from "../general/Preloader";
@@ -22,19 +22,19 @@ export interface IAction {
 }
 
 export interface IExtPermission {
-    [name: string]: Array<IAction>;
+    [name: string]: IAction[];
 }
 
-export interface IRoleParams {
+interface IRoleParams {
 }
 
-export interface IRoleProps extends IPageComponentProps<IRoleParams> {
+interface IRoleProps extends IPageComponentProps<IRoleParams> {
 }
 
-export interface IRoleState {
+interface IRoleState {
     permissions?: IExtPermission;
     queryOption: IDataTableQueryOption<IRole>;
-    roles: Array<IRole>;
+    roles: IRole[];
     showLoader?: boolean;
     validationErrors?: IValidationError;
 }

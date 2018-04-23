@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { TranslateService } from "../../../service/TranslateService";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { ChangeEventHandler, IFromControlProps } from "./FormWrapper";
+import { IFromControlProps } from "./FormWrapper";
 
 interface IFormMultichoiceProps extends IBaseComponentProps, IFromControlProps {
     options: Array<{}>;
@@ -74,7 +74,8 @@ export class FormMultichoice extends PureComponent<IFormMultichoiceProps, null> 
             return (
                 <li key={i}>
                     <label>
-                        <input name={name} type="checkbox" value={i} checked={checked} onChange={this.onChange} /> {o[titleKey]}
+                        <input name={name} type="checkbox" value={i} checked={checked}
+                            onChange={this.onChange} /> {o[titleKey]}
                     </label>
                 </li>);
         });
@@ -83,7 +84,8 @@ export class FormMultichoice extends PureComponent<IFormMultichoiceProps, null> 
             choices.splice(0, 0, (
                 <li key={-1} className="select-all-choice">
                     <label>
-                        <input name={name} type="checkbox" checked={isAllSelected} data-select-all={true} onChange={this.onChange} /> {this.selectAllText}
+                        <input name={name} type="checkbox" checked={isAllSelected} data-select-all={true}
+                            onChange={this.onChange} /> {this.selectAllText}
                     </label>
                 </li>
             ));

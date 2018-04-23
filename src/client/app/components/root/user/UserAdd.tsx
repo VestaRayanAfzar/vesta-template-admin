@@ -5,16 +5,16 @@ import { IValidationError } from "../../../medium";
 import { IPageComponentProps, PageComponent, Save } from "../../PageComponent";
 import { UserForm } from "./UserForm";
 
-export interface IUserAddParams {
+interface IUserAddParams {
 }
 
-export interface IUserAddProps extends IPageComponentProps<IUserAddParams> {
-    roles: Array<IRole>;
+interface IUserAddProps extends IPageComponentProps<IUserAddParams> {
+    roles: IRole[];
     save: Save<IUser>;
     validationErrors: IValidationError;
 }
 
-export interface IUserAddState {
+interface IUserAddState {
 }
 
 export class UserAdd extends PageComponent<IUserAddProps, IUserAddState> {
@@ -28,7 +28,8 @@ export class UserAdd extends PageComponent<IUserAddProps, IUserAddState> {
                 <UserForm save={save} validationErrors={validationErrors} roles={roles}>
                     <div className="btn-group">
                         <button className="btn btn-primary" type="submit">{this.tr("add")}</button>
-                        <button className="btn btn-outline" type="button" onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
+                        <button className="btn btn-outline" type="button"
+                            onClick={this.props.history.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </UserForm>
             </div>

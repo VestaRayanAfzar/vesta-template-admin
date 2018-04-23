@@ -2,7 +2,7 @@ import React from "react";
 import { IRole } from "../../cmn/models/Role";
 import { IUser, User, UserGender } from "../../cmn/models/User";
 import { IQueryResult, IValidationError } from "../../medium";
-import { IFieldValidationMessage, getFileUrl, IModelValidationMessage, shallowClone, validationMessage } from "../../util/Util";
+import { getFileUrl, IModelValidationMessage, shallowClone, validationMessage } from "../../util/Util";
 import { Avatar } from "../general/Avatar";
 import { FormDateTimeInput } from "../general/form/FormDateTimeInput";
 import { FormSelect } from "../general/form/FormSelect";
@@ -27,7 +27,7 @@ interface IProfileState {
 
 export class Profile extends PageComponent<IProfileProps, IProfileState> {
     private formErrorsMessages: IModelValidationMessage;
-    private genderOptions: Array<IFormOption> = [
+    private genderOptions: IFormOption[] = [
         { id: UserGender.Male, title: this.tr("enum_male") },
         { id: UserGender.Female, title: this.tr("enum_female") }];
 

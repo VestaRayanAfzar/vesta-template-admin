@@ -1,24 +1,22 @@
-import React from "react";
-import {IPageComponentProps} from "../PageComponent";
+import React, { PureComponent } from "react";
+import { IBaseComponentProps } from "../BaseComponent";
 
-export interface ScriptParams {
-}
-
-export interface ScriptProps extends IPageComponentProps<ScriptParams> {
+export interface IScriptProps extends IBaseComponentProps {
     src: string;
     success: () => void;
     error?: () => void;
 }
 
-export const Script = (props: ScriptProps) => {
-    const src = props.src;
-    if (!src) return null;
-    let head = document.documentElement.querySelector('head');
-    let script = document.createElement('script');
-    script.setAttribute('src', src);
-    script.addEventListener('load', () => {
-        props.success();
-    })
-    head.appendChild(script);
-    return null;
-};
+export class Script extends PureComponent<IScriptProps, null> {
+
+    public render() {
+        const { src, error, success } = this.props;
+        if (!src) { return null; }
+        const head = document.documentElement.querySelector("head");
+        const script = document.createElement("script");
+        script.setAttribute("src", src);
+        script.addEventListener("load", success);
+        head.appendChild(script);
+        return null;
+    }
+}
