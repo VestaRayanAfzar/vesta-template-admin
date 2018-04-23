@@ -1,5 +1,5 @@
 $actionsheet-transition-enter-duration: $transition-duration-default;
-$actionsheet-transition-leave-duration: floor(2 * $sidenav-transition-enter-duration / 3);
+$actionsheet-transition-leave-duration: floor(2 * $transition-duration-default / 3);
 $actionsheet-transition-effect: $transition-effect-default;
 $actionsheet-bg-color: transparentize($color-light, .1);
 $actionsheet-offset: 5%;
@@ -44,7 +44,7 @@ $actionsheet-item-padding: 15px;
     }
 
     &.actionsheet-enter-active {
-        .sidenav {
+        .action-list {
             @include translate3d(0, 0, 0);
             transition: transform $actionsheet-transition-enter-duration $actionsheet-transition-effect;
         }
@@ -60,12 +60,12 @@ $actionsheet-item-padding: 15px;
     &.actionsheet-leave-active {
         .action-list {
             @include translate3d(0, 100%, 0);
-            transition: transform $sidenav-transition-leave-duration $sidenav-transition-effect;
+            transition: transform $actionsheet-transition-leave-duration $actionsheet-transition-effect;
         }
 
         .actionsheet-backdrop {
             opacity: .1;
-            transition: opacity $sidenav-transition-leave-duration $sidenav-transition-effect;
+            transition: opacity $actionsheet-transition-leave-duration $actionsheet-transition-effect;
         }
     }
 }

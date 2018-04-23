@@ -46,9 +46,7 @@ module.exports = function (setting) {
     return {
         watch: ['asset:watch'],
         // run in parallel
-        tasks: [
-            ['asset:etc', 'asset:font', 'asset:image']
-        ]
+        tasks: [['asset:etc', 'asset:font', 'asset:image']]
     };
 
     function minifyHtml(stream) {

@@ -3,18 +3,23 @@ let ts = require('gulp-typescript');
 
 module.exports = function (setting) {
     let dir = setting.dir;
-    let buildPath = `${dir.build}/tmp/cmn`;
+    let buildPath = `${dir.build}/tmp`;
 
     gulp.task('model:compile', () => {
-        let tsFiles = [`${dir.srcClient}/app/cmn/**/*.ts`];
+        compile(`${dir.srcClient}/app/medium.ts`, buildPath);
+        compile(`${dir.srcClient}/app/cmn/**/*.ts`, `${buildPath}/cmn`);
+    });
+
+    return {};
+
+    function compile(files, destination) {
+        let tsFiles = [files];
         let stream = gulp.src(tsFiles);
         let tsResult = stream.pipe(ts({
             target: 'es5',
             noEmitHelpers: false,
             module: 'commonjs'
         }));
-        return tsResult.js.pipe(gulp.dest(`${buildPath}/model`));
-    });
-
-    return {};
+        return tsResult.js.pipe(gulp.dest(destination));
+    }
 };

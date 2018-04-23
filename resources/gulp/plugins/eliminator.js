@@ -60,10 +60,7 @@ module.exports = function (config) {
     }
 
     function updateEliminationsArea(target) {
-        const eliminationsArea = {
-            html: [],
-            others: []
-        };
+        const eliminationsArea = {html: [], others: []};
         // removing production/development
         const envEliminationTag = config.production ? 'development' : 'production';
         eliminationsArea.html.push({
