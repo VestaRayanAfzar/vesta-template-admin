@@ -68,8 +68,8 @@ module.exports = function (config) {
             end: `<!--/${envEliminationTag}-->`
         });
         eliminationsArea.others.push({
-            start: `//\s*<${envEliminationTag}>`,
-            end: `//\s*</${envEliminationTag}>`
+            start: `/// <${envEliminationTag}>`,
+            end: `/// </${envEliminationTag}>`
         });
         // removing non relevant target tags
         eliminationsArea.html.push({
@@ -77,8 +77,8 @@ module.exports = function (config) {
             end: `<!--/${target}-->`
         });
         eliminationsArea.others.push({
-            start: `//\s*<!${target}>`,
-            end: `//\s*</${target}>`
+            start: `/// <!${target}>`,
+            end: `/// </${target}>`
         });
 
         let eliminations = config.targets[target].elimination;
@@ -88,8 +88,8 @@ module.exports = function (config) {
                 end: `<!--/${elimination}-->`
             });
             eliminationsArea.others.push({
-                start: `//<${elimination}>`,
-                end: `//</${elimination}>`
+                start: `/// <${elimination}>`,
+                end: `/// </${elimination}>`
             });
         });
         return eliminationsArea;

@@ -13,14 +13,14 @@ module.exports = function (setting) {
 
     gulp.task('sass:preCompile', () => {
         let tmpDirectory = `${dir.build}/tmp/scss`;
-        return gulp.src(`${dir.srcClient}/scss/**/*.scss`)
+        return gulp.src(`${dir.src}/scss/**/*.scss`)
             .pipe(eliminator(setting, setting.target))
             .pipe(gulp.dest(tmpDirectory))
     });
 
     gulp.task('sass:compile', ['sass:preCompile'], () => {
         let target = setting.buildPath(setting.target);
-        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.buildClient}/${target}/css`;
+        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.build}/${target}/css`;
         let stream = gulp.src(getEntry()),
             genMap = !setting.production;
         if (genMap) stream = stream.pipe(sourcemaps.init());
@@ -39,7 +39,7 @@ module.exports = function (setting) {
 
     gulp.task('sass:postCss', ['sass:compile'], () => {
         let target = setting.buildPath(setting.target);
-        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.buildClient}/${target}/css`;
+        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.build}/${target}/css`;
         let preprocessors = [autoPrefixer({browsers: browsersToSupport})];
         if (setting.production) {
             preprocessors.push(mqpacker);
@@ -47,12 +47,12 @@ module.exports = function (setting) {
             return gulp.src(tmpDirectory + '/*.css')
                 .pipe(postCss(preprocessors))
                 .on('error', setting.error)
-                .pipe(gulp.dest(`${dir.buildClient}/${target}/css`))
+                .pipe(gulp.dest(`${dir.build}/${target}/css`))
         }
     });
 
     gulp.task('sass:watch', () => {
-        return gulp.watch(`${dir.srcClient}/scss/**/*.scss`, ['sass:postCss']);
+        return gulp.watch(`${dir.src}/scss/**/*.scss`, ['sass:postCss']);
     });
 
     return {

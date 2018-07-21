@@ -11,5 +11,7 @@
         "preserve_newlines": true,
         "max_preserve_newlines": 3
     },
-    "js": {}
+    "js": {
+        "brace_style": "collapse,preserve-inline"
+    }
 }

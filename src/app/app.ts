@@ -19,10 +19,10 @@ function checkScripts() {
     const OFFLINE_ASSUMPTION_DURATION = 30000;
     const SCRIPT_CHECK_INTERVAL = 300;
     const scriptsToCheck = [];
-    //<development>
+    /// <development>
     // do not waste time in development
     scriptsToCheck.splice(0, scriptsToCheck.length);
-    //</development>
+    /// </development>
     let scriptCheckCounter = 0;
     (function check() {
         ++scriptCheckCounter;

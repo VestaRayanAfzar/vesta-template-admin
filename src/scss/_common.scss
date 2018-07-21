@@ -4,12 +4,12 @@
 @import 'misc/mixins';
 @import 'misc/animation';
 @import 'fonts/material';
-///<vesta:scssFont/>
+// <vesta:scssFont/>
 @import 'elements/global';
 @import 'elements/button';
 @import 'elements/form';
 @import 'elements/frame';
-///<vesta:scssElement/>
+// <vesta:scssElement/>
 @import 'components/page';
 @import 'components/root';
 @import 'components/general/form/autocomplete';
@@ -43,7 +43,7 @@
 @import 'components/general/sidenav';
 @import 'components/general/sidenavContent';
 @import 'components/general/toast';
-///<vesta:scssComponent/>
+// <vesta:scssComponent/>
 @import 'components/root/context';
 @import 'components/root/forbidden';
 @import 'components/root/forget';
@@ -55,4 +55,4 @@
 @import 'components/root/role';
 @import 'components/root/support';
 @import 'components/root/user';
-///<vesta:scssPageComponent/>
+// <vesta:scssPageComponent/>

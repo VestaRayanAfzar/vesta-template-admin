@@ -5,25 +5,25 @@ const webConnect = require('gulp-connect');
 const eliminator = require('./plugins/eliminator');
 const bundler = require('./plugins/bundler');
 
-module.exports = function (setting) {
+module.exports = function(setting) {
     let dir = setting.dir;
-    let tmpClient = `${setting.dir.build}/tmp/client`;
+    let tmpClient = `${setting.dir.build}/tmp`;
 
     gulp.task('client:sw', () => {
         if (setting.is(setting.target, 'cordova')) return;
         let target = setting.buildPath(setting.target);
         let serviceWorkers = ['service-worker.js'];
         let timestamp = Date.now();
-        const files = getFilesList(`${dir.buildClient}/${target}`, '').join('","');
+        const files = getFilesList(`${dir.build}/${target}`, '').join('","');
         for (let i = 0, il = serviceWorkers.length; i < il; ++i) {
-            setting.findInFileAndReplace(`${dir.srcClient}/${serviceWorkers[i]}`, /__TIMESTAMP__/g, timestamp, `${dir.buildClient}/${target}`);
-            setting.findInFileAndReplace(`${dir.buildClient}/${target}/${serviceWorkers[i]}`, "__FILES__", `"${files}"`, `${dir.buildClient}/${target}`);
+            setting.findInFileAndReplace(`${dir.src}/${serviceWorkers[i]}`, /__TIMESTAMP__/g, timestamp, `${dir.build}/${target}`);
+            setting.findInFileAndReplace(`${dir.build}/${target}/${serviceWorkers[i]}`, "__FILES__", `"${files}"`, `${dir.build}/${target}`);
         }
     });
 
     gulp.task('client:preBuild', () => {
         setting.clean(tmpClient);
-        bundler(setting, getEntry(`${setting.dir.srcClient}/app`), tmpClient);
+        bundler(setting, getEntry(`${setting.dir.src}/app`), tmpClient);
         return gulp.src(`${tmpClient}/**/*.ts*`)
             .pipe(eliminator(setting))
             .pipe(gulp.dest(tmpClient))
@@ -31,8 +31,8 @@ module.exports = function (setting) {
 
     gulp.task('client:build', ['client:preBuild'], () => {
         // copying conf.var to target on production mode [in case of not using deploy system]
-        if (setting.production) {
-            fs.copySync(`${setting.dir.resource}/gitignore/config.var.ts`, `${tmpClient}/client/app/config/config.var.ts`);
+        if (setting.production || setting.is(setting.target, 'cordova')) {
+            fs.copySync(`${setting.dir.resource}/gitignore/variantConfig.ts`, `${tmpClient}/client/app/config/variantConfig.ts`);
         }
         let webpackConfig = getWebpackConfig();
         const compiler = webpack(webpackConfig);
@@ -57,19 +57,19 @@ module.exports = function (setting) {
         })
     });
 
-    gulp.task('client:run', function () {
+    gulp.task('client:run', function() {
         if (setting.production) return;
         let target = setting.buildPath(setting.target);
-        let root = `${dir.buildClient}/${target}`;
+        let root = `${dir.build}/${target}`;
         runWebServer(root);
     });
 
     gulp.task(`client:watch`, () => {
-        gulp.watch([`${dir.srcClient}/**/*.ts*`], [`client:build`, `client:sw`]);
+        gulp.watch([`${dir.src}/**/*.ts*`], [`client:build`, `client:sw`]);
     });
 
     gulp.task(`sw:watch`, () => {
-        gulp.watch([`${dir.srcClient}/*.js`], [`client:sw`]);
+        gulp.watch([`${dir.src}/*.js`], [`client:sw`]);
     });
 
     return {
@@ -79,55 +79,44 @@ module.exports = function (setting) {
 
     function getWebpackConfig() {
         let plugins = [
-            new webpack.optimize.CommonsChunkPlugin({
-                name: "lib",
-                minChunks: function (module) {
-                    // console.log(module.context);
-                    return module.context && module.context.indexOf("node_modules") !== -1;
-                }
-            }),
             new webpack.ProvidePlugin({
                 '__assign': ['tslib', '__assign'],
                 '__extends': ['tslib', '__extends'],
             })
         ];
-        if (setting.production) {
-            plugins = plugins.concat([
-                new webpack.DefinePlugin({
-                    'process.env': { NODE_ENV: '"production"' }
-                }),
-                new webpack.LoaderOptionsPlugin({
-                    minimize: true,
-                    debug: false
-                }),
-                new webpack.optimize.UglifyJsPlugin({
-                    sourceMap: false,
-                    warnings: false,
-                })
-            ]);
-        }
         let target = setting.buildPath(setting.target);
-        return {
+        const wpConfig = {
             entry: {
-                app: getEntry(`${tmpClient}/client/app`)
+                app: getEntry(`${tmpClient}/app`)
             },
             output: {
                 filename: "[name].js",
-                path: `${dir.buildClient}/${target}/js`
+                path: `${dir.build}/${target}/js`
             },
-            devtool: "source-map",
+            mode: setting.production ? "production" : "development",
             resolve: {
                 extensions: [".ts", ".tsx", ".js", ".json"]
             },
             module: {
                 rules: [
-                    { test: /\.tsx?$/, loader: `awesome-typescript-loader?sourceMap=${!setting.production}` },
-                    { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+                    { test: /\.tsx?$/, loader: `ts-loader` },
+                    // { test: /\.js$/, loader: "source-map-loader", enforce: "pre" },
                 ]
             },
             plugins,
             externals: {},
+            optimization: {
+                splitChunks: {
+                    cacheGroups: {
+                        commons: { test: /[\\/]node_modules[\\/]/, name: "lib", chunks: "all" }
         }
+    }
+        }
+    }
+        if (!setting.production) {
+            wpConfig.devtool = "inline-source-map";
+        }
+        return wpConfig;
     }
 
     function getEntry(baseDirectory) {
@@ -150,7 +139,7 @@ module.exports = function (setting) {
             port: setting.port.http
         });
 
-        gulp.watch([assets], function () {
+        gulp.watch([assets], function() {
             gulp.src(assets).pipe(webConnect.reload());
         });
     }

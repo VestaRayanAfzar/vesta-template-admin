@@ -9,16 +9,16 @@ export class LogService {
 
     public static warn(warning: ILog | string, method?: string, file?: string) {
         LogService.log("warn", method, file, warning);
-        //<production>
+        /// <production>
         LogService.save(LogLevel.Warn, warning, method, file);
-        //</production>
+        /// </production>
     }
 
     public static error(error: ILog | string, method?: string, file?: string) {
         LogService.log("error", method, file, error);
-        //<production>
+        /// <production>
         LogService.save(LogLevel.Error, error, method, file);
-        //</production>
+        /// </production>
     }
 
     private static log(logType: string, method: string, file: string, log: any) {
@@ -26,13 +26,13 @@ export class LogService {
     }
 
     private static save(level: LogLevel, log: ILog | string, method?: string, file?: string) {
-        //<production>
+        /// <production>
         const message = "string" === typeof log ? log : log.message;
         const logModel = new Log({ level, message, method, file });
         // saving log to api server
         ApiService.getInstance().post<ILog>("log", logModel.getValues())
             // tslint:disable-next-line:no-console
             .catch((error) => console.error("[LogService::save]", error));
-        //</production>
+        /// </production>
     }
 }

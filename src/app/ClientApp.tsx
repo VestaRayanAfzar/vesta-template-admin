@@ -67,14 +67,14 @@ export class ClientApp {
                     const installingWorker = reg.installing;
                     installingWorker.addEventListener("statechange", () => {
                         if (installingWorker.state == "installed" && navigator.serviceWorker.controller) {
-                            //<production>
+                            /// <production>
                             this.showAppUpdate = true;
                             this.run();
                             setTimeout(window.location.reload, splashTimeout);
-                            //</production>
-                            //<development>
+                            /// </production>
+                            /// <development>
                             LogService.info("New version available!", "registerServiceWorker", "ClientApp");
-                            //</development>
+                            /// </development>
                         }
                     });
                 });

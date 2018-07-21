@@ -6,8 +6,8 @@ module.exports = function (setting) {
     let buildPath = `${dir.build}/tmp`;
 
     gulp.task('model:compile', () => {
-        compile(`${dir.srcClient}/app/medium.ts`, buildPath);
-        compile(`${dir.srcClient}/app/cmn/**/*.ts`, `${buildPath}/cmn`);
+        compile(`${dir.src}/app/medium.ts`, buildPath);
+        compile(`${dir.src}/app/cmn/**/*.ts`, `${buildPath}/cmn`);
     });
 
     return {};
