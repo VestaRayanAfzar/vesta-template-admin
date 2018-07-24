@@ -62,6 +62,8 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
                             onClick={this.onSubmit}>{this.tr("select")}</button>
                         <button type="button" className="btn btn-outline"
                             onClick={onAbort}>{this.tr("cancel")}</button>
+                        <button type="button" className="btn btn-outline"
+                            onClick={this.onClear}>{this.tr("clear")}</button>
                     </div>
                 </div>
             </div>
@@ -118,6 +120,10 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
 
     private onSubmit = () => {
         this.props.onChange(this.selectedDateTime.format(this.dateTimeFormat));
+    }
+
+    private onClear = () => {
+        this.props.onChange("");
     }
 
     private renderHeader() {

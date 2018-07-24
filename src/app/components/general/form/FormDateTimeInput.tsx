@@ -23,7 +23,7 @@ export class FormDateTimeInput extends PureComponent<IFormDateTimeInputProps, IF
         super(props);
         const locale = Culture.getLocale();
         this.dateTimeFormat = this.props.hasTime ? locale.defaultDateTimeFormat : locale.defaultDateFormat;
-        this.state = { value: this.format(props.value) };
+        this.state = { value: props.value ? this.format(props.value) : "" };
     }
 
     public componentWillReceiveProps(newProps: IFormDateTimeInputProps) {
@@ -54,6 +54,7 @@ export class FormDateTimeInput extends PureComponent<IFormDateTimeInputProps, IF
     }
 
     private format(value: number): string {
+        if (!value) { return ""; }
         const timestamp = +value;
         if (!isNaN(timestamp)) {
             this.dateTime.setTime(timestamp);
@@ -68,8 +69,9 @@ export class FormDateTimeInput extends PureComponent<IFormDateTimeInputProps, IF
     private onChange = (value) => {
         const { name, onChange, hasTime } = this.props;
         // dateTime validation, also sets the correct values
-        if (this.dateTime.validate(value, hasTime) && onChange) {
-            onChange(name, this.dateTime.getTime());
+        const timestamp = this.dateTime.validate(value, hasTime) ? this.dateTime.getTime() : 0;
+        if (onChange) {
+            onChange(name, timestamp);
         }
         this.setState({ value, showPicker: false });
     }
