@@ -1,0 +1,84 @@
+$dt-bg: $white;
+$dt-border-color: $border-color;
+$dt-border-radius: $border-radius;
+$dt-header-cell-padding: 14px 7px 5px 7px;
+$dt-data-cell-padding: 7px;
+
+@mixin style-table() {
+    background: $dt-bg;
+    border-collapse: collapse;
+    table-layout: auto;
+    width: 100%;
+
+    thead {
+        th {
+            background: $color-light;
+            border: 1px solid $dt-border-color;
+            border-bottom: 2px solid $color-dark;
+            padding: $dt-header-cell-padding;
+            position: relative;
+            text-align: start;
+
+            &:last-child {
+                width: 1px;
+            }
+        }
+    }
+
+    tbody {
+        >tr {
+
+            //cursor: pointer;
+            //transition: all 200ms linear;
+            //&:nth-child(odd) {
+            //}
+            &:nth-child(even) {
+                background: transparentize($color-light, .5);
+            }
+
+            //&:hover {
+            //    background: transparentize($color-dark, .7);
+            //    color: $color-light;
+            //}
+        }
+
+        td, th {
+            border: 1px solid $dt-border-color;
+            overflow: hidden;
+            padding: $dt-data-cell-padding;
+            position: relative;
+            //white-space: nowrap;
+            //text-overflow: ellipsis;
+        }
+
+        th {
+            text-align: start;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+.data-table {
+    border: 1px solid $dt-border-color;
+    border-radius: $dt-border-radius;
+    overflow: hidden;
+
+    >table {
+        @include style-table();
+    }
+}
+
+.dt-operation-cell {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.details-table {
+    @include style-table();
+
+    img {
+        max-height: 15vh;
+    }
+}

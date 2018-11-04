@@ -1,8 +1,10 @@
 .login-page {
 
     .forget-link {
-        margin: 20px auto 0 auto;
         font-size: $font-size-small;
+        margin: 20px auto 0;
+        text-align: end;
+
         a {
             color: $color-primary;
         }

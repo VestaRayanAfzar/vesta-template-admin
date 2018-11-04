@@ -32,7 +32,6 @@ interface ILogProps extends IPageComponentProps<ILogParams> {
 interface ILogState {
     logs: string[];
     queryOption: IDataTableQueryOption<ILog>;
-    showLoader?: boolean;
     users: IUser[];
 }
 
@@ -52,7 +51,7 @@ export class Log extends PageComponent<ILogProps, ILogState> {
     }
 
     public render() {
-        const { showLoader, logs } = this.state;
+        const { logs } = this.state;
         const dateTime = Culture.getDateTimeInstance();
         const dateTimeFormst = Culture.getLocale().defaultDateTimeFormat;
         const columns: Array<IColumn<string>> = [
@@ -80,12 +79,11 @@ export class Log extends PageComponent<ILogProps, ILogState> {
                 <PageTitle title={this.tr("mdl_log")} />
                 <Navbar title={this.tr("mdl_log")} showBurger={true} />
                 <h1>{this.tr("mdl_log")}</h1>
-                <Preloader show={showLoader} />
                 <CrudMenu path="log" access={this.access} />
                 <div className="crud-wrapper">
                     <DynamicRouter>
                         <Switch>
-                            <Route path="/log/detail/:id" render={this.tz(LogDetail, { log: ["read"] }, { onFetch: this.onFetch })} />
+                            <Route path="/log/detail/:id" render={this.tz(LogDetail, { log: ["read"] })} />
                         </Switch>
                     </DynamicRouter>
                     <div className="crud-page">
@@ -96,40 +94,28 @@ export class Log extends PageComponent<ILogProps, ILogState> {
         );
     }
 
-    private onFetch = (id: number) => {
-        this.setState({ showLoader: true });
-        return this.api.get(`log/${id}`)
-            .then((response) => {
-                this.setState({ showLoader: false });
-                return response;
-            })
-            .catch((error) => {
-                this.setState({ showLoader: false });
-                this.notif.error(error.message);
-            });
-    }
-
     private onFetchAll = () => {
-        this.setState({ showLoader: true });
+        Preloader.show();
         this.api.get<string>("log")
             .then((response) => {
-                this.setState({ showLoader: false, logs: response.items });
+                Preloader.hide();
+                this.setState({ logs: response.items });
             })
             .catch((error) => {
-                this.setState({ showLoader: false });
+                Preloader.hide();
                 this.notif.error(error.message);
             });
     }
 
     private onDelete = (id) => {
-        this.setState({ showLoader: true });
+        Preloader.show();
         this.api.del(`log/${id}`)
             .then((response) => {
-                this.setState({ showLoader: false });
+                Preloader.hide();
                 this.onFetchAll();
             })
             .catch((error) => {
-                this.setState({ showLoader: false });
+                Preloader.hide();
             });
     }
 }

@@ -6,30 +6,34 @@ $toast-border-color: $border-color;
 $toast-text-color: $white;
 
 .toast-wrapper {
-    position: fixed;
-    z-index: $z-index-notification;
     bottom: 0;
     left: 0;
-    width: 100%;
+    position: fixed;
     text-align: center;
+    width: 100%;
+    z-index: $z-index-notification;
+
     .toast {
-        padding: $toast-padding;
-        margin: $toast-margin;
-        text-align: center;
-        font-size: $toast-font-size;
-        line-height: 2;
-        display: inline-block;
-        border-radius: $toast-border-radius;
-        color: $toast-text-color;
         background: transparentize($color-dark, .15);
         border: 2px solid $toast-border-color;
+        border-radius: $toast-border-radius;
+        color: $toast-text-color;
+        display: inline-block;
+        font-size: $toast-font-size;
+        line-height: 2;
+        margin: $toast-margin;
+        padding: $toast-padding;
+        text-align: center;
     }
+
     .type-error {
         background: transparentize($color-error, .1);
     }
+
     .type-success {
         background: transparentize($color-success, .1);
     }
+
     .type-warning {
         background: transparentize($color-warning, .1);
     }

@@ -28,18 +28,14 @@ interface IDataTableState {
 }
 
 export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState> {
-    private headerRow;
 
     constructor(props: IDataTableProps<T>) {
         super(props);
         this.state = { records: [] };
     }
 
-    public componentDidMount() {
-        this.createHeader();
-    }
-
     public render() {
+        const header = this.createHeader();
         const rows = this.createRows();
         const queryOption = this.props.queryOption;
         const pagination = this.props.pagination ? (
@@ -49,7 +45,7 @@ export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState>
             <div>
                 <div className="data-table">
                     <table>
-                        <thead>{this.headerRow}</thead>
+                        <thead>{header}</thead>
                         <tbody>{rows}</tbody>
                     </table>
                 </div>
@@ -62,7 +58,7 @@ export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState>
         const headerCells = this.props.columns.map((col, i) => {
             return <th key={i + 1}>{col.title || col.name}</th>;
         });
-        this.headerRow = <tr>{headerCells}</tr>;
+        return <tr>{headerCells}</tr>;
     }
 
     private createRows() {

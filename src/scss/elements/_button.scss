@@ -35,6 +35,10 @@ $btn-group-active-bg: lighten($color-primary, 15%);
     padding: 2px;
     position: fixed;
     right: 0;
+
+    .btn {
+        flex: 1;
+    }
 }
 
 .btn {

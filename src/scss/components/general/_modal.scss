@@ -4,39 +4,39 @@ $modal-transition-leave-duration: ceil($transition-duration-short);
 $modal-transition-effect: $transition-effect-default;
 
 .modal {
-    will-change: tranform;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
+    @include translate3d(0);
+    align-content: center;
+    align-items: center;
     background: $modal-background-color;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    align-content: center;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    will-change: tranform;
     z-index: $z-index-dialog;
-    @include translate3d(0);
 }
 
 .modal-enter {
     @include translate3d(100%, 0);
 
     &.modal-enter-active {
-        transition: transform $modal-transition-enter-duration $modal-transition-effect;
         @include translate3d(0);
         @include scale(1);
+        transition: transform $modal-transition-enter-duration $modal-transition-effect;
     }
 }
 
 .modal-leave {
 
     &.modal-leave-active {
-        transition: transform $modal-transition-leave-duration $modal-transition-effect;
         @include translate3d(100%, 0);
+        transition: transform $modal-transition-leave-duration $modal-transition-effect;
     }
 }
 
@@ -44,24 +44,26 @@ $modal-transition-effect: $transition-effect-default;
     @include scale(0);
 
     &.modal-zoom-enter-active {
-        transition: transform $modal-transition-enter-duration $modal-transition-effect;
         @include scale(1);
+        transition: transform $modal-transition-enter-duration $modal-transition-effect;
     }
 }
 
 .modal-zoom-leave {
 
     &.modal-zoom-leave-active {
-        transition: transform $modal-transition-leave-duration $modal-transition-effect;
         @include scale(0);
+        transition: transform $modal-transition-leave-duration $modal-transition-effect;
     }
 }
 
 html.modal-open {
     overflow-y: hidden;
+
     .page {
         overflow-y: hidden;
     }
+
     .modal {
         .page {
             overflow-y: auto;

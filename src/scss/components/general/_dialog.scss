@@ -4,36 +4,38 @@ $dialog-padding: 30px;
 $dialog-border-radius: $border-radius;
 
 .dialog {
-    position: relative;
     align-items: center;
-    border-radius: $border-radius;
-    overflow: hidden;
-    z-index: $z-index-dialog;
     background: $dialog-background-color;
+    border-radius: $border-radius;
     min-width: $layout-small-min;
-    //@include translate3d(0, -50%, 0);
+    overflow: hidden;
+    position: relative;
+    z-index: $z-index-dialog;
 
-    > .dialog-header {
-        padding: $dialog-header-padding;
+    >.dialog-header {
         border-bottom: 1px solid $border-color;
+        padding: $dialog-header-padding;
 
         h3 {
-            white-space: nowrap;
             font-weight: lighter;
+            white-space: nowrap;
         }
+
         .btn {
-            position: absolute;
-            top: 0;
             #{$opposite-float}: 0;
             font-size: $font-size-medium;
             min-width: 1px;
+            position: absolute;
+            top: 0;
         }
     }
-    > .dialog-content {
-        padding: $dialog-padding floor($dialog-padding / 2);
+
+    >.dialog-content {
         flex: 1;
+        padding: $dialog-padding floor($dialog-padding / 2);
     }
-    > .dialog-footer {
+
+    >.dialog-footer {
         border-top: 1px solid $border-color;
         text-align: end;
 
@@ -41,11 +43,12 @@ $dialog-border-radius: $border-radius;
             display: flex;
             justify-content: flex-end;
         }
+
         .btn {
+            border-radius: $border-radius;
             flex: 1;
             height: $btn-height-large;
             margin: $border-radius;
-            border-radius: $border-radius;
             max-width: 50%;
         }
     }

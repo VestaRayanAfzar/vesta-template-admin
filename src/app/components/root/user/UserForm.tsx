@@ -1,33 +1,32 @@
 import React from "react";
 import { Status } from "../../../cmn/enum/Status";
 import { IRole } from "../../../cmn/models/Role";
-import { IUser, UserGender, UserType } from "../../../cmn/models/User";
+import { IUser, User, UserGender, UserType } from "../../../cmn/models/User";
 import { IValidationError } from "../../../medium";
+import { ModelService } from "../../../service/models/ModelService";
 import { getFileUrl, IModelValidationMessage, validationMessage } from "../../../util/Util";
-import { FormDateTimeInput } from "../../general/form/FormDateTimeInput";
-import { FormFileInput } from "../../general/form/FormFileInput";
-import { FormMultichoice } from "../../general/form/FormMultichoice";
-import { FormSelect } from "../../general/form/FormSelect";
-import { FormTextInput } from "../../general/form/FormTextInput";
+import { IBaseComponentProps } from "../../BaseComponent";
+import { DateTimeInput } from "../../general/form/DateTimeInput";
+import { FileInput } from "../../general/form/FileInput";
 import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";
-import { FetchById, IPageComponentProps, PageComponent, Save } from "../../PageComponent";
+import { Multichoice } from "../../general/form/Multichoice";
+import { Select } from "../../general/form/Select";
+import { TextInput } from "../../general/form/TextInput";
+import { PageComponent } from "../../PageComponent";
 
-interface IUserFormParams {
-}
-
-interface IUserFormProps extends IPageComponentProps<IUserFormParams> {
-    fetch?: FetchById<IUser>;
+interface IUserFormProps extends IBaseComponentProps {
     id?: number;
-    roles: IRole[];
-    save: Save<IUser>;
-    validationErrors?: IValidationError;
+    goBack?: () => void;
 }
 
 interface IUserFormState {
     user: IUser;
+    roles: IRole[];
+    validationErrors?: IValidationError;
 }
 
 export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
+    private service = ModelService.getService<IUser>("user");
     private formErrorsMessages: IModelValidationMessage;
     private genderOptions: IFormOption[] = [
         { id: UserGender.Male, title: this.tr("enum_male") },
@@ -38,11 +37,10 @@ export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
     private typeOptions: IFormOption[] = [
         { id: UserType.Admin, title: this.tr("enum_admin") },
         { id: UserType.User, title: this.tr("enum_user") }];
-    // const dateTime = DateTimeFactory.create(ConfigService.getConfig().locale)
 
     constructor(props: IUserFormProps) {
         super(props);
-        this.state = { user: {} };
+        this.state = { user: {}, roles: [] };
         this.formErrorsMessages = {
             birthDate: {
                 timestamp: this.tr("err_date"),
@@ -101,7 +99,7 @@ export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
     public componentDidMount() {
         const id = +this.props.id;
         if (isNaN(id)) { return; }
-        this.props.fetch(id)
+        this.service.fetch(id)
             .then((user) => {
                 if (user.image) {
                     user.image = getFileUrl(`user/${user.image}`);
@@ -110,49 +108,67 @@ export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
             });
     }
 
-    public onChange = (name: string, value: any) => {
-        this.state.user[name] = value;
-        this.setState({ user: this.state.user });
-    }
-
-    public onSubmit = (e: Event) => {
-        this.props.save(this.state.user);
-    }
-
     public render() {
-        const { validationErrors, roles } = this.props;
+        const { validationErrors, roles } = this.state;
         const errors = validationErrors ? validationMessage(this.formErrorsMessages, validationErrors) : {};
         const user = this.state.user;
         const roleId = user.role && (user.role as IRole).id;
 
         return (
             <FormWrapper name="userForm" onSubmit={this.onSubmit}>
-                <FormMultichoice name="type" label={this.tr("fld_type")} value={user.type}
+                <Multichoice name="type" label={this.tr("fld_type")} value={user.type}
                     error={errors.type} onChange={this.onChange} options={this.typeOptions} />
-                <FormSelect name="role" label={this.tr("role")} options={roles} value={roleId} placeholder={true}
+                <Select name="role" label={this.tr("role")} options={roles} value={roleId} placeholder={true}
                     error={errors.role} onChange={this.onChange} titleKey="name" valueKey="id" />
-                <FormTextInput name="username" label={this.tr("fld_username")} value={user.username} placeholder={true}
+                <TextInput name="username" label={this.tr("fld_username")} value={user.username} placeholder={true}
                     error={errors.username} onChange={this.onChange} />
-                <FormTextInput name="firstName" label={this.tr("fld_firstname")} value={user.firstName}
+                <TextInput name="firstName" label={this.tr("fld_firstname")} value={user.firstName}
                     placeholder={true} error={errors.firstName} onChange={this.onChange} />
-                <FormTextInput name="lastName" label={this.tr("fld_lastname")} value={user.lastName}
+                <TextInput name="lastName" label={this.tr("fld_lastname")} value={user.lastName}
                     placeholder={true} error={errors.lastName} onChange={this.onChange} />
-                <FormTextInput name="email" label={this.tr("fld_email")} value={user.email} placeholder={true}
+                <TextInput name="email" label={this.tr("fld_email")} value={user.email} placeholder={true}
                     error={errors.email} onChange={this.onChange} type="email" />
-                <FormTextInput name="mobile" label={this.tr("fld_mobile")} value={user.mobile} placeholder={true}
+                <TextInput name="mobile" label={this.tr("fld_mobile")} value={user.mobile} placeholder={true}
                     error={errors.mobile} onChange={this.onChange} />
-                <FormTextInput name="password" label={this.tr("fld_password")} value={user.password} placeholder={true}
+                <TextInput name="password" label={this.tr("fld_password")} value={user.password} placeholder={true}
                     error={errors.password} onChange={this.onChange} type="password" />
-                <FormDateTimeInput name="birthDate" label={this.tr("fld_birthDate")} value={user.birthDate}
+                <DateTimeInput name="birthDate" label={this.tr("fld_birthDate")} value={user.birthDate}
                     error={errors.birthDate} onChange={this.onChange} placeholder={true} />
-                <FormSelect name="gender" label={this.tr("fld_gender")} value={user.gender} placeholder={true}
+                <Select name="gender" label={this.tr("fld_gender")} value={user.gender} placeholder={true}
                     error={errors.gender} onChange={this.onChange} options={this.genderOptions} />
-                <FormFileInput name="image" label={this.tr("fld_image")} value={user.image} placeholder={true}
+                <FileInput name="image" label={this.tr("fld_image")} value={user.image} placeholder={true}
                     error={errors.image} onChange={this.onChange} />
-                <FormSelect name="status" label={this.tr("fld_status")} value={user.status} placeholder={true}
+                <Select name="status" label={this.tr("fld_status")} value={user.status} placeholder={true}
                     error={errors.status} onChange={this.onChange} options={this.statusOptions} />
                 {this.props.children}
             </FormWrapper>
         );
+    }
+
+    public onChange = (name: string, value: any) => {
+        this.state.user[name] = value;
+        this.setState({ user: this.state.user });
+    }
+
+    public onSubmit = () => {
+        const { user } = this.state;
+        const userModel = new User(user);
+        const userFiles: IUser = {};
+        const validationResult = userModel.validate();
+        if (validationResult) {
+            if (!userModel.password) {
+                delete validationResult.password;
+            }
+            if (Object.keys(validationResult).length) {
+                return Promise.reject(validationResult);
+            }
+        }
+        let hasFile = false;
+        if (userModel.image) {
+            userFiles.image = userModel.image;
+            delete userModel.image;
+            hasFile = true;
+        }
+        this.service.save(userModel.getValues(), hasFile ? userFiles : null);
     }
 }

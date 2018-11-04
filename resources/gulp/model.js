@@ -1,25 +1,30 @@
-let gulp = require('gulp');
-let ts = require('gulp-typescript');
+const { src, dest, series } = require("gulp");
+const ts = require("gulp-typescript");
 
-module.exports = function (setting) {
-    let dir = setting.dir;
-    let buildPath = `${dir.build}/tmp`;
+module.exports = function(setting) {
+    const dir = setting.dir;
+    const buildPath = `${dir.build}/tmp`;
 
-    gulp.task('model:compile', () => {
-        compile(`${dir.src}/app/medium.ts`, buildPath);
-        compile(`${dir.src}/app/cmn/**/*.ts`, `${buildPath}/cmn`);
-    });
+    function medium() {
+        return compile(`${dir.src}/app/medium.ts`, buildPath);
+    }
 
-    return {};
+    function cmn() {
+        return compile(`${dir.src}/app/cmn/**/*.ts`, `${buildPath}/cmn`);
+    }
 
     function compile(files, destination) {
         let tsFiles = [files];
-        let stream = gulp.src(tsFiles);
+        let stream = src(tsFiles);
         let tsResult = stream.pipe(ts({
-            target: 'es5',
+            target: "es5",
             noEmitHelpers: false,
-            module: 'commonjs'
+            module: "commonjs"
         }));
-        return tsResult.js.pipe(gulp.dest(destination));
+        return tsResult.js.pipe(dest(destination));
     }
+
+    series(medium, cmn);
+
+    return {};
 };

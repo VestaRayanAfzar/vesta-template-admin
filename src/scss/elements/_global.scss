@@ -1,78 +1,8 @@
-*, *:before, *:after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    outline: 0;
-}
-
-html {
-    background: url("../img/bg-main.jpg") no-repeat fixed center $color-default;
-    background-size: cover;
-}
-
 html, body {
     direction: $direction;
     font-family: $base-font-family;
     font-size: $font-size-base;
     text-overflow: clip;
-}
-
-body {
-    color: $color-dark;
-
-    .splash-wrapper {
-        display: none;
-        position: fixed;
-        z-index: $z-index-splash;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: url("../img/splash/1024x768.jpg") no-repeat center white;
-        background-size: cover;
-        transition: transform $transition-duration-short $transition-effect-default;
-    }
-
-    &.has-splash {
-        .splash-wrapper {
-            display: block;
-        }
-    }
-
-    &.app-offline {
-        .app-offline-msg {
-            display: flex;
-        }
-
-        .navbar {
-            background: $color-default !important;
-        }
-    }
-
-    .app-offline-msg {
-        display: none;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 1px solid transparent;
-        border-top-color: $color-error;
-        height: 10vh;
-        z-index: $z-index-splash;
-
-        .alert {
-            max-width: $layout-medium-max;
-            display: block;
-            text-align: center;
-            border-radius: 20px;
-            direction: ltr;
-            padding: 7px 15px;
-            white-space: nowrap;
-            user-select: none;
-        }
-    }
 }
 
 .en {
@@ -85,7 +15,7 @@ input, textarea, select, button {
 }
 
 a {
-    color: $teal;
+    color: $dark;
     text-decoration: none;
 }
 
@@ -95,4 +25,20 @@ table {
 
 ul {
     list-style: none;
+}
+
+.row {
+    display: flex;
+
+    &.wrap {
+        flex-wrap: wrap;
+    }
+
+    &.space-around {
+        justify-content: space-around;
+    }
+
+    &.space-between {
+        justify-content: space-between;
+    }
 }

@@ -1,4 +1,4 @@
-var cacheName = 'vesta-panel-__TIMESTAMP__';
+var cacheName = 'vesta-admin-__TIMESTAMP__';
 var filesToCache = [__FILES__];
 
 self.addEventListener('install', function (e) {
@@ -54,7 +54,7 @@ self.addEventListener('fetch', function (event) {
                     return response;
                 });
             }).catch(function (error) {
-                console.error('[ServiceWorker] fetch', error);
+                // console.error('[ServiceWorker] fetch', error);
             });
         })
     );

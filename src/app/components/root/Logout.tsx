@@ -1,4 +1,3 @@
-import React from "react";
 import { IUser } from "../../cmn/models/User";
 import { LogService } from "../../service/LogService";
 import { Preloader } from "../general/Preloader";
@@ -15,11 +14,16 @@ interface ILogoutState {
 
 export class Logout extends PageComponent<ILogoutProps, ILogoutState> {
 
+    public constructor(props: ILogoutProps) {
+        super(props);
+        this.state = {};
+    }
+
     public componentDidMount() {
         if (this.auth.isGuest()) {
             return this.props.history.replace("/");
         }
-
+        Preloader.show();
         this.api.get<IUser>("account/logout")
             .then((response) => {
                 this.onAfterLogout(response.items[0]);
@@ -30,8 +34,12 @@ export class Logout extends PageComponent<ILogoutProps, ILogoutState> {
             });
     }
 
+    public componentWillUnmount() {
+        Preloader.hide();
+    }
+
     public render() {
-        return <Preloader show={true} />;
+        return null;
     }
 
     private onAfterLogout(user: IUser) {

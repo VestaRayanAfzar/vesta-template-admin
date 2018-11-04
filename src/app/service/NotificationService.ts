@@ -1,5 +1,4 @@
-import { Dispatcher } from "./Dispatcher";
-import { TranslateService } from "./TranslateService";
+import { Dispatcher, Translate } from "../medium";
 
 export const enum MessageType { Info = 1, Success, Warning, Error }
 
@@ -18,7 +17,7 @@ export class NotificationService {
     }
 
     private static instance: NotificationService;
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
 
     private constructor(private dispatcher: Dispatcher) {
     }
@@ -38,9 +37,7 @@ export class NotificationService {
     public toast(message: string, type: MessageType = MessageType.Info, ...placeholders: any[]) {
         const text = this.tr(message, placeholders);
         this.dispatcher.dispatch<IToastData>("toast", { message: text, type });
-        /// <development>
         // tslint:disable-next-line:no-console
         console.log(text);
-        /// </development>
     }
 }

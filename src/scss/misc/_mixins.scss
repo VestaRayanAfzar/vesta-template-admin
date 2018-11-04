@@ -13,8 +13,7 @@
 @mixin rtl($prop, $value, $rtl-value) {
     @if ($direction==ltr) {
         #{$prop}: $value;
-    }
-    @else {
+    } @else {
         #{$prop}: $rtl-value;
     }
 }
@@ -32,8 +31,8 @@
 }
 
 @mixin skew($x, $y: $x) {
-    transform: skew($x, $y);
     -webkit-backface-visibility: hidden;
+    transform: skew($x, $y);
 }
 
 @mixin translate3d($x, $y: $x, $z: $y) {
@@ -45,9 +44,9 @@
 }
 
 @mixin animation-rotate($duration, $effect: $transition-effect-default) {
-    animation-name: rotate;
     animation-duration: $duration;
     animation-iteration-count: infinite;
+    animation-name: rotate;
     animation-timing-function: $effect;
 }
 
@@ -57,13 +56,11 @@
         @media screen and (min-width: $min-width) and (max-width: $max-width) {
             @content;
         }
-    }
-    @else if ($min-width > 0) {
+    } @else if ($min-width > 0) {
         @media screen and (min-width: $min-width) {
             @content;
         }
-    }
-    @else {
+    } @else {
         @media screen and (max-width: $max-width) {
             @content;
         }

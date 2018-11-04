@@ -9,56 +9,59 @@ $form-error-padding: 5px;
 
 .form-wrapper {
     .btn-group {
-        padding: $btn-group-padding;
-        width: 100%;
-        margin: auto;
+        align-items: center;
         display: flex;
         flex-direction: row;
-        align-items: center;
         justify-content: center;
+        margin: auto;
+        padding: $btn-group-padding;
+        width: 100%;
 
         >.btn {
-            flex: 1;
-            margin: auto 5px;
             border-radius: $border-radius;
+            flex: 1;
             height: $btn-height-large;
             line-height: $btn-height-large;
+            margin: auto 5px;
         }
     }
 }
 
 .form-error {
-    padding: 0 $form-error-padding;
-    position: absolute;
-    color: $color-error;
-    text-align: end;
-    font-size: $font-size-small;
-    top: -1 * floor($form-control-height / 3);
     #{$opposite-float}: 0;
     background: $white;
+    color: $color-error;
+    font-size: $font-size-small;
+    padding: 0 $form-error-padding;
+    position: absolute;
+    text-align: end;
+    top: -1 * floor($form-control-height / 3);
 }
 
 .form-group {
+    align-items: center;
+    display: flex;
+    justify-content: center;
     margin: $form-group-margin;
     padding: $form-group-padding;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     label {
+        margin: $form-label-margin;
         margin-#{$opposite-float}: 10px;
-        white-space: nowrap;
         text-align: end;
         vertical-align: bottom;
-        margin: $form-label-margin;
+        white-space: nowrap;
     }
+
     .form-control {
         flex: 1;
     }
+
     &.btn-group {
         margin-top: 4 * $form-group-margin;
     }
+
     &.has-error {
         .form-control {
             border-color: $color-error;
@@ -68,15 +71,17 @@ $form-error-padding: 5px;
 
 .form-control {
     background-color: $form-control-bg;
-    height: $form-control-height;
-    padding: $form-control-padding;
     border: 1px solid $border-color;
     border-radius: $form-control-border-radius;
+    height: $form-control-height;
     outline: 0;
+    padding: $form-control-padding;
 }
 
-body.shrink-view {
+body {
+    &.shrink-view {
     .stick-btm {
         @include scale(0);
+    }
     }
 }

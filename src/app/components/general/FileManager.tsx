@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { IFile } from "../../cmn/interfaces/FileSystem";
+import { Translate } from "../../medium";
 import { ApiService } from "../../service/ApiService";
 import { LogService } from "../../service/LogService";
 import { NotificationService } from "../../service/NotificationService";
-import { TranslateService } from "../../service/TranslateService";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Icon } from "./Icon";
 
@@ -24,7 +24,7 @@ export interface IFileManagerState {
 }
 
 export class FileManager extends Component<IFileManagerProps, IFileManagerState> {
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
     private api = ApiService.getInstance();
     private notif = NotificationService.getInstance();
     private baseDirectory = "file-manager";

@@ -1,5 +1,4 @@
 import { ComponentClass } from "react";
-import { Context } from "../components/root/Context";
 import { Forget } from "../components/root/Forget";
 import { Home } from "../components/root/Home";
 import { Log } from "../components/root/Log";
@@ -7,10 +6,9 @@ import { Login } from "../components/root/Login";
 import { Logout } from "../components/root/Logout";
 import { Profile } from "../components/root/Profile";
 import { Role } from "../components/root/Role";
-import { Support } from "../components/root/Support";
 import { User } from "../components/root/User";
+import { Translate } from "../medium";
 import { IPermissionCollection } from "../service/AuthService";
-import { TranslateService } from "../service/TranslateService";
 
 export interface IRouteItem {
     abstract?: boolean;
@@ -27,12 +25,10 @@ export interface IRouteItem {
 }
 
 export function getRoutes(isLoggedIn: boolean): IRouteItem[] {
-    const tr = TranslateService.getInstance().translate;
+    const tr = Translate.getInstance().translate;
 
     const userRoutes = [
         { link: "", title: tr("home"), component: Home, exact: true },
-        { link: "support", title: tr("mdl_support"), component: Support, permissions: { contact: ["read"] } },
-        { link: "context", title: tr("mdl_context"), component: Context, permissions: { context: ["read"] } },
         { link: "user", title: tr("mdl_user"), component: User, permissions: { user: ["read"] } },
         { link: "role", title: tr("mdl_role"), component: Role, permissions: { role: ["read"] } },
         { link: "log", title: tr("mdl_log"), component: Log, permissions: { log: ["read"] } },

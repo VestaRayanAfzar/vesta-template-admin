@@ -1,16 +1,14 @@
 import React from "react";
-import { IRole } from "../../../cmn/models/Role";
 import { IUser } from "../../../cmn/models/User";
+import { ModelService } from "../../../service/models/ModelService";
 import { getFileUrl } from "../../../util/Util";
-import { FetchById, IPageComponentProps, PageComponent } from "../../PageComponent";
+import { IPageComponentProps, PageComponent } from "../../PageComponent";
 
 interface IUserDetailParams {
     id: number;
 }
 
 interface IUserDetailProps extends IPageComponentProps<IUserDetailParams> {
-    fetch: FetchById<IUser>;
-    roles: IRole[];
 }
 
 interface IUserDetailState {
@@ -18,26 +16,24 @@ interface IUserDetailState {
 }
 
 export class UserDetail extends PageComponent<IUserDetailProps, IUserDetailState> {
-
+    private service = ModelService.getService<IUser>("user");
+    private userTypeOptions = {
+        1: this.tr("enum_admin"),
+        2: this.tr("enum_user"),
+    };
     constructor(props: IUserDetailProps) {
         super(props);
         this.state = { user: {} };
     }
 
     public componentDidMount() {
-        this.props.fetch(+this.props.match.params.id)
+        this.service.fetch(+this.props.match.params.id)
             .then((user) => this.setState({ user }));
     }
 
     public render() {
         const user = this.state.user;
         if (!user) { return null; }
-        const userTypeOptions = {
-            2: this.tr("enum_staff"),
-            3: this.tr("enum_mechanic"),
-            4: this.tr("enum_technician"),
-            5: this.tr("enum_user"),
-        };
         const userGenderOptions = { 1: this.tr("enum_male"), 2: this.tr("enum_female") };
         const userImage = getFileUrl(`user/${user.image}`);
         const statusOptions = { 1: this.tr("enum_active"), 0: this.tr("enum_inactive") };
@@ -52,7 +48,7 @@ export class UserDetail extends PageComponent<IUserDetailProps, IUserDetailState
                     <tbody>
                         <tr>
                             <td>{this.tr("fld_type")}</td>
-                            <td>{user.type && user.type.map((i) => userTypeOptions[i]).join(" ")}</td>
+                            <td>{user.type && user.type.map((i) => this.userTypeOptions[i]).join(" ")}</td>
                         </tr>
                         <tr>
                             <td>{this.tr("fld_username")}</td>

@@ -11,28 +11,26 @@ $autocomplete-clear-btn-size: 24px;
         }
     }
 
-    &.is-multi {
-
-    }
+    &.is-multi {}
 
     .list-wrapper {
-        padding: 0;
+        #{$float}: 2px;
         border: 0;
-        width: 80%;
+        border-radius: 0;
+        padding: 0;
         position: absolute;
         top: $autocomplete-list-top-offset;
-        #{$float}: 2px;
+        width: 80%;
         z-index: $z-index-content;
-        border-radius: 0;
     }
 
     .list-item {
         //border: 1px solid blue;
-        display: block;
-        cursor: pointer;
         background: $form-control-bg;
         border: 1px solid $border-color;
         border-bottom: 0;
+        cursor: pointer;
+        display: block;
         padding: $form-control-padding;
 
         &.has-hover {
@@ -51,27 +49,27 @@ $autocomplete-clear-btn-size: 24px;
         max-width: 50%;
 
         span {
-            display: inline-block;
-            position: relative;
             border: 1px solid $border-color;
             border-radius: $border-radius;
-            padding: 2px 7px;
-            margin: 5px;
             cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+            padding: 2px 7px;
+            position: relative;
             vertical-align: middle;
 
             &:after {
-                position: absolute;
-                top: ceil(-$autocomplete-clear-btn-size/2);
-                left: ceil(-$autocomplete-clear-btn-size/2);
-                border-radius: 50%;
-                width: $autocomplete-clear-btn-size;
-                height: $autocomplete-clear-btn-size;
-                text-align: center;
-                content: "X";
-                color: $color-error;
-                border: 1px solid $color-error;
                 background: $white;
+                border: 1px solid $color-error;
+                border-radius: 50%;
+                color: $color-error;
+                content: 'X';
+                height: $autocomplete-clear-btn-size;
+                left: ceil(-$autocomplete-clear-btn-size/2);
+                position: absolute;
+                text-align: center;
+                top: ceil(-$autocomplete-clear-btn-size/2);
+                width: $autocomplete-clear-btn-size;
             }
         }
     }

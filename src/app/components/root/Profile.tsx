@@ -4,10 +4,10 @@ import { IUser, User, UserGender } from "../../cmn/models/User";
 import { IQueryResult, IValidationError } from "../../medium";
 import { getFileUrl, IModelValidationMessage, shallowClone, validationMessage } from "../../util/Util";
 import { Avatar } from "../general/Avatar";
-import { FormDateTimeInput } from "../general/form/FormDateTimeInput";
-import { FormSelect } from "../general/form/FormSelect";
-import { FormTextInput } from "../general/form/FormTextInput";
+import { DateTimeInput } from "../general/form/DateTimeInput";
 import { FormWrapper, IFormOption } from "../general/form/FormWrapper";
+import { Select } from "../general/form/Select";
+import { TextInput } from "../general/form/TextInput";
 import Navbar from "../general/Navbar";
 import { Preloader } from "../general/Preloader";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
@@ -20,7 +20,6 @@ interface IProfileProps extends IPageComponentProps<IProfileParams> {
 
 interface IProfileState {
     imagePreview: string;
-    showLoader?: boolean;
     user: IUser;
     validationErrors?: IValidationError;
 }
@@ -69,7 +68,7 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
     }
 
     public render() {
-        const { showLoader, validationErrors, imagePreview } = this.state;
+        const { validationErrors, imagePreview } = this.state;
         const user = shallowClone(this.state.user);
         let userImage = null;
         if (user.image && "string" == typeof user.image) {
@@ -80,11 +79,10 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
         return (
             <div className="page profile-page has-navbar">
                 <Navbar title={this.tr("profile")} backLink="/" />
-                <Preloader show={showLoader} />
                 <FormWrapper onSubmit={this.onSubmit}>
                     <div className="avatar-wrapper">
                         <Avatar src={imagePreview ? imagePreview : userImage as string}
-                            defaultSrc="img/vesta-logo.png">
+                            defaultSrc="img/icons/144x144.png">
                             <button className="change-image" type="button">{this.tr("txt_change_image")}</button>
                             <input className="change-image" type="file" name="image" onChange={this.updateImage} />
                         </Avatar>
@@ -93,24 +91,24 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
                     </div>
 
                     <fieldset className="profile-form">
-                        <FormTextInput name="firstName" label={this.tr("fld_firstname")} value={user.firstName}
+                        <TextInput name="firstName" label={this.tr("fld_firstname")} value={user.firstName}
                             placeholder={true} error={errors.firstName} onChange={this.onChange} />
-                        <FormTextInput name="lastName" label={this.tr("fld_lastname")} value={user.lastName}
+                        <TextInput name="lastName" label={this.tr("fld_lastname")} value={user.lastName}
                             placeholder={true} error={errors.lastName} onChange={this.onChange} />
-                        <FormTextInput name="email" label={this.tr("fld_email")} value={user.email} placeholder={true}
+                        <TextInput name="email" label={this.tr("fld_email")} value={user.email} placeholder={true}
                             error={errors.email} onChange={this.onChange} type="email" dir="ltr" />
-                        <FormSelect name="gender" label={this.tr("fld_gender")} value={user.gender} placeholder={true}
+                        <Select name="gender" label={this.tr("fld_gender")} value={user.gender} placeholder={true}
                             error={errors.gender} onChange={this.onChange} options={this.genderOptions} />
-                        <FormDateTimeInput name="birthDate" label={this.tr("fld_birth_date")} value={user.birthDate}
+                        <DateTimeInput name="birthDate" label={this.tr("fld_birth_date")} value={user.birthDate}
                             placeholder={true} error={errors.birthDate} onChange={this.onChange} />
                     </fieldset>
 
                     <fieldset className="profile-form">
                         <legend>{this.tr("txt_change_pass")}</legend>
-                        <FormTextInput name="password" label={this.tr("fld_password")} value={user.password}
+                        <TextInput name="password" label={this.tr("fld_password")} value={user.password}
                             placeholder={true} error={errors.password} onChange={this.onChange}
                             type="password" />
-                        <FormTextInput name="confPassword" label={this.tr("fld_conf_password")} placeholder={true}
+                        <TextInput name="confPassword" label={this.tr("fld_conf_password")} placeholder={true}
                             value={(user as any).confPassword} onChange={this.onChange} type="password" />
                     </fieldset>
 
@@ -149,21 +147,23 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
             delete userModel.image;
             hasImage = true;
         }
-        this.setState({ showLoader: true, validationErrors: null });
+        Preloader.show();
+        this.setState({ validationErrors: null });
         this.api.put<IUser>("user", userModel.getValues())
             .then((response) => {
                 if (!hasImage) {
-                    this.setState({ showLoader: false });
+                    Preloader.hide();
                     return this.updateUser(response);
                 }
                 return this.api.upload<IUser>(`user/file/${userModel.id}`, userImage)
                     .then((uplResponse) => {
-                        this.setState({ showLoader: false });
+                        Preloader.hide();
                         this.updateUser(uplResponse);
                     });
             })
             .catch((error) => {
-                this.setState({ showLoader: false, validationErrors: error.violations });
+                Preloader.hide();
+                this.setState({ validationErrors: error.violations });
                 this.notif.error(error.message);
             });
     }
@@ -174,7 +174,7 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
             const reader = new FileReader();
             const file = e.target.files[0];
             reader.onloadend = () => {
-                this.setState({ imagePreview: reader.result });
+                this.setState({ imagePreview: reader.result as string });
             };
             reader.readAsDataURL(file);
             this.onChange("image", files[0]);
@@ -190,5 +190,6 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
         delete user.password;
         delete (user as any).confPassword;
         this.setState({ user: this.state.user });
+        this.notif.success("msg_profile_update");
     }
 }

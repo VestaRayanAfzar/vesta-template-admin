@@ -1,26 +1,24 @@
 .icon {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px; /* Preferred icon size */
+    direction: ltr;
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    font-family: 'Material Icons';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: normal;
     line-height: 1;
+    height: 1em;
     text-transform: none;
     letter-spacing: normal;
-    word-wrap: normal;
+    width: 1em;
     white-space: nowrap;
-    direction: ltr;
+    word-wrap: normal;
 
-    /* Support for all WebKit browsers. */
+    // Support for all WebKit browsers
     -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
+    // Support for Safari and Chrome
     text-rendering: optimizeLegibility;
-
-    /* Support for Firefox. */
+    // Support for Firefox
     -moz-osx-font-smoothing: grayscale;
-
-    /* Support for IE. */
+    // Support for IE
     font-feature-settings: 'liga';
 }

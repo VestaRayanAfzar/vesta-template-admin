@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Dispatcher } from "../../service/Dispatcher";
+import { Dispatcher } from "../../medium";
 import { IToastData, MessageType } from "../../service/NotificationService";
 import { IBaseComponentProps } from "../BaseComponent";
 
@@ -18,11 +18,14 @@ export class ToastMessage extends PureComponent<IToastMessageProps, IToastMessag
 
     constructor(props: IToastMessageProps) {
         super(props);
+        this.state = { message: null, type: null };
+    }
+
+    public componentDidMount() {
         Dispatcher.getInstance().register<IToastData>("toast", (payload) => {
             this.setState({ message: payload.message, type: payload.type });
             return false;
         });
-        this.state = { message: null, type: null };
     }
 
     public render() {

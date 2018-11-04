@@ -1,0 +1,82 @@
+$form-file-input-padding: 5px;
+$form-file-input-del-width: 24px;
+
+.file-input {
+    input {
+        opacity: 0.5;
+        position: absolute;
+    }
+
+    .form-control {
+        height: auto;
+        min-height: $form-control-height;
+        position: relative;
+
+        label {
+            color: $color-semidark;
+            font-size: $font-size-xsmall;
+            position: relative;
+            top: -$form-control-padding;
+        }
+    }
+
+    .thumbnails {
+        display: flex;
+        overflow: hidden;
+        padding: $form-file-input-padding;
+    }
+
+    .file-wrapper {
+        flex: 1;
+        justify-content: space-around;
+        margin: $form-file-input-padding;
+        position: relative;
+        text-align: end;
+
+        .file-del {
+            #{$opposite-float}: -1 * floor($form-file-input-del-width / 3);
+            background: $white;
+            border: 1px solid $color-error;
+            border-radius: 50%;
+            color: $color-error;
+            cursor: pointer;
+            font-size: $font-size-base;
+            height: $form-file-input-del-width;
+            line-height: $form-file-input-del-width;
+            position: absolute;
+            text-align: center;
+            top: -1 * floor($form-file-input-del-width / 3);
+            width: $form-file-input-del-width;
+        }
+
+        img, video {
+            border: 2px solid $border-color;
+            border-radius: $border-radius;
+            max-height: 15vh;
+            max-width: 15vh;
+            overflow: hidden;
+            width: 98%;
+        }
+
+        .file {
+            background: $color-semilight;
+            border: 2px solid $border-color;
+            border-radius: $border-radius;
+            display: inline-block;
+            height: 10vh;
+            overflow: hidden;
+            position: relative;
+            width: 15vh;
+
+            &:after {
+                bottom: 0;
+                color: $white;
+                content: 'no preview';
+                left: 0;
+                position: absolute;
+                text-align: center;
+                width: 100%;
+            }
+        }
+    }
+}

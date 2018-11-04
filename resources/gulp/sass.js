@@ -1,76 +1,54 @@
-let gulp = require('gulp');
-let sass = require('gulp-sass');
-let sourcemaps = require('gulp-sourcemaps');
-let postCss = require('gulp-postcss');
-let autoPrefixer = require('autoprefixer');
-let csswring = require('csswring');
-let mqpacker = require('css-mqpacker');
-let fs = require('fs');
-let eliminator = require('./plugins/eliminator');
+const sass = require("gulp-sass");
+const sourcemaps = require("gulp-sourcemaps");
+const postCss = require("gulp-postcss");
+const autoPrefixer = require("autoprefixer");
+const csswring = require("csswring");
+const mqpacker = require("css-mqpacker");
+const eliminator = require("./plugins/eliminator");
+const { src, dest, watch } = require("gulp");
 
-module.exports = function (setting) {
-    let dir = setting.dir;
-
-    gulp.task('sass:preCompile', () => {
-        let tmpDirectory = `${dir.build}/tmp/scss`;
-        return gulp.src(`${dir.src}/scss/**/*.scss`)
-            .pipe(eliminator(setting, setting.target))
-            .pipe(gulp.dest(tmpDirectory))
-    });
-
-    gulp.task('sass:compile', ['sass:preCompile'], () => {
-        let target = setting.buildPath(setting.target);
-        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.build}/${target}/css`;
-        let stream = gulp.src(getEntry()),
-            genMap = !setting.production;
-        if (genMap) stream = stream.pipe(sourcemaps.init());
-        stream = stream.pipe(sass()).on('error', setting.error);
-        if (genMap) stream = stream.pipe(sourcemaps.write());
-        return stream.pipe(gulp.dest(tmpDirectory));
-    });
-
-    let browsersToSupport = [
-        'last 4 version',
-        'iOS >= 7',
-        'Android >= 4',
-        'Explorer >= 10',
-        'ExplorerMobile >= 11'
+module.exports = function(setting) {
+    const dir = setting.dir;
+    const browsersToSupport = [
+        "last 4 version",
+        "iOS >= 7",
+        "Android >= 4",
+        "Explorer >= 10",
+        "ExplorerMobile >= 11"
     ];
 
-    gulp.task('sass:postCss', ['sass:compile'], () => {
-        let target = setting.buildPath(setting.target);
-        let tmpDirectory = setting.production ? `${dir.build}/tmp/css` : `${dir.build}/${target}/css`;
-        let preprocessors = [autoPrefixer({browsers: browsersToSupport})];
-        if (setting.production) {
-            preprocessors.push(mqpacker);
-            preprocessors.push(csswring);
-            return gulp.src(tmpDirectory + '/*.css')
-                .pipe(postCss(preprocessors))
-                .on('error', setting.error)
-                .pipe(gulp.dest(`${dir.build}/${target}/css`))
+    function compile() {
+        const genMap = !setting.production;
+        const target = setting.buildPath(setting.target);
+        let stream = src(getEntries());
+        if (genMap) {
+            stream = stream.pipe(sourcemaps.init());
         }
-    });
+        stream = stream.pipe(eliminator(setting)).pipe(sass());
+        const preprocessors = [autoPrefixer({ browsers: browsersToSupport })];
+        preprocessors.push(mqpacker);
+        preprocessors.push(csswring);
+        stream = stream.pipe(postCss(preprocessors));
+        if (genMap) {
+            stream = stream.pipe(sourcemaps.write());
+        }
+        return stream.pipe(dest(`${dir.build}/${target}/css`));
+    }
 
-    gulp.task('sass:watch', () => {
-        return gulp.watch(`${dir.src}/scss/**/*.scss`, ['sass:postCss']);
-    });
+    function watches() {
+        watch(`${dir.src}/scss/**/*.scss`, compile);
+    }
+
+    function getEntries() {
+        return [
+            `${dir.src}/scss/app-init.scss`,
+            `${dir.src}/scss/app-rtl.scss`,
+            `${dir.src}/scss/app-ltr.scss`,
+        ];
+    }
 
     return {
-        tasks: ['sass:postCss'],
-        watch: ['sass:watch']
+        tasks: compile,
+        watch: watches
     };
-
-    function getEntry() {
-        let baseDirectory = `${dir.build}/tmp/scss`;
-        let entry = `${baseDirectory}/${setting.target}-rtl.scss`;
-        if (fs.existsSync(entry)) return [entry, entry.replace('-rtl', '-ltr')];
-        if (setting.is(setting.target, 'cordova')) {
-            entry = `${baseDirectory}/cordova-rtl.scss`;
-            if (fs.existsSync(entry)) return [entry, entry.replace('-rtl', '-ltr')];
-        }
-        entry = `${baseDirectory}/app-rtl.scss`;
-        if (fs.existsSync(entry)) return [entry, entry.replace('-rtl', '-ltr')];
-        process.stderr.write(`Entry not found ${entry}`);
-        process.exit(1);
-    }
 };

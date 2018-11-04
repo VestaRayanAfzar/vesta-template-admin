@@ -1,0 +1,15 @@
+.text-input {
+    &.dir-ltr {
+        input {
+            direction: ltr;
+            text-align: $float;
+        }
+    }
+
+    &.dir-rtl {
+        input {
+            direction: rtl;
+            text-align: $float;
+        }
+    }
+}

@@ -2,12 +2,12 @@ import React, { Component, ComponentType } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { IUser } from "../cmn/models/User";
 import { IRouteItem } from "../config/route";
-import { Culture } from "../medium";
+import { Culture, Dispatcher } from "../medium";
 import { ApiService } from "../service/ApiService";
 import { AuthService } from "../service/AuthService";
-import { Dispatcher } from "../service/Dispatcher";
 import { LogService } from "../service/LogService";
 import { Html } from "./general/Html";
+import { Preloader } from "./general/Preloader";
 import { Sidenav } from "./general/Sidenav";
 import { SidenavContent } from "./general/SidenavContent";
 import { ToastMessage } from "./general/ToastMessage";
@@ -58,6 +58,7 @@ class Root extends Component<IRootProps, IRootState> {
                     <SidenavContent name="main-sidenav" user={user} menuItems={routeItems} />
                 </Sidenav>
                 <ToastMessage />
+                <Preloader />
             </div>
         );
     }

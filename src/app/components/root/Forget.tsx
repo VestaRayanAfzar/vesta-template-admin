@@ -4,8 +4,9 @@ import { IUser, User } from "../../cmn/models/User";
 import { IValidationError } from "../../medium";
 import { IModelValidationMessage, validationMessage } from "../../util/Util";
 import { Alert } from "../general/Alert";
-import { FormTextInput } from "../general/form/FormTextInput";
 import { FormWrapper } from "../general/form/FormWrapper";
+import { TextInput } from "../general/form/TextInput";
+import Navbar from "../general/Navbar";
 import { Preloader } from "../general/Preloader";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
 
@@ -18,7 +19,6 @@ interface IForgetProps extends IPageComponentProps<IForgetParams> {
 interface IForgetState {
     message: string;
     mobile: string;
-    showLoader?: boolean;
     validationErrors?: IValidationError;
 }
 
@@ -40,20 +40,20 @@ export class Forget extends PageComponent<IForgetProps, IForgetState> {
     }
 
     public render() {
-        const { message, validationErrors, showLoader, mobile } = this.state;
+        const { message, validationErrors, mobile } = this.state;
         const errors = validationErrors ? validationMessage(this.formErrorsMessages, validationErrors) : {};
         const alert = message ? <Alert type="info">{message}</Alert> : null;
 
         return (
             <div className="page forget-page has-navbar page-logo-form">
-                <Preloader show={showLoader} />
+                <Navbar className="navbar-transparent" showBurger={true} />
                 <div className="logo-wrapper">
                     <div className="logo-container">
-                        <img src="img/vesta-logo.png" alt="Vesta Logo" />
+                        <img src="img/icons/144x144.png" alt="Vesta Logo" />
                     </div>
                 </div>
                 <FormWrapper name="ForgetForm" onSubmit={this.onSubmit}>
-                    <FormTextInput name="mobile" label={this.tr("fld_mobile")} value={mobile} type="tel"
+                    <TextInput name="mobile" label={this.tr("fld_mobile")} value={mobile} type="tel"
                         error={errors.mobile} placeholder={true} onChange={this.onChange} />
                     {alert}
                     <div className="btn-group">
@@ -75,15 +75,17 @@ export class Forget extends PageComponent<IForgetProps, IForgetState> {
         if (validationErrors) {
             return this.setState({ validationErrors });
         }
-        this.setState({ showLoader: true, validationErrors: null });
+        Preloader.show();
+        this.setState({ validationErrors: null });
         this.api.post<IUser>("account/forget", { mobile: this.state.mobile })
             .then((response) => {
-                this.setState({ showLoader: false });
+                Preloader.hide();
                 this.notif.success(this.tr("info_forget"));
                 this.props.history.push("/");
             })
             .catch((error) => {
-                this.setState({ showLoader: false, validationErrors: error.violations });
+                Preloader.hide();
+                this.setState({ validationErrors: error.violations });
             });
     }
 }

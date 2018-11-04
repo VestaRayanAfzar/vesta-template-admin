@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { TranslateService } from "../../service/TranslateService";
+import { Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Dialog } from "./Dialog";
 
@@ -21,7 +21,7 @@ export interface IMessageBoxState {
 }
 
 export class MessageBox extends PureComponent<IMessageBoxProps, IMessageBoxState> {
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
 
     constructor(props: IMessageBoxProps) {
         super(props);

@@ -5,19 +5,17 @@ $page-center-form-padding: 30px 30px 15px 30px;
 $page-padding: 15px;
 
 .page {
-    max-width: $page-max-width;
     margin: auto;
+    max-width: $page-max-width;
     padding: $page-padding;
+    position: relative;
+
     &.has-navbar {
         padding-top: $header-height;
     }
-    position: relative;
-}
 
-.crud-page {
-    padding-top: $page-padding;
-    &+.crud-page {
-        display: none;
+    .crud-page+.crud-page {
+        @include scale(0);
     }
 }
 
@@ -25,48 +23,56 @@ $page-padding: 15px;
     $logo-img-size: 25vh;
     $logo-border-size: floor($logo-img-size / 10);
     $logo-wrapper-size: $logo-img-size + (2 * $logo-border-size);
+
     .logo-wrapper {
-        height: $logo-wrapper-size;
-        width: $logo-wrapper-size;
-        border-radius: 50%;
-        overflow: hidden;
         border: $logo-border-size solid transparentize($white, .5);
-        margin: 5px auto 30px auto;
-    }
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: $logo-img-size;
-        height: $logo-img-size;
         border-radius: 50%;
+        height: $logo-wrapper-size;
+        margin: 5px auto 30px auto;
         overflow: hidden;
+        width: $logo-wrapper-size;
+    }
+
+    .logo-container {
+        align-items: center;
         border: $logo-border-size solid transparentize($white, .3);
+        border-radius: 50%;
+        display: flex;
+        height: $logo-img-size;
+        justify-content: center;
+        overflow: hidden;
+        width: $logo-img-size;
+
         img {
-            width: auto;
             height: 100%;
+            width: auto;
         }
     }
+
     .form-wrapper {
-        width: 90%;
-        max-width: $layout-medium-min;
-        margin: auto;
         background: transparentize($white, 0);
         border-radius: $border-radius;
+        margin: auto;
+        max-width: $layout-medium-min;
         padding: $page-center-form-padding;
+        width: 90%;
     }
+
     .form-control {
         background-color: transparent;
         border: 0;
         border-bottom: 1px solid $color-dark;
         border-radius: 0;
     }
+
     .btn-group {
         margin-top: 30px;
     }
+
     .btn {
         height: $btn-height-large;
     }
+
     .form-error {
         top: floor($form-control-height / 2);
     }

@@ -1,5 +1,5 @@
 import React, { MouseEvent, PureComponent } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { IRouteItem } from "../../config/route";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Icon } from "./Icon";
@@ -43,9 +43,9 @@ export class Menu extends PureComponent<IMenuProps, null> {
                 const icon = <Icon name={item.icon} />;
                 const className = `menu-item ${item.disabled ? "disabled" : ""}`;
                 const itemComponent = item.link ?
-                    (<Link to={`${basePath}/${item.link}`}>
+                    (<NavLink to={`${basePath}/${item.link}`} activeClassName="active">
                         <span>{icon} {item.title}</span>
-                    </Link>) :
+                    </NavLink>) :
                     <a data-id={item.id}>{icon} {item.title}</a>;
                 links.push(
                     <li key={this.keyCounter++} className={className} data-id={item.id} onClick={this.onItemClick}>
@@ -67,5 +67,6 @@ export class Menu extends PureComponent<IMenuProps, null> {
         if (onItemSelect) {
             onItemSelect(id);
         }
+        this.forceUpdate();
     }
 }

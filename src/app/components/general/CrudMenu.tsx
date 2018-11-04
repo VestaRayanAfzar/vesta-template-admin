@@ -19,7 +19,7 @@ export class CrudMenu extends PureComponent<ICrudMenuProps, null> {
             links.push(<li key={key}><Link to={`/${path}/add`}><Icon name="add" /></Link></li>);
         }
         return (
-            <div className="crudMenu-component">
+            <div className="crud-menu-component">
                 <ul>{links}</ul>
             </div>
         );

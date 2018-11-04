@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
+import { Translate } from "../../medium";
 import { IAccess } from "../../service/AuthService";
-import { TranslateService } from "../../service/TranslateService";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Icon } from "./Icon";
 import { MessageBox, MessageBoxBtn, MessageBoxBtnGroup } from "./MessageBox";
@@ -18,7 +18,7 @@ export interface IDataTableOperationsState {
 }
 
 export class DataTableOperations extends PureComponent<IDataTableOperationsProps, IDataTableOperationsState> {
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
 
     constructor(props: IDataTableOperationsProps) {
         super(props);
@@ -34,7 +34,7 @@ export class DataTableOperations extends PureComponent<IDataTableOperationsProps
             <span className="del-btn" onClick={this.onDelete}><Icon name="delete" /></span> : null;
 
         return (
-            <span className="datatable-operations dt-operation-cell">
+            <span className="data-table-operations dt-operation-cell">
                 <Link to={`/${path}/detail/${id}`}><Icon name="search" /></Link>
                 {editLink}
                 {delLink}

@@ -1,19 +1,20 @@
 $alert-padding: 7px 10px;
 $alert-margin: 0;
 $alert-lighten-ratio: 50%;
+
 @mixin alert-style($color) {
+    background-color: lighten($color, $alert-lighten-ratio);
     border-color: $color;
     color: $color;
-    background-color: lighten($color, $alert-lighten-ratio);
 }
 
 .alert {
-    padding: $alert-padding;
-    margin: $alert-margin;
     border: 1px solid $color-default;
     border-radius: $border-radius;
     color: $color-default;
     font-size: $font-size-small;
+    margin: $alert-margin;
+    padding: $alert-padding;
 }
 
 .alert-error {

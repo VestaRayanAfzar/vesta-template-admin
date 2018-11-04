@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Culture, DateTime } from "../../medium";
-import { TranslateService } from "../../service/TranslateService";
+import { Culture, DateTime, Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 
 export interface IDatePickerProps extends IBaseComponentProps {
@@ -20,7 +19,7 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
     private monthNames: string[] = [];
     private selectedDateTime = Culture.getDateTimeInstance();
     // the datePicker should render the month in which the selected date exist
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
     private weekDayNames: string[] = [];
 
     constructor(props: IDatePickerProps) {

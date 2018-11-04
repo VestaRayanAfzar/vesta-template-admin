@@ -1,98 +1,86 @@
 import React, { Component } from "react";
 import { Status } from "../../../cmn/enum/Status";
 import { IPermission } from "../../../cmn/models/Permission";
-import { IRole } from "../../../cmn/models/Role";
-import { IValidationError } from "../../../medium";
-import { TranslateService } from "../../../service/TranslateService";
+import { IRole, Role } from "../../../cmn/models/Role";
+import { IValidationError, Translate } from "../../../medium";
+import { ModelService } from "../../../service/models/ModelService";
 import { IModelValidationMessage, validationMessage } from "../../../util/Util";
-import { FormMultichoice } from "../../general/form/FormMultichoice";
-import { FormSelect } from "../../general/form/FormSelect";
-import { FormTextInput } from "../../general/form/FormTextInput";
+import { IBaseComponentProps } from "../../BaseComponent";
 import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";
-import { FetchById, IPageComponentProps, Save } from "../../PageComponent";
+import { Multichoice } from "../../general/form/Multichoice";
+import { Select } from "../../general/form/Select";
+import { TextInput } from "../../general/form/TextInput";
 import { IAction, IExtPermission } from "../Role";
-
-interface IRoleFormParams {
-}
 
 interface IPermissionCollection {
     [name: string]: number[];
 }
 
-interface IRoleFormProps extends IPageComponentProps<IRoleFormParams> {
-    fetch?: FetchById<IRole>;
+interface IRoleFormProps extends IBaseComponentProps {
     id?: number;
-    permissions: IExtPermission;
-    save: Save<IRole>;
-    validationErrors: IValidationError;
+    goBack: () => void;
 }
 
 interface IRoleFormState {
     role: IRole;
+    permissions: IExtPermission;
+    validationErrors?: IValidationError;
 }
 
 export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
+    private tr = Translate.getInstance().translate;
+    private roleService = ModelService.getService<IRole>("acl/role");
+    private permissionService = ModelService.getService<IPermission>("acl/permission");
     private permissions: IPermissionCollection = {};
+    private formErrorsMessages: IModelValidationMessage;
+    private statusOptions: IFormOption[] = [
+        { id: Status.Active, title: this.tr("enum_active") },
+        { id: Status.Inactive, title: this.tr("enum_inactive") }];
 
     constructor(props: IRoleFormProps) {
         super(props);
-        this.state = { role: { permissions: [] } };
+        this.state = { role: { permissions: [] }, permissions: {} };
+        this.formErrorsMessages = {
+            name: {
+                required: this.tr("err_required"),
+            },
+            status: {
+                enum: this.tr("err_enum"),
+                required: this.tr("err_required"),
+            },
+        };
     }
 
     public componentDidMount() {
-        const id = +this.props.id;
-        if (isNaN(id)) { return; }
-        this.props.fetch(id)
-            .then((role) => {
-                const { permissions } = this.props;
-                // extracting permissions from role.permissions to permissions
-                const resources = Object.keys(permissions);
-                for (let i = resources.length; i--;) {
-                    const resource = resources[i];
-                    const actions = permissions[resource].map((a: IAction) => a.id);
-                    const rolePermissions = role.permissions.map((p: IPermission) => p.id);
-                    for (let j = rolePermissions.length; j--;) {
-                        if (actions.indexOf(rolePermissions[j]) >= 0) {
-                            if (!this.permissions[resource]) {
-                                this.permissions[resource] = [];
-                            }
-                            this.permissions[resource].push(rolePermissions[j]);
-                        }
-                    }
-                }
-                this.setState({ role });
-            });
+        let permissions = [];
+        this.permissionService.fetchAll({})
+            .then((items) => {
+                permissions = items;
+                const id = +this.props.id;
+                if (isNaN(id)) { return null; }
+                return this.roleService.fetch(id);
+            })
+            .then((role) => this.parsePermissions(permissions, role));
     }
 
     public render() {
-        const { validationErrors } = this.props;
-        const tr = TranslateService.getInstance().translate;
-        const formErrorsMessages: IModelValidationMessage = {
-            name: {
-                required: tr("err_required"),
-            },
-            status: {
-                enum: tr("err_enum"),
-                required: tr("err_required"),
-            },
-        };
-        const errors = validationErrors ? validationMessage(formErrorsMessages, validationErrors) : {};
-        const statusOptions: IFormOption[] = [
-            { id: Status.Active, title: tr("enum_active") },
-            { id: Status.Inactive, title: tr("enum_inactive") }];
+        const { validationErrors } = this.state;
+
+        const errors = validationErrors ? validationMessage(this.formErrorsMessages, validationErrors) : {};
 
         const role = this.state.role;
         const rows = this.renderPermissionTable();
+
         return (
             <FormWrapper name="roleAddForm" onSubmit={this.onSubmit}>
                 <div className="roleForm-component">
-                    <FormTextInput name="name" label={tr("fld_name")} value={role.name} placeholder={true}
-                        error={errors.name} onChange={this.onFormChange} />
-                    <FormTextInput name="desc" label={tr("fld_desc")} value={role.desc} placeholder={true}
-                        error={errors.desc} onChange={this.onFormChange} />
-                    <FormSelect name="status" label={tr("fld_status")} value={role.status} placeholder={true}
-                        titleKey="title" error={errors.status} onChange={this.onFormChange}
-                        options={statusOptions} />
+                    <TextInput name="name" label={this.tr("fld_name")} value={role.name} placeholder={true}
+                        error={errors.name} onChange={this.onChange} />
+                    <TextInput name="desc" label={this.tr("fld_desc")} value={role.desc} placeholder={true}
+                        error={errors.desc} onChange={this.onChange} />
+                    <Select name="status" label={this.tr("fld_status")} value={role.status} placeholder={true}
+                        titleKey="title" error={errors.status} onChange={this.onChange}
+                        options={this.statusOptions} />
                     <div className="form-group">
                         <ul className="permission-list">
                             {rows}
@@ -113,7 +101,7 @@ export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
         return values;
     }
 
-    private onFormChange = (name: string, value: any) => {
+    private onChange = (name: string, value: any) => {
         this.state.role[name] = value;
         this.setState({ role: this.state.role });
     }
@@ -128,21 +116,53 @@ export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
         this.setState({ role: this.state.role });
     }
 
-    private onSubmit = (e: Event) => {
-        this.props.save(this.state.role);
+    private onSubmit = () => {
+        const { role } = this.state;
+        this.roleService.submit(new Role(role))
+            .then(this.props.goBack)
+            .catch((error) => this.setState({ validationErrors: error.violations }));
+    }
+
+    private parsePermissions(inpPermissions: IPermission[], inpRole: IRole) {
+        const { permissions, role } = this.state;
+        inpRole = inpRole || role;
+        // converting list of [{resource, action}] => {resource=> [actions]}
+        for (let i = 0, il = inpPermissions.length; i < il; ++i) {
+            const p: IPermission = inpPermissions[i] as IPermission;
+            if (!permissions[p.resource]) {
+                permissions[p.resource] = [];
+            }
+            permissions[p.resource].push({ id: p.id, action: p.action });
+        }
+        const resources = Object.keys(permissions);
+        for (let i = resources.length; i--;) {
+            const resource = resources[i];
+            const actions = permissions[resource].map((a: IAction) => a.id);
+            const rolePermissions = inpRole.permissions.map((p: IPermission) => p.id);
+            for (let j = rolePermissions.length; j--;) {
+                if (actions.indexOf(rolePermissions[j]) >= 0) {
+                    if (!this.permissions[resource]) {
+                        this.permissions[resource] = [];
+                    }
+                    this.permissions[resource].push(rolePermissions[j]);
+                }
+            }
+        }
+        this.setState({ role: inpRole, permissions });
     }
 
     private renderPermissionTable() {
-        const resources = Object.keys(this.props.permissions);
+        const { permissions } = this.state;
+        const resources = Object.keys(permissions);
         if (!resources.length) { return null; }
         const rows = [];
         for (let i = resources.length; i--;) {
             const resource = resources[i];
-            const actions = this.props.permissions[resource];
+            const actions = permissions[resource];
             const values = this.permissions[resource];
             rows.push(
                 <li key={i}>
-                    <FormMultichoice name={resource} label={resource} value={values} onChange={this.onPermissionChange}
+                    <Multichoice name={resource} label={resource} value={values} onChange={this.onPermissionChange}
                         options={actions} titleKey="action" />
                 </li>);
         }

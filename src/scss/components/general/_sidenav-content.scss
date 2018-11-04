@@ -1,0 +1,46 @@
+$sidenav-header-avatar-width: 100px;
+$sidenav-padding: 20px;
+$sidenav-top-padding: $header-height;
+$sidenav-menu-bg: rgba($white, .5);
+
+.sidenav-content {
+    header {
+        color: $white;
+        padding: $sidenav-top-padding $sidenav-padding 0;
+        position: relative;
+
+        .icon {
+            #{$opposite-float}: $sidenav-padding;
+            bottom: ceil($sidenav-padding / 2);
+            color: $white;
+            font-size: $font-size-large;
+            position: absolute;
+        }
+
+        .select-input {
+            #{$opposite-float}: 0;
+            position: absolute;
+            top: $sidenav-top-padding;
+
+            .form-control {
+                background: transparent;
+                border: 0;
+            }
+        }
+    }
+
+    .avatar {
+        border: 2px solid $border-color;
+        height: $sidenav-header-avatar-width;
+        width: $sidenav-header-avatar-width;
+    }
+
+    .name-wrapper {
+        $name-padding: ceil($sidenav-padding / 2);
+        padding: $name-padding;
+
+        h4 {
+            font-weight: normal;
+        }
+    }
+}

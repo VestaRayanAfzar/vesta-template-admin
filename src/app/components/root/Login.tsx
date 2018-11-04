@@ -4,8 +4,9 @@ import { IUser, User } from "../../cmn/models/User";
 import { IValidationError } from "../../medium";
 import { IModelValidationMessage, validationMessage } from "../../util/Util";
 import { Alert } from "../general/Alert";
-import { FormTextInput } from "../general/form/FormTextInput";
 import { FormWrapper } from "../general/form/FormWrapper";
+import { TextInput } from "../general/form/TextInput";
+import Navbar from "../general/Navbar";
 import { Preloader } from "../general/Preloader";
 import { IPageComponentProps, PageComponent } from "../PageComponent";
 
@@ -17,7 +18,6 @@ interface ILoginProps extends IPageComponentProps<ILoginParams> {
 
 interface ILoginState {
     error: string;
-    showLoader?: boolean;
     user: IUser;
     validationErrors?: IValidationError;
 }
@@ -50,23 +50,23 @@ export class Login extends PageComponent<ILoginProps, ILoginState> {
     }
 
     public render() {
-        const { validationErrors, showLoader, error, user } = this.state;
+        const { validationErrors, error, user } = this.state;
         const errors = validationErrors ? validationMessage(this.formErrorsMessages, validationErrors) : {};
         const loginErr = error ? <Alert type="error">{this.tr("err_wrong_user_pass")}</Alert> : null;
 
         return (
             <div className="page login-page has-navbar page-logo-form">
-                <Preloader show={showLoader} />
+                <Navbar className="navbar-transparent" showBurger={true} />
                 <div className="logo-wrapper">
                     <div className="logo-container">
-                        <img src="img/vesta-logo.png" alt="Vesta Logo" />
+                        <img src="img/icons/144x144.png" alt="Vesta Logo" />
                     </div>
                 </div>
                 <FormWrapper name="loginForm" onSubmit={this.onSubmit}>
                     {loginErr}
-                    <FormTextInput name="username" label={this.tr("fld_username")} value={user.username}
+                    <TextInput name="username" label={this.tr("fld_username")} value={user.username}
                         error={errors.username} onChange={this.onChange} placeholder={true} />
-                    <FormTextInput name="password" label={this.tr("fld_password")} value={user.password} type="password"
+                    <TextInput name="password" label={this.tr("fld_password")} value={user.password} type="password"
                         error={errors.password} onChange={this.onChange} placeholder={true} />
                     <p className="forget-link">
                         <Link to="forget">{this.tr("forget_pass")}</Link>
@@ -90,13 +90,16 @@ export class Login extends PageComponent<ILoginProps, ILoginState> {
         if (validationResult) {
             return this.setState({ validationErrors: validationResult });
         }
-        this.setState({ showLoader: true, validationErrors: null });
+        Preloader.show();
+        this.setState({ validationErrors: null });
         this.api.post<IUser>("account/login", user.getValues("username", "password"))
             .then((response) => {
+                Preloader.hide();
                 this.auth.login(response.items[0]);
             })
             .catch((error) => {
-                this.setState({ showLoader: false, error: this.tr("err_wrong_user_pass") });
+                Preloader.hide();
+                this.setState({ error: this.tr("err_wrong_user_pass") });
                 if (error.message == "err_db_no_record") { return; }
                 this.notif.error(error.message);
             });

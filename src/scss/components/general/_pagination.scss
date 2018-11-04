@@ -1,23 +1,24 @@
 $pagination-input-width: 64px;
 
 .pagination {
-    text-align: center;
-    white-space: nowrap;
     background: $white;
     border-bottom-left-radius: $border-radius;
     border-bottom-right-radius: $border-radius;
+    text-align: center;
+    white-space: nowrap;
 
     form {
         display: inline-block;
 
         input {
+            background: $white;
             border: 1px solid $border-color;
+            border-radius: 0;
             text-align: center;
             width: $pagination-input-width;
-            border-radius: 0;
-            background: $white;
         }
     }
+
     .btn {
         min-width: 32px;
     }

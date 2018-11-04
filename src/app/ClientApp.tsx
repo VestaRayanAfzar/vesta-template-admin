@@ -1,27 +1,24 @@
 import React from "react";
 import { render } from "react-dom";
 import { Route, Switch } from "react-router";
-import { IVersion } from "./cmn/config/cmnConfig";
 import { AclPolicy } from "./cmn/enum/Acl";
 import { IUser } from "./cmn/models/User";
-import { Preloader } from "./components/general/Preloader";
 import Root from "./components/Root";
 import { NotFound } from "./components/root/NotFound";
+import { appConfig } from "./config/appConfig";
 import { getRoutes, IRouteItem } from "./config/route";
-import { DynamicRouter } from "./medium";
+import { Dispatcher, DynamicRouter, Translate } from "./medium";
 import { SplashPlugin } from "./plugin/SplashPlugin";
 import { AuthService } from "./service/AuthService";
 import { Config } from "./service/Config";
-import { Dispatcher } from "./service/Dispatcher";
 import { LogService } from "./service/LogService";
 import { TransitionService } from "./service/TransitionService";
-import { TranslateService } from "./service/TranslateService";
 
 export class ClientApp {
     private auth = AuthService.getInstance();
     private dispatcher = Dispatcher.getInstance();
     private showAppUpdate = false;
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
     private tz = TransitionService.getInstance().willTransitionTo;
 
     public init() {
@@ -33,8 +30,6 @@ export class ClientApp {
 
     public run() {
         const routeItems = getRoutes(!this.auth.isGuest());
-        const appName = Config.get<string>("name");
-        const version = Config.get<IVersion>("version").app;
         const splashTimeout = Config.get<number>("splashTimeout");
         const routes = this.renderRoutes(routeItems, "");
 
@@ -45,8 +40,6 @@ export class ClientApp {
                         {routes}
                         <Route component={NotFound} />
                     </Switch>
-                    <Preloader show={this.showAppUpdate} title={this.tr("app_update")}
-                        message={`${appName} v${version}`} />
                 </Root>
             </DynamicRouter>,
             document.getElementById("root"),
@@ -67,14 +60,16 @@ export class ClientApp {
                     const installingWorker = reg.installing;
                     installingWorker.addEventListener("statechange", () => {
                         if (installingWorker.state == "installed" && navigator.serviceWorker.controller) {
-                            /// <production>
-                            this.showAppUpdate = true;
-                            this.run();
-                            setTimeout(window.location.reload, splashTimeout);
-                            /// </production>
-                            /// <development>
-                            LogService.info("New version available!", "registerServiceWorker", "ClientApp");
-                            /// </development>
+                            if (appConfig.env === "production") {
+                                this.showAppUpdate = true;
+                                this.run();
+                                setTimeout(() => {
+                                    LogService.info("Reloading for new version!", "registerServiceWorker", "ClientApp");
+                                    window.location.reload();
+                                }, splashTimeout);
+                            } else {
+                                LogService.info("New version available!", "registerServiceWorker", "ClientApp");
+                            }
                         }
                     });
                 });

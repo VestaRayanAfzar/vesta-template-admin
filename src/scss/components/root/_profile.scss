@@ -2,55 +2,66 @@ $profile-avatar-width: 20vh;
 $profile-fb-width: $btn-height;
 
 .profile-page {
+    align-items: center;
     display: flex;
     justify-content: center;
-    align-items: center;
+
     legend {
         text-align: center;
     }
+
     .form-wrapper {
         width: 98%;
     }
+
     .profile-form {
         border: 0;
         margin: 15px auto;
     }
+
     .avatar-wrapper {
         text-align: center;
+
         .avatar {
             background: $white;
             border: 2px solid $color-light;
+            height: $profile-avatar-width;
             margin: 10px auto;
             width: $profile-avatar-width;
-            height: $profile-avatar-width;
         }
+
         input {
             opacity: 0;
         }
+
         .change-image {
             outline: 0;
         }
     }
+
     .save-btn {
         text-align: center;
+
         .btn {
             width: 50%;
         }
     }
+
     .change-image {
-        position: absolute;
+        background: transparentize($border-color, .7);
         border: 0;
         bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 25%;
-        background: transparentize($border-color, .7);
         cursor: pointer;
+        height: 25%;
+        left: 0;
         outline: 0;
+        position: absolute;
+        width: 100%;
     }
+
     .add-car {
-        width: $profile-fb-width;
-        height: $profile-fb-width;
         bottom: 12px;
+        height: $profile-fb-width;
+        width: $profile-fb-width;
     }
 }

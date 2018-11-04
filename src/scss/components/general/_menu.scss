@@ -17,6 +17,8 @@ $menu-item-hover-text: $white;
     a {
         display: block;
         width: 100%;
+
+        &.active {}
     }
 
     &.menu-hr {

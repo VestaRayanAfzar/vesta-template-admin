@@ -1,4 +1,3 @@
-import { Promise } from "es6-promise";
 import { Err, IQueryRequest, IQueryResult } from "../medium";
 import { AuthService } from "./AuthService";
 import { Config } from "./Config";

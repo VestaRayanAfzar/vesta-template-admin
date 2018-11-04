@@ -8,39 +8,39 @@ $pl-wrapper-min-size: 200px;
     text-align: center;
 
     .pl-wrapper {
-        width: $pl-wrapper-size;
-        min-width: $pl-wrapper-min-size;
         height: $pl-wrapper-size;
-        min-height: $pl-wrapper-min-size;
         margin: auto;
+        min-height: $pl-wrapper-min-size;
+        min-width: $pl-wrapper-min-size;
         position: relative;
+        width: $pl-wrapper-size;
     }
 
     .pl-circular {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid $color-default;
-        border-top-color: $pl-circular-border-color;
-        background: transparentize($color-default, .25);
         @include animation-rotate(4s, linear);
+        background: transparentize($color-default, .25);
+        border: 2px solid $color-default;
+        border-radius: 50%;
+        border-top-color: $pl-circular-border-color;
+        height: 100%;
+        width: 100%;
     }
 
     .pl-text {
-        position: absolute;
-        text-align: center;
+        @include translate3d(0, -50%, 0);
+        left: 0;
         overflow: hidden;
+        position: absolute;
+        right: 0;
+        text-align: center;
         text-overflow: ellipsis;
         top: 50%;
-        left: 0;
-        right: 0;
-        @include translate3d(0, -50%, 0);
     }
 
     .pl-title {
-        white-space: nowrap;
-        margin-bottom: 10px;
         font-weight: normal;
+        margin-bottom: 10px;
+        white-space: nowrap;
     }
 
     .pl-message {
@@ -48,19 +48,21 @@ $pl-wrapper-min-size: 200px;
     }
 }
 
-.modal.preloader-modal {
-    background: $pl-modal-bg;
+.modal {
+    &.preloader-modal {
+        background: $pl-modal-bg;
 
-    .dialog {
-        position: relative;
-        background: transparent;
-        display: flex;
-        flex-direction: column;
-    }
+        .dialog {
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-    .dialog-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        .dialog-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
     }
 }

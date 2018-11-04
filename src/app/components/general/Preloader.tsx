@@ -1,78 +1,72 @@
 import React, { PureComponent } from "react";
-import { TranslateService } from "../../service/TranslateService";
+import { Dispatcher, Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Dialog } from "./Dialog";
 
-export const enum PreloaderType { Text = 1, Linear, Circular, Progress }
-
 export interface IPreloaderProps extends IBaseComponentProps {
-    show: boolean;
-    type?: PreloaderType;
     title?: string;
     message?: string;
 }
 
-interface IPreloaderState { }
+interface IPreloaderState {
+    show?: boolean;
+}
 
 export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
+
+    public static hide() {
+        Dispatcher.getInstance().dispatch("preloader", { show: false });
+    }
+
+    public static show() {
+        Dispatcher.getInstance().dispatch("preloader", { show: true });
+    }
+
     private waitMessage;
     private inProgressMessage;
-    private show;
+    // private show;
 
     constructor(props: IPreloaderProps) {
         super(props);
         // translate messages
-        const tr = TranslateService.getInstance().translate;
+        const tr = Translate.getInstance().translate;
         this.waitMessage = tr("msg_inprogress");
         this.inProgressMessage = tr("msg_wait");
         this.state = {};
     }
 
-    public componentWillReceiveProps(newProps: IPreloaderProps) {
-        if (newProps.show == true) {
-            this.show = false;
-        }
+    public componentDidMount() {
+        Dispatcher.getInstance().register("preloader", (payload: IPreloaderState) => {
+            this.setState({ show: payload.show });
+        });
     }
 
     public render() {
-        const { show, title = this.waitMessage, message = this.inProgressMessage } = this.props;
-        const preloader = this.getPreloader();
+        const { title = this.waitMessage, message = this.inProgressMessage } = this.props;
+        const { show } = this.state;
 
-        if (show && !this.show) {
-            setTimeout(() => {
-                this.show = true;
-                this.forceUpdate();
-            }, 900);
-        }
-        if (!this.show || !show) {
-            return <Dialog show={false} />;
-        }
+        // if (show && !this.show) {
+        //     setTimeout(() => {
+        //         this.show = true;
+        //         this.forceUpdate();
+        //     }, 900);
+        // }
+        // if (!this.show || !show) {
+        //     return <Dialog show={false} />;
+        // }
 
         return (
-            <Dialog show={true} modalClassName="preloader-modal">
+            <Dialog show={show} modalClassName="preloader-modal">
                 <div className="preloader">
-                    {preloader}
+                    <div className="pl-wrapper">
+                        <div className="pl-circular" />
+                    </div>
                     <div className="pl-text">
                         <h3 className="pl-title">{title}</h3>
                         {message ? <p className="pl-message">{message}</p> : null}
                     </div>
                 </div>
             </Dialog>
-        );
-    }
-
-    private getPreloader() {
-        const { type } = this.props;
-        let preloader = null;
-        switch (type) {
-            default:
-                preloader = <div className="pl-circular" />;
-                break;
-        }
-        return (
-            <div className="pl-wrapper">
-                {preloader}
-            </div>
         );
     }
 }

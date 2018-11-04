@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TranslateService } from "../../../service/TranslateService";
+import { Translate } from "../../../medium";
 import { getFileUrl } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { Dialog } from "../Dialog";
@@ -24,7 +24,7 @@ export class Wysiwyg extends Component<IWysiwygProps, IWysiwygState> {
     private content = "";
     private editor: HTMLDivElement;
     private toolbarActions: IToolbarAction[] = [];
-    private tr = TranslateService.getInstance().translate;
+    private tr = Translate.getInstance().translate;
 
     constructor(props: IWysiwygProps) {
         super(props);
