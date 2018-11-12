@@ -1,7 +1,7 @@
 import React from "react";
 import { IUser } from "../../../cmn/models/User";
 import { IAccess } from "../../../service/AuthService";
-import { ModelService } from "../../../service/models/ModelService";
+import { ModelService } from "../../../service/ModelService";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
 import { DataTableOperations } from "../../general/DataTableOperations";

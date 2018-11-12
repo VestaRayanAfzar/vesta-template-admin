@@ -1,6 +1,6 @@
 import React from "react";
 import { IUser } from "../../../cmn/models/User";
-import { ModelService } from "../../../service/models/ModelService";
+import { ModelService } from "../../../service/ModelService";
 import { getFileUrl } from "../../../util/Util";
 import { IPageComponentProps, PageComponent } from "../../PageComponent";
 

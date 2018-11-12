@@ -1,8 +1,8 @@
-import { IDataTableQueryOption } from "../../components/general/DataTable";
-import { Preloader } from "../../components/general/Preloader";
-import { Err, IDeleteResult, Model, Translate, ValidationError } from "../../medium";
-import { ApiService } from "../ApiService";
-import { NotificationService } from "../NotificationService";
+import { IDataTableQueryOption } from "../components/general/DataTable";
+import { Preloader } from "../components/general/Preloader";
+import { Err, IDeleteResult, Model, Translate, ValidationError } from "../medium";
+import { ApiService } from "./ApiService";
+import { NotificationService } from "./NotificationService";
 
 export class ModelService<T> {
 

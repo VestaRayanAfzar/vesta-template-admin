@@ -3,7 +3,7 @@ import { Status } from "../../../cmn/enum/Status";
 import { IPermission } from "../../../cmn/models/Permission";
 import { IRole, Role } from "../../../cmn/models/Role";
 import { IValidationError, Translate } from "../../../medium";
-import { ModelService } from "../../../service/models/ModelService";
+import { ModelService } from "../../../service/ModelService";
 import { IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";

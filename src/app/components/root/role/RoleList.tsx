@@ -2,7 +2,7 @@ import React from "react";
 import { IRole } from "../../../cmn/models/Role";
 import { IDeleteResult } from "../../../medium";
 import { IAccess } from "../../../service/AuthService";
-import { ModelService } from "../../../service/models/ModelService";
+import { ModelService } from "../../../service/ModelService";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
 import { DataTableOperations } from "../../general/DataTableOperations";
