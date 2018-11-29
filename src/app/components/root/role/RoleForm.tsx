@@ -1,8 +1,8 @@
+import { Culture, IValidationError } from "@vesta/core";
 import React, { Component } from "react";
 import { Status } from "../../../cmn/enum/Status";
 import { IPermission } from "../../../cmn/models/Permission";
 import { IRole, Role } from "../../../cmn/models/Role";
-import { IValidationError, Translate } from "../../../medium";
 import { ModelService } from "../../../service/ModelService";
 import { IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";
@@ -28,7 +28,7 @@ interface IRoleFormState {
 }
 
 export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
     private roleService = ModelService.getService<IRole>("acl/role");
     private permissionService = ModelService.getService<IPermission>("acl/permission");
     private permissions: IPermissionCollection = {};

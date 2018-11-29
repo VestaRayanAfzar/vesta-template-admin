@@ -1,8 +1,8 @@
+import { Dispatcher } from "@vesta/core";
 import { AclAction, AclPolicy } from "../cmn/enum/Acl";
 import { IPermission } from "../cmn/models/Permission";
 import { IRole } from "../cmn/models/Role";
 import { IUser } from "../cmn/models/User";
-import { Dispatcher } from "../medium";
 
 export interface IPermissionCollection {
     [resource: string]: string[];

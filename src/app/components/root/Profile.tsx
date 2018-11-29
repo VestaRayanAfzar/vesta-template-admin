@@ -1,7 +1,7 @@
+import { IResponse, IValidationError } from "@vesta/core";
 import React from "react";
 import { IRole } from "../../cmn/models/Role";
 import { IUser, User, UserGender } from "../../cmn/models/User";
-import { IQueryResult, IValidationError } from "../../medium";
 import { getFileUrl, IModelValidationMessage, shallowClone, validationMessage } from "../../util/Util";
 import { Avatar } from "../general/Avatar";
 import { DateTimeInput } from "../general/form/DateTimeInput";
@@ -181,7 +181,7 @@ export class Profile extends PageComponent<IProfileProps, IProfileState> {
         }
     }
 
-    private updateUser(response: IQueryResult<IUser>) {
+    private updateUser(response: IResponse<IUser>) {
         const { user } = this.state;
         const newUser = response.items[0];
         newUser.role = this.auth.getUser().role;

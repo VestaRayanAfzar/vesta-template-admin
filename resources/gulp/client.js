@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const webConnect = require("gulp-connect");
 const { src, watch, parallel, series } = require("gulp");
-const { copySync, readdirSync, statSync } = require("fs");
+const { readdirSync, statSync } = require("fs");
 const { getWebpackConfig } = require("./config");
 
 module.exports = function(setting) {
@@ -20,7 +20,7 @@ module.exports = function(setting) {
         cb();
     }
 
-    function compile() {
+    function compileTs() {
         const wpConfig = getWebpackConfig(setting);
         wpConfig.entry = { app: `${dir.src}/app/app.ts` };
         wpConfig.optimization.splitChunks = {
@@ -29,7 +29,7 @@ module.exports = function(setting) {
             }
         };
         if (setting.production || setting.is(setting.target, "cordova")) {
-            copySync(`${dir.resource}/gitignore/variantConfig.ts`, `${dir.src}/app/config/variantConfig.ts`);
+            setting.findInFileAndReplace(`${dir.resource}/gitignore/variantConfig.ts`, "", "", `${dir.src}/app/config`);
         }
         const compiler = webpack(wpConfig);
         return new Promise((resolve, reject) => {
@@ -47,10 +47,12 @@ module.exports = function(setting) {
         });
     }
 
-    function run() {
-        if (setting.production) return;
-        let target = setting.buildPath(setting.target);
-        let root = `${dir.build}/${target}`;
+    function runServer(cb) {
+        if (setting.production) {
+            return Promise.resolve();
+        }
+        const target = setting.buildPath(setting.target);
+        const root = `${dir.build}/${target}`;
         switch (setting.target) {
             case "web":
                 runWebServer(root);
@@ -58,10 +60,11 @@ module.exports = function(setting) {
             default:
                 process.stderr.write(`${setting.target} Develop server is not supported`);
         }
+        cb();
     }
 
     function watches() {
-        watch([`${dir.src}/**/*.ts*`], compile);
+        watch([`${dir.src}/**/*.ts*`], compileTs);
         watch([`${dir.src}/*.js`], serviceWorkers);
     }
 
@@ -69,15 +72,17 @@ module.exports = function(setting) {
         let assets = `${wwwRoot}/**/*`;
 
         webConnect.server({
-            root: [wwwRoot],
+            root: wwwRoot,
             livereload: true,
             host: "0.0.0.0",
             port: setting.port.http
         });
 
-        watch([assets], function() {
-            src(assets).pipe(webConnect.reload());
-        });
+        watch([assets], reloadServer);
+
+        function reloadServer() {
+            return src(assets).pipe(webConnect.reload());
+        }
     }
 
     function getFilesList(dir, base) {
@@ -96,7 +101,7 @@ module.exports = function(setting) {
     }
 
     return {
-        tasks: parallel(serviceWorkers, series(compile, run)),
+        tasks: parallel(serviceWorkers, series(compileTs, runServer)),
         watch: watches,
     };
 };

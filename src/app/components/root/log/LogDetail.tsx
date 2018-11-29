@@ -1,7 +1,9 @@
+import { Culture } from "@vesta/core";
 import React from "react";
+import { ILog } from "../../../cmn/models/Log";
 import { IUser } from "../../../cmn/models/User";
-import { Culture } from "../../../medium";
-import { FetchById, IPageComponentProps, PageComponent } from "../../PageComponent";
+import { ModelService } from "../../../service/ModelService";
+import { IPageComponentProps, PageComponent } from "../../PageComponent";
 import { ILogger } from "../Log";
 
 interface ILogDetailParams {
@@ -9,7 +11,6 @@ interface ILogDetailParams {
 }
 
 interface ILogDetailProps extends IPageComponentProps<ILogDetailParams> {
-    onFetch: FetchById<string>;
     users: IUser[];
 }
 
@@ -18,6 +19,7 @@ interface ILogDetailState {
 }
 
 export class LogDetail extends PageComponent<ILogDetailProps, ILogDetailState> {
+    private service = ModelService.getService<string>("log");
 
     constructor(props: ILogDetailProps) {
         super(props);
@@ -25,7 +27,7 @@ export class LogDetail extends PageComponent<ILogDetailProps, ILogDetailState> {
     }
 
     public componentDidMount() {
-        this.props.onFetch(+this.props.match.params.id)
+        this.service.fetch(+this.props.match.params.id)
             .then((log) => this.setState({ log }));
     }
 

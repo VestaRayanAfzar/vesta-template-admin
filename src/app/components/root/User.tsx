@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router";
-import { DynamicRouter } from "../../medium";
+import { HashRouter } from "react-router-dom";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import Navbar from "../general/Navbar";
@@ -44,13 +44,13 @@ export class User extends PageComponent<IUserProps, IUserState> {
                 <CrudMenu path="user" access={this.access} />
 
                 <div className="crud-wrapper">
-                    <DynamicRouter>
+                    <HashRouter>
                         <Switch>
                             {addUser}
                             {editUser}
                             <Route path="/user/detail/:id" render={this.tz(UserDetail, { user: ["read"] })} />
                         </Switch>
-                    </DynamicRouter>
+                    </HashRouter>
                     <UserList access={this.access} />
                 </div>
             </div>

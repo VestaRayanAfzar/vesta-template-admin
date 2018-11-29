@@ -1,5 +1,5 @@
+import { Culture, DateTime } from "@vesta/core";
 import React, { Component } from "react";
-import { Culture, DateTime, Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 
 export interface IDatePickerProps extends IBaseComponentProps {
@@ -19,7 +19,7 @@ export class DatePicker extends Component<IDatePickerProps, IDatePickerState> {
     private monthNames: string[] = [];
     private selectedDateTime = Culture.getDateTimeInstance();
     // the datePicker should render the month in which the selected date exist
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
     private weekDayNames: string[] = [];
 
     constructor(props: IDatePickerProps) {

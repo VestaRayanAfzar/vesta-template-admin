@@ -1,9 +1,9 @@
+import { Culture } from "@vesta/core";
 import React from "react";
 import { Route, Switch } from "react-router";
+import { HashRouter } from "react-router-dom";
 import { ILog } from "../../cmn/models/Log";
 import { IUser, SourceApp } from "../../cmn/models/User";
-import { Culture } from "../../medium";
-import { DynamicRouter } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import { DataTable, IColumn, IDataTableQueryOption } from "../general/DataTable";
@@ -81,11 +81,11 @@ export class Log extends PageComponent<ILogProps, ILogState> {
                 <h1>{this.tr("mdl_log")}</h1>
                 <CrudMenu path="log" access={this.access} />
                 <div className="crud-wrapper">
-                    <DynamicRouter>
+                    <HashRouter>
                         <Switch>
                             <Route path="/log/detail/:id" render={this.tz(LogDetail, { log: ["read"] })} />
                         </Switch>
-                    </DynamicRouter>
+                    </HashRouter>
                     <div className="crud-page">
                         <DataTable columns={columns} records={logs} />
                     </div>

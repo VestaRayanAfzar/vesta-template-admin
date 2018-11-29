@@ -1,8 +1,8 @@
+import { IValidationError } from "@vesta/core";
 import React from "react";
 import { Status } from "../../../cmn/enum/Status";
 import { IRole } from "../../../cmn/models/Role";
 import { IUser, User, UserGender, UserType } from "../../../cmn/models/User";
-import { IValidationError } from "../../../medium";
 import { ModelService } from "../../../service/ModelService";
 import { getFileUrl, IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";

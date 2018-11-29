@@ -1,6 +1,6 @@
+import { Culture } from "@vesta/core";
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
-import { Translate } from "../../medium";
 import { IAccess } from "../../service/AuthService";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Icon } from "./Icon";
@@ -18,7 +18,7 @@ export interface IDataTableOperationsState {
 }
 
 export class DataTableOperations extends PureComponent<IDataTableOperationsProps, IDataTableOperationsState> {
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
 
     constructor(props: IDataTableOperationsProps) {
         super(props);

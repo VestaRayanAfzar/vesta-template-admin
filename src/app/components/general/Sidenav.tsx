@@ -1,6 +1,6 @@
+import { Dispatcher } from "@vesta/core";
 import React, { Component } from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Dispatcher } from "../../medium";
 import { Config } from "../../service/Config";
 import { IBaseComponentProps } from "../BaseComponent";
 import Navbar, { NavBarMainButtonType } from "./Navbar";

@@ -1,4 +1,4 @@
-import { Err, IQueryRequest, IQueryResult } from "../medium";
+import { Err, IRequest, IResponse } from "@vesta/core";
 import { AuthService } from "./AuthService";
 import { Config } from "./Config";
 
@@ -29,26 +29,26 @@ export class ApiService {
         this.sourceApp = Config.get("sourceApp");
     }
 
-    public del<T>(edge: string, data?: IQueryRequest<T>) {
+    public del<T>(edge: string, data?: IRequest<T>) {
         const queryString = data ? `?${this.param(data)}&s=${this.sourceApp}` : `?s=${this.sourceApp}`;
-        return this.xhr<IQueryResult<T>>("DELETE", `${edge}${queryString}`, null, null);
+        return this.xhr<IResponse<T>>("DELETE", `${edge}${queryString}`, null, null);
     }
 
-    public get<T>(edge: string, data?: IQueryRequest<T>) {
+    public get<T>(edge: string, data?: IRequest<T>) {
         const queryString = data ? `?${this.param(data)}&s=${this.sourceApp}` : `?s=${this.sourceApp}`;
-        return this.xhr<IQueryResult<T>>("GET", `${edge}${queryString}`, null, null);
+        return this.xhr<IResponse<T>>("GET", `${edge}${queryString}`, null, null);
     }
 
     public post<T>(edge: string, data: any) {
         const headers = { "Content-Type": "application/json" };
         data.s = this.sourceApp;
-        return this.xhr<IQueryResult<T>>("POST", edge, JSON.stringify(data), headers);
+        return this.xhr<IResponse<T>>("POST", edge, JSON.stringify(data), headers);
     }
 
     public put<T>(edge: string, data: any) {
         const headers = { "Content-Type": "application/json" };
         data.s = this.sourceApp;
-        return this.xhr<IQueryResult<T>>("PUT", edge, JSON.stringify(data), headers);
+        return this.xhr<IResponse<T>>("PUT", edge, JSON.stringify(data), headers);
     }
 
     public upload<T>(edge: string, files: T) {
@@ -70,7 +70,7 @@ export class ApiService {
                 }
             }
         }
-        return this.xhr<IQueryResult<T>>("POST", `${edge}?s=${this.sourceApp}`, formData, null);
+        return this.xhr<IResponse<T>>("POST", `${edge}?s=${this.sourceApp}`, formData, null);
     }
 
     private onAfterReceive(xhr: XMLHttpRequest) {

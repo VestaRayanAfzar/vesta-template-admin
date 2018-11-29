@@ -1,5 +1,5 @@
+import { Culture } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Dialog } from "./Dialog";
 
@@ -21,7 +21,7 @@ export interface IMessageBoxState {
 }
 
 export class MessageBox extends PureComponent<IMessageBoxProps, IMessageBoxState> {
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
 
     constructor(props: IMessageBoxProps) {
         super(props);

@@ -18,8 +18,8 @@ $pl-wrapper-min-size: 200px;
 
     .pl-circular {
         @include animation-rotate(4s, linear);
-        background: transparentize($color-default, .25);
-        border: 2px solid $color-default;
+        background: transparentize($color-primary, .95);
+        border: 2px solid transparent;
         border-radius: 50%;
         border-top-color: $pl-circular-border-color;
         height: 100%;

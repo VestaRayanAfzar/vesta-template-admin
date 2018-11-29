@@ -2,14 +2,14 @@ import React from "react";
 import { IPermission } from "../../../cmn/models/Permission";
 import { IRole } from "../../../cmn/models/Role";
 import { IPermissionCollection } from "../../../service/AuthService";
-import { FetchById, IPageComponentProps, PageComponent } from "../../PageComponent";
+import { ModelService } from "../../../service/ModelService";
+import { IPageComponentProps, PageComponent } from "../../PageComponent";
 
 interface IRoleDetailParams {
     id: number;
 }
 
 interface IRoleDetailProps extends IPageComponentProps<IRoleDetailParams> {
-    fetch: FetchById<IRole>;
 }
 
 interface IRoleDetailState {
@@ -17,6 +17,7 @@ interface IRoleDetailState {
 }
 
 export class RoleDetail extends PageComponent<IRoleDetailProps, IRoleDetailState> {
+    private service = ModelService.getService<IRole>("role", "acl/role");
 
     constructor(props: IRoleDetailProps) {
         super(props);
@@ -24,7 +25,7 @@ export class RoleDetail extends PageComponent<IRoleDetailProps, IRoleDetailState
     }
 
     public componentDidMount() {
-        this.props.fetch(+this.props.match.params.id)
+        this.service.fetch(+this.props.match.params.id)
             .then((role) => this.setState({ role }));
     }
 

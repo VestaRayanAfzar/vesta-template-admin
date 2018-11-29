@@ -17,7 +17,7 @@ module.exports = function(setting) {
         "ExplorerMobile >= 11"
     ];
 
-    function compile() {
+    function compileSass() {
         const genMap = !setting.production;
         const target = setting.buildPath(setting.target);
         let stream = src(getEntries());
@@ -36,7 +36,7 @@ module.exports = function(setting) {
     }
 
     function watches() {
-        watch(`${dir.src}/scss/**/*.scss`, compile);
+        watch(`${dir.src}/scss/**/*.scss`, compileSass);
     }
 
     function getEntries() {
@@ -48,7 +48,7 @@ module.exports = function(setting) {
     }
 
     return {
-        tasks: compile,
+        tasks: compileSass,
         watch: watches
     };
 };

@@ -1,6 +1,6 @@
+import { Culture } from "@vesta/core";
 import React, { Component } from "react";
 import { IFile } from "../../cmn/interfaces/FileSystem";
-import { Translate } from "../../medium";
 import { ApiService } from "../../service/ApiService";
 import { LogService } from "../../service/LogService";
 import { NotificationService } from "../../service/NotificationService";
@@ -24,7 +24,7 @@ export interface IFileManagerState {
 }
 
 export class FileManager extends Component<IFileManagerProps, IFileManagerState> {
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
     private api = ApiService.getInstance();
     private notif = NotificationService.getInstance();
     private baseDirectory = "file-manager";

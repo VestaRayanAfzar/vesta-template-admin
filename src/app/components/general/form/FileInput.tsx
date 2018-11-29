@@ -1,5 +1,5 @@
+import { Mime } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Mime } from "../../../medium";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { IFromControlProps } from "./FormWrapper";
 

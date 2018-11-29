@@ -1,5 +1,5 @@
+import { Culture } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Culture } from "../../../medium";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { DatePicker } from "../DatePicker";
 import { Modal } from "../Modal";

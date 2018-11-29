@@ -1,5 +1,5 @@
+import { Culture } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Translate } from "../../../medium";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { IFromControlProps } from "./FormWrapper";
 
@@ -17,8 +17,8 @@ export class Multichoice extends PureComponent<IMultichoiceProps, null> {
 
     constructor(props: IMultichoiceProps) {
         super(props);
-        const tr = Translate.getInstance();
-        this.selectAllText = tr.translate("select_all");
+        const tr = Culture.getDictionary().translate;
+        this.selectAllText = tr("select_all");
     }
 
     public render() {

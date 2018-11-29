@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { KeyCode } from "../../../cmn/enum/KeyCode";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { Search } from "../../PageComponent";
 import { IFromControlProps } from "./FormWrapper";
 
 interface IAutocompleteProps extends IBaseComponentProps, IFromControlProps {
     multi?: boolean;
-    search: Search<any>;
     titleKey?: string;
     valueKey?: string;
+    search: (term: string) => Promise<any>;
 }
 
 interface IAutocompleteState {

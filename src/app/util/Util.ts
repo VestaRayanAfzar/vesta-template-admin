@@ -1,4 +1,4 @@
-import { IValidationError } from "../medium";
+import { IValidationError } from "@vesta/core";
 import { Config } from "../service/Config";
 
 export interface IModelValidationMessage {
@@ -26,6 +26,7 @@ export function validationMessage(messages: IModelValidationMessage, validationE
 }
 
 export function shallowClone<T>(object: T): T {
+    if (!object) { return object; }
     // return (JSON.parse(JSON.stringify(object))) as T;
     const clone: T = {} as T;
     for (let keys = Object.keys(object), i = keys.length; i--;) {

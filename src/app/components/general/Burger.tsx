@@ -1,5 +1,5 @@
+import { Dispatcher } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Dispatcher } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 
 export interface IBurgerProps extends IBaseComponentProps {

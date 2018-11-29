@@ -4,7 +4,7 @@ const { getWebpackConfig } = require("./config");
 module.exports = function(setting) {
     const dir = setting.dir;
 
-    function compile() {
+    function compilePolyfill() {
         const wpConfig = getWebpackConfig(setting);
         wpConfig.entry = { polyfill: `${dir.src}/app/polyfill.ts` };
         const compiler = webpack(wpConfig);
@@ -25,6 +25,6 @@ module.exports = function(setting) {
 
     return {
         watch: [],
-        tasks: compile
+        tasks: compilePolyfill
     };
 };

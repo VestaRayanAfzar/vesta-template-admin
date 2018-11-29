@@ -1,11 +1,10 @@
+import { Culture, Dispatcher } from "@vesta/core";
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { IUser } from "../../cmn/models/User";
-import { Culture, Dispatcher, Translate } from "../../medium";
 import { getFileUrl } from "../../util/Util";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Avatar } from "./Avatar";
-import { IFormOption } from "./form/FormWrapper";
 import { Select } from "./form/Select";
 import { Icon } from "./Icon";
 import { IMenuItem, Menu } from "./Menu";
@@ -23,7 +22,7 @@ interface ISidenavContentState {
 export class SidenavContent extends PureComponent<ISidenavContentProps, ISidenavContentState> {
     private dispatch = Dispatcher.getInstance().dispatch;
     private localeOptions: any[];
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
 
     public constructor(props: ISidenavContentProps) {
         super(props);

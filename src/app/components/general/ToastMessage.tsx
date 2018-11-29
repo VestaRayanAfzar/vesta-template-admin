@@ -1,5 +1,5 @@
+import { Dispatcher } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Dispatcher } from "../../medium";
 import { IToastData, MessageType } from "../../service/NotificationService";
 import { IBaseComponentProps } from "../BaseComponent";
 

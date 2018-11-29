@@ -1,5 +1,5 @@
+import { Culture, Dispatcher } from "@vesta/core";
 import React, { PureComponent } from "react";
-import { Dispatcher, Translate } from "../../medium";
 import { IBaseComponentProps } from "../BaseComponent";
 import { Dialog } from "./Dialog";
 
@@ -14,14 +14,20 @@ interface IPreloaderState {
 
 export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
 
-    public static hide() {
+    public static hide(force?: boolean) {
         Dispatcher.getInstance().dispatch("preloader", { show: false });
+        Preloader.counter = force ? 0 : Preloader.counter - 1;
+        if (Preloader.counter < 0) {
+            Preloader.counter = 0;
+        }
     }
 
     public static show() {
+        Preloader.counter++;
         Dispatcher.getInstance().dispatch("preloader", { show: true });
     }
 
+    private static counter = 0;
     private waitMessage;
     private inProgressMessage;
     // private show;
@@ -29,7 +35,7 @@ export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
     constructor(props: IPreloaderProps) {
         super(props);
         // translate messages
-        const tr = Translate.getInstance().translate;
+        const tr = Culture.getDictionary().translate;
         this.waitMessage = tr("msg_inprogress");
         this.inProgressMessage = tr("msg_wait");
         this.state = {};
@@ -56,7 +62,7 @@ export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
         // }
 
         return (
-            <Dialog show={show} modalClassName="preloader-modal">
+            <Dialog show={show && Preloader.counter > 0} modalClassName="preloader-modal">
                 <div className="preloader">
                     <div className="pl-wrapper">
                         <div className="pl-circular" />

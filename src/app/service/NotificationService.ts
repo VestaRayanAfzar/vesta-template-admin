@@ -1,4 +1,4 @@
-import { Dispatcher, Translate } from "../medium";
+import { Culture, Dispatcher } from "@vesta/core";
 
 export const enum MessageType { Info = 1, Success, Warning, Error }
 
@@ -17,7 +17,7 @@ export class NotificationService {
     }
 
     private static instance: NotificationService;
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
 
     private constructor(private dispatcher: Dispatcher) {
     }

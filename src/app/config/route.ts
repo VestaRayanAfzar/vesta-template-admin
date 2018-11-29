@@ -1,3 +1,4 @@
+import { Culture } from "@vesta/core";
 import { ComponentClass } from "react";
 import { Forget } from "../components/root/Forget";
 import { Home } from "../components/root/Home";
@@ -7,7 +8,6 @@ import { Logout } from "../components/root/Logout";
 import { Profile } from "../components/root/Profile";
 import { Role } from "../components/root/Role";
 import { User } from "../components/root/User";
-import { Translate } from "../medium";
 import { IPermissionCollection } from "../service/AuthService";
 
 export interface IRouteItem {
@@ -25,7 +25,7 @@ export interface IRouteItem {
 }
 
 export function getRoutes(isLoggedIn: boolean): IRouteItem[] {
-    const tr = Translate.getInstance().translate;
+    const tr = Culture.getDictionary().translate;
 
     const userRoutes = [
         { link: "", title: tr("home"), component: Home, exact: true },

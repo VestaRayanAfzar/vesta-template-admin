@@ -1,5 +1,5 @@
+import { Culture } from '@vesta/core';
 import React, { Component } from "react";
-import { Translate } from "../../../medium";
 import { getFileUrl } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { Dialog } from "../Dialog";
@@ -24,7 +24,7 @@ export class Wysiwyg extends Component<IWysiwygProps, IWysiwygState> {
     private content = "";
     private editor: HTMLDivElement;
     private toolbarActions: IToolbarAction[] = [];
-    private tr = Translate.getInstance().translate;
+    private tr = Culture.getDictionary().translate;
 
     constructor(props: IWysiwygProps) {
         super(props);

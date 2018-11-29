@@ -1,5 +1,5 @@
+import { IRequest } from "@vesta/core";
 import React, { Component } from "react";
-import { IQueryRequest } from "../../medium";
 import { shallowClone } from "../../util/Util";
 import { IBaseComponentProps } from "../BaseComponent";
 import Pagination from "./Pagination";
@@ -10,7 +10,7 @@ export interface IColumn<T> {
     title?: string;
 }
 
-export interface IDataTableQueryOption<T> extends IQueryRequest<T> {
+export interface IDataTableQueryOption<T> extends IRequest<T> {
     total?: number;
 }
 
@@ -70,7 +70,7 @@ export class DataTable<T> extends Component<IDataTableProps<T>, IDataTableState>
     }
 
     private onPaginationChange = (page: number, recordsPerPage: number) => {
-        const queryOption = shallowClone<IQueryRequest<T>>(this.props.queryOption);
+        const queryOption = shallowClone<IRequest<T>>(this.props.queryOption);
         queryOption.page = +page;
         queryOption.limit = recordsPerPage;
         this.props.fetch(queryOption);

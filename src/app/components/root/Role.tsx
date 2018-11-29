@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router";
-import { DynamicRouter } from "../../medium";
+import { HashRouter } from "react-router-dom";
 import { IAccess } from "../../service/AuthService";
 import { CrudMenu } from "../general/CrudMenu";
 import Navbar from "../general/Navbar";
@@ -51,13 +51,13 @@ export class Role extends PageComponent<IRoleProps, IRoleState> {
                 <h1>{this.tr("mdl_role")}</h1>
                 <CrudMenu path="role" access={this.access} />
                 <div className="crud-wrapper">
-                    <DynamicRouter>
+                    <HashRouter>
                         <Switch>
                             {add}
                             {edit}
                             <Route path="/role/detail/:id" render={this.tz(RoleDetail, { role: ["read"] })} />
                         </Switch>
-                    </DynamicRouter>
+                    </HashRouter>
                     <RoleList access={this.access} />
                 </div>
             </div>

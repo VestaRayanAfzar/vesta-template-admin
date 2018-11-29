@@ -1,6 +1,6 @@
+import { Culture, Err, IResponse, Model, ValidationError } from "@vesta/core";
 import { IDataTableQueryOption } from "../components/general/DataTable";
 import { Preloader } from "../components/general/Preloader";
-import { Err, IDeleteResult, Model, Translate, ValidationError } from "../medium";
 import { ApiService } from "./ApiService";
 import { NotificationService } from "./NotificationService";
 
@@ -14,7 +14,7 @@ export class ModelService<T> {
     }
 
     private static instances: { [name: string]: ModelService<any> } = {};
-    protected tr = Translate.getInstance().translate;
+    protected tr = Culture.getDictionary().translate;
     protected api = ApiService.getInstance();
     protected notif = NotificationService.getInstance();
 
@@ -29,7 +29,7 @@ export class ModelService<T> {
             });
     }
 
-    public fetchAll(query: IDataTableQueryOption<T>): Promise<T[]> {
+    public fetchAll(query?: IDataTableQueryOption<T>): Promise<T[]> {
         return this.api.get<T>(this.edge, query)
             .then((response) => response.items)
             .catch((error) => {
@@ -38,7 +38,7 @@ export class ModelService<T> {
             });
     }
 
-    public fetchCount(query: IDataTableQueryOption<T>): Promise<number> {
+    public fetchCount(query?: IDataTableQueryOption<T>): Promise<number> {
         return this.api.get<T>(`${this.edge}/count`, query)
             .then((response) => response.total)
             .catch((error) => {
@@ -64,7 +64,7 @@ export class ModelService<T> {
     }
 
     public remove(id: number): Promise<boolean> {
-        return this.api.del<IDeleteResult>(`${this.edge}/${id}`)
+        return this.api.del<IResponse<number>>(`${this.edge}/${id}`)
             .then((response) => {
                 this.notif.success(this.tr("info_delete_record", response.items[0]));
                 return true;
@@ -78,7 +78,7 @@ export class ModelService<T> {
     public save(model: T, files?: T): Promise<T> {
         return ((model as any).id ? this.update(model, files) : this.insert(model, files))
             .catch((error: Err) => {
-                if (error.code === Err.Code.Validation) {
+                if (error.errno === Err.Code.Validation.errno) {
                     throw error;
                 }
                 return null;

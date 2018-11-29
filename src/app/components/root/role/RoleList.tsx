@@ -1,6 +1,6 @@
+import { IResponse } from "@vesta/core";
 import React from "react";
 import { IRole } from "../../../cmn/models/Role";
-import { IDeleteResult } from "../../../medium";
 import { IAccess } from "../../../service/AuthService";
 import { ModelService } from "../../../service/ModelService";
 import { IBaseComponentProps } from "../../BaseComponent";
@@ -53,7 +53,7 @@ export class RoleList extends PageComponent<IRoleListProps, IRoleListState> {
     }
 
     private onDelete = (id) => {
-        this.api.del<IDeleteResult>(`acl/role/${id}`)
+        this.api.del<IResponse<number>>(`acl/role/${id}`)
             .then((response) => {
                 this.notif.success(this.tr("info_delete_record", response.items[0]));
                 this.fetchAll(this.state.queryOption);
