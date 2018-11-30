@@ -4,10 +4,10 @@ import { match } from "react-router";
 
 export interface IBaseComponentProps {
     children?: ReactNode;
-    history?: History;
-    location?: Location;
 }
 
 export interface IBaseComponentWithRouteProps<T> extends IBaseComponentProps {
+    history?: History;
+    location?: Location;
     match?: match<T>;
 }

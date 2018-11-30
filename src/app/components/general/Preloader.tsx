@@ -6,10 +6,12 @@ import { Dialog } from "./Dialog";
 export interface IPreloaderProps extends IBaseComponentProps {
     title?: string;
     message?: string;
+    show?: boolean;
+    singleton?: boolean;
 }
 
 interface IPreloaderState {
-    show?: boolean;
+    showMe?: boolean;
 }
 
 export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
@@ -43,26 +45,15 @@ export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
 
     public componentDidMount() {
         Dispatcher.getInstance().register("preloader", (payload: IPreloaderState) => {
-            this.setState({ show: payload.show });
+            this.setState({ showMe: payload.showMe });
         });
     }
 
     public render() {
         const { title = this.waitMessage, message = this.inProgressMessage } = this.props;
-        const { show } = this.state;
-
-        // if (show && !this.show) {
-        //     setTimeout(() => {
-        //         this.show = true;
-        //         this.forceUpdate();
-        //     }, 900);
-        // }
-        // if (!this.show || !show) {
-        //     return <Dialog show={false} />;
-        // }
 
         return (
-            <Dialog show={show && Preloader.counter > 0} modalClassName="preloader-modal">
+            <Dialog show={this.show} modalClassName="preloader-modal">
                 <div className="preloader">
                     <div className="pl-wrapper">
                         <div className="pl-circular" />
@@ -74,5 +65,21 @@ export class Preloader extends PureComponent<IPreloaderProps, IPreloaderState> {
                 </div>
             </Dialog>
         );
+    }
+
+    private get show() {
+        const { show, singleton } = this.props;
+        const { showMe } = this.state;
+        // if (show && !this.show) {
+        //     setTimeout(() => {
+        //         this.show = true;
+        //         this.forceUpdate();
+        //     }, 900);
+        // }
+        // if (!this.show || !show) {
+        //     return <Dialog show={false} />;
+        // }
+        if (singleton && show) { return true; }
+        if (showMe && Preloader.counter > 0) { return true; }
     }
 }
