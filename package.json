@@ -13,9 +13,9 @@
     "deploy:web": "gulp deploy:web"
   },
   "dependencies": {
-    "@vesta/core": "^2.0.4",
-    "@vesta/culture-ir": "^1.0.1",
-    "@vesta/culture-us": "^1.0.0",
+    "@vesta/core": "^2.0.5",
+    "@vesta/culture-ir": "^1.0.2",
+    "@vesta/culture-us": "^1.0.2",
     "core-js": "^2.5.7",
     "md-font": "^0.1.1",
     "react": "^16.6.3",
