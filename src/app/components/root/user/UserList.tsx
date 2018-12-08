@@ -1,11 +1,11 @@
-import React from "react";
+import { Culture } from "@vesta/core";
+import React, { useState } from "react";
 import { IUser } from "../../../cmn/models/User";
 import { IAccess } from "../../../service/AuthService";
 import { ModelService } from "../../../service/ModelService";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
 import { DataTableOperations } from "../../general/DataTableOperations";
-import { PageComponent } from "../../PageComponent";
 
 interface IUserListProps extends IBaseComponentProps {
     access: IAccess;
@@ -16,55 +16,45 @@ interface IUserListState {
     users: IUser[];
 }
 
-export class UserList extends PageComponent<IUserListProps, IUserListState> {
+export function UserList(props: IUserListProps) {
+    const tr = Culture.getDictionary().translate;
+    const service = ModelService.getService<IUser>("user");
+    const [users, setUsers] = useState([]);
+    const queryOption = { limit: 20 };
+    const statusOptions = { 1: tr("enum_active"), 0: tr("enum_inactive") };
+    const columns: Array<IColumn<IUser>> = [
+        { name: "id", title: tr("fld_id") },
+        { name: "username", title: tr("fld_username") },
+        { name: "name", title: tr("fld_name") },
+        { name: "email", title: tr("fld_email") },
+        { name: "mobile", title: tr("fld_mobile") },
+        { name: "status", title: tr("fld_status"), render: (r) => tr(statusOptions[r.status]) },
+        {
+            render: (r) => <DataTableOperations access={access} id={r.id} path="user" onDelete={onDelete} />,
+            title: tr("operations"),
+        },
+    ];
 
-    private userService = ModelService.getService<IUser>("user");
+    // prevent deleting user
+    const access = { ...props.access };
+    delete access.del;
 
-    constructor(props: IUserListProps) {
-        super(props);
-        this.state = { queryOption: { limit: 20 }, users: [] };
+    return (
+        <div className="crud-page">
+            <DataTable queryOption={queryOption} columns={columns} records={users}
+                fetch={onFetch} pagination={true} />
+        </div>
+    );
+
+    function onDelete(id: number) {
+        service.remove(id)
+            .then((isDeleted) => isDeleted ? onFetch(null) : null);
     }
 
-    public componentDidMount() {
-        this.onFetch(null);
-    }
-
-    public render() {
-        const { access } = this.props;
-        const { queryOption, users } = this.state;
-        const statusOptions = { 1: this.tr("enum_active"), 0: this.tr("enum_inactive") };
-        // prevent deleting user
-        delete access.del;
-        const columns: Array<IColumn<IUser>> = [
-            { name: "id", title: this.tr("fld_id") },
-            { name: "username", title: this.tr("fld_username") },
-            { name: "name", title: this.tr("fld_name") },
-            { name: "email", title: this.tr("fld_email") },
-            { name: "mobile", title: this.tr("fld_mobile") },
-            { name: "status", title: this.tr("fld_status"), render: (r) => this.tr(statusOptions[r.status]) },
-            {
-                render: (r) => <DataTableOperations access={access} id={r.id} path="user" onDelete={this.onDelete} />,
-                title: this.tr("operations"),
-            },
-        ];
-        return (
-            <div className="crud-page">
-                <DataTable queryOption={queryOption} columns={columns} records={users}
-                    fetch={this.onFetch} pagination={true} />
-            </div>
-        );
-    }
-
-    private onDelete = (id: number) => {
-        this.userService.remove(id)
-            .then((isDeleted) => isDeleted ? this.onFetch(null) : null);
-    }
-
-    private onFetch = (queryOption: IDataTableQueryOption<IUser>) => {
-        if (!queryOption) {
-            queryOption = this.state.queryOption;
+    function onFetch(qOptions: IDataTableQueryOption<IUser>) {
+        if (!qOptions) {
+            qOptions = queryOption;
         }
-        this.userService.fetchAll(queryOption)
-            .then((users) => this.setState({ users }));
+        service.fetchAll(qOptions).then(setUsers);
     }
 }

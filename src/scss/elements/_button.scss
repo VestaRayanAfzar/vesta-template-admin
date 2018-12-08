@@ -11,7 +11,7 @@ $btn-group-active-bg: lighten($color-primary, 15%);
 
 @mixin btn-style($color, $text-color: $white) {
     background: $color;
-    border: 1px solid lighten($color, $btn-border-darken-ratio);
+    border: 1px solid darken($color, $btn-border-darken-ratio);
     color: $text-color;
 
     &:hover {
@@ -34,6 +34,7 @@ $btn-group-active-bg: lighten($color-primary, 15%);
     max-width: $page-max-width;
     padding: 2px;
     position: fixed;
+    position: sticky;
     right: 0;
 
     .btn {
@@ -60,18 +61,22 @@ $btn-group-active-bg: lighten($color-primary, 15%);
 
     &.btn-outline {
         border-color: $btn-border-color;
-    }
 
-    &.btn-default {
-        @include btn-style($color-default, $color-primary);
+        &.primary {
+            border-color: $color-primary;
+        }
+
+        &.secondary {
+            border-color: $color-secondary;
+        }
     }
 
     &.btn-primary {
-        @include btn-style($color-primary);
+        @include btn-style($color-primary, $color-primary-text);
     }
 
     &.btn-secondary {
-        @include btn-style($color-secondary);
+        @include btn-style($color-secondary, $color-secondary-text);
     }
 
     &:disabled {

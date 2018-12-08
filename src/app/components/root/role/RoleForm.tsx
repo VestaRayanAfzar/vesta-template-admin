@@ -74,11 +74,11 @@ export class RoleForm extends Component<IRoleFormProps, IRoleFormState> {
         return (
             <FormWrapper name="roleAddForm" onSubmit={this.onSubmit}>
                 <div className="roleForm-component">
-                    <TextInput name="name" label={this.tr("fld_name")} value={role.name} placeholder={true}
+                    <TextInput name="name" label={this.tr("fld_name")} value={role.name} required={true}
                         error={errors.name} onChange={this.onChange} />
-                    <TextInput name="desc" label={this.tr("fld_desc")} value={role.desc} placeholder={true}
+                    <TextInput name="desc" label={this.tr("fld_desc")} value={role.desc} required={true}
                         error={errors.desc} onChange={this.onChange} />
-                    <Select name="status" label={this.tr("fld_status")} value={role.status} placeholder={true}
+                    <Select name="status" label={this.tr("fld_status")} value={role.status} required={true}
                         titleKey="title" error={errors.status} onChange={this.onChange}
                         options={this.statusOptions} />
                     <div className="form-group">

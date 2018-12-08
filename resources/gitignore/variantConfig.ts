@@ -11,7 +11,7 @@ export interface IVariantConfig {
 
 export const variantConfig: IVariantConfig = {
     api: "https://api.vesta.bz",
-    env: "production",
+    env: "development",
     sw: "service-worker",
     viewport: {
         Large: 1024,

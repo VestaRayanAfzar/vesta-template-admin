@@ -31,30 +31,34 @@ $burger-item-height: 3px;
     }
 
     &.back-btn {
-        span:first-child {
-            @include back-btn-rotate(40deg);
-        }
+        span {
+            &:first-child {
+                @include back-btn-rotate($direction-eq * -40deg);
+            }
 
-        span:nth-child(2) {
-            @include scale(0);
-        }
+            &:nth-child(2) {
+                @include scale(0);
+            }
 
-        span:last-child {
-            @include back-btn-rotate(-40deg);
+            &:last-child {
+                @include back-btn-rotate($direction-eq * 40deg);
+            }
         }
     }
 
     &.close-btn {
-        span:first-child {
-            @include close-btn-rotate(40deg, 1);
-        }
+        span {
+            &:first-child {
+                @include close-btn-rotate(40deg, 1);
+            }
 
-        span:nth-child(2) {
-            @include scale(0);
-        }
+            &:nth-child(2) {
+                @include scale(0);
+            }
 
-        span:last-child {
-            @include close-btn-rotate(-40deg, -1);
+            &:last-child {
+                @include close-btn-rotate(-40deg, -1);
+            }
         }
     }
 }

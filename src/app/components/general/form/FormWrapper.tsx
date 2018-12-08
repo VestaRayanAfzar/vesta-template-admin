@@ -8,8 +8,8 @@ export interface IFromControlProps {
     label?: string;
     name?: string;
     onChange?: ChangeEventHandler;
-    placeholder?: boolean;
     readonly?: boolean;
+    required?: boolean;
     value?: any;
 }
 

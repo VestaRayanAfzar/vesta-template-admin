@@ -47,22 +47,24 @@ $sidenav-width: 300px;
 $page-max-width: $layout-medium-max;
 
 // colors
-$color-primary: #519af7;
-$color-primary-text: $black;
-$color-primary-light: #a9d4ff;
-$color-primary-light: $black;
-$color-primary-dark: #4375ac;
-$color-primary-dark-text: $white;
-$color-secondary: $white;
-$color-default: $grey;
-$color-success: #3db366;
-$color-error: #f15b44;
-$color-info: $blue;
-$color-warning: #fdc600;
 $color-light: darken($white, 10%);
 $color-semilight: darken($white, 40%);
 $color-dark: lighten($black, 10%);
 $color-semidark: lighten($black, 40%);
+$color-primary: #519af7;
+$color-primary-text: $black;
+$color-primary-light: #a9d4ff;
+$color-primary-light-text: $black;
+$color-primary-dark: #4375ac;
+$color-primary-dark-text: $white;
+$color-secondary: $white;
+$color-secondary-text: $black;
+$color-default: $color-semidark;
+$color-default-text: $white;
+$color-success: #3db366;
+$color-error: #f15b44;
+$color-info: $blue;
+$color-warning: #fdc600;
 $color-list: $color-primary $color-success $color-error $color-warning $color-info;
 $color-classes: primary success error warning info;
 

@@ -1,7 +1,6 @@
 $form-control-height: 36px;
 $form-group-margin: 10px;
 $form-group-padding: 2px;
-$form-label-margin: 0;
 $form-control-padding: 7px;
 $form-control-bg: $white;
 $form-control-border-radius: $border-radius;
@@ -39,24 +38,41 @@ $form-error-padding: 5px;
 }
 
 .form-group {
-    align-items: center;
-    display: flex;
-    justify-content: center;
     margin: $form-group-margin;
-    padding: $form-group-padding;
+    padding: $form-group-padding 0;
     position: relative;
 
-    label {
-        margin: $form-label-margin;
-        margin-#{$opposite-float}: 10px;
-        text-align: end;
-        vertical-align: bottom;
-        white-space: nowrap;
+    &.dirty {
+        label {
+            transform: scale(.75, .75) translate3d(-$form-control-height / 2, -3*$form-control-height / 4, 0);
+            transition: transform $transition-duration-default $transition-effect-default;
+        }
     }
 
-    .form-control {
-        flex: 1;
+    &.required {
+        &:after {
+            #{$opposite-float}: $form-control-border-radius;
+            content: '*';
+            position: absolute;
+            top: $form-control-border-radius;
+        }
     }
+
+    &.multichoice-input {
+        label {
+            color: $color-primary-text;
+            position: static;
+        }
+    }
+
+    label {
+        #{$float}: $form-control-padding;
+        color: $color-default;
+        line-height: $form-control-height;
+        position: absolute;
+        top: $form-group-padding;
+    }
+
 
     &.btn-group {
         margin-top: 4 * $form-group-margin;
@@ -76,12 +92,13 @@ $form-error-padding: 5px;
     height: $form-control-height;
     outline: 0;
     padding: $form-control-padding;
+    width: 100%;
 }
 
 body {
     &.shrink-view {
-    .stick-btm {
-        @include scale(0);
-    }
+        .stick-btm {
+            @include scale(0);
+        }
     }
 }

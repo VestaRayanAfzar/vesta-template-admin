@@ -21,9 +21,9 @@ export class RoleEdit extends PageComponent<IRoleEditProps, IRoleEditState> {
             <div className="crud-page">
                 <h1>{this.tr("title_record_edit", this.tr("mdl_role"))}</h1>
                 <RoleForm id={id} goBack={this.goBack}>
-                    <div className="btn-group">
+                    <div className="btn-group stick-btm">
                         <button className="btn btn-primary" type="submit">Save Role</button>
-                        <button className="btn btn-outline" type="button"
+                        <button className="btn btn-secondary" type="button"
                             onClick={this.goBack}>Cancel</button>
                     </div>
                 </RoleForm>

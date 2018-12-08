@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { IBaseComponentProps } from "../../BaseComponent";
 import { IFromControlProps } from "./FormWrapper";
 
@@ -8,27 +8,25 @@ export interface ITextInputProps extends IBaseComponentProps, IFromControlProps 
     value?: string;
 }
 
-export class TextInput extends PureComponent<ITextInputProps, null> {
+export function TextInput(props: ITextInputProps) {
 
-    public render() {
-        const { label, name, value, dir, error, placeholder, readonly } = this.props;
-        const type = this.props.type || "text";
-        const extClassName = dir ? `dir-${dir}` : "";
+    const type = props.type || "text";
+    let extClassName = props.dir ? `dir-${props.dir}` : "";
+    extClassName = props.value ? `${extClassName} dirty` : extClassName;
+    extClassName = props.required ? `${extClassName} required` : extClassName;
 
-        return (
-            <div className={`form-group text-input ${extClassName} ${error ? "has-error" : ""}`}>
-                {placeholder ? null : <label htmlFor={name}>{label}</label>}
-                <input className="form-control" type={type} name={name} id={name} placeholder={placeholder ? label : ""}
-                    value={value || ""} onChange={this.onChange} disabled={readonly} />
-                <p className="form-error">{error || ""}</p>
-            </div>
-        );
-    }
+    return (
+        <div className={`form-group text-input ${extClassName} ${props.error ? "has-error" : ""}`}>
+            <label htmlFor={name}>{props.label}</label>
+            <input className="form-control" type={type} name={name} id={name}
+                value={props.value || ""} onChange={onChange} disabled={props.readonly} />
+            <p className="form-error">{props.error || ""}</p>
+        </div>
+    );
 
-    private onChange = (e) => {
-        const { onChange, name, readonly } = this.props;
-        if (onChange && !readonly) {
-            onChange(name, e.target.value);
+    function onChange(e) {
+        if (props.onChange && !props.readonly) {
+            props.onChange(props.name, e.target.value);
         }
     }
 }

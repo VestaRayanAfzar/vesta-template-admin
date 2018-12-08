@@ -21,9 +21,9 @@ export class UserEdit extends PageComponent<IUserEditProps, IUserEditState> {
             <div className="crud-page">
                 <h2>{this.tr("title_record_edit", this.tr("mdl_user"))}</h2>
                 <UserForm id={id} goBack={this.goBack}>
-                    <div className="btn-group">
+                    <div className="btn-group stick-btm">
                         <button className="btn btn-primary" type="submit">{this.tr("save")}</button>
-                        <button className="btn btn-outline" type="button"
+                        <button className="btn btn-secondary" type="button"
                             onClick={this.goBack}>{this.tr("cancel")}</button>
                     </div>
                 </UserForm>
