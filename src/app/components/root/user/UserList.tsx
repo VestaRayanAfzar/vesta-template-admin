@@ -1,10 +1,9 @@
+import { DataTable, DataTableOperations, IColumn, IDataTableQueryOption } from "@vesta/components";
 import React from "react";
 import { IUser } from "../../../cmn/models/User";
 import { IAccess } from "../../../service/AuthService";
 import { ModelService } from "../../../service/ModelService";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { DataTable, IColumn, IDataTableQueryOption } from "../../general/DataTable";
-import { DataTableOperations } from "../../general/DataTableOperations";
 import { PageComponent } from "../../PageComponent";
 
 interface IUserListProps extends IBaseComponentProps {
@@ -43,14 +42,15 @@ export class UserList extends PageComponent<IUserListProps, IUserListState> {
             { name: "mobile", title: this.tr("fld_mobile") },
             { name: "status", title: this.tr("fld_status"), render: (r) => this.tr(statusOptions[r.status]) },
             {
-                render: (r) => <DataTableOperations access={access} id={r.id} path="user" onDelete={this.onDelete} />,
+                render: (r) => <DataTableOperations id={r.id} path="user" hasDeleteAccess={access.del}
+                    hasEditAccess={access.update} onDelete={this.onDelete} />,
                 title: this.tr("operations"),
             },
         ];
         return (
             <div className="crud-page">
                 <DataTable queryOption={queryOption} columns={columns} records={users}
-                    fetch={this.onFetch} pagination={true} />
+                    onQuery={this.onFetch} pagination={true} />
             </div>
         );
     }

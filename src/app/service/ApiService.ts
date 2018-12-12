@@ -146,7 +146,7 @@ export class ApiService {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (!xhr.status) {
-                        return reject(Err.Code.NoDataConnection);
+                        return reject(Err.Code.NoConnection);
                     }
                     if (xhr.status === 200) {
                         this.onAfterReceive(xhr);

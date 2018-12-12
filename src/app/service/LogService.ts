@@ -1,6 +1,6 @@
 import { ILog, Log, LogLevel } from "../cmn/models/Log";
-import { ApiService } from "./ApiService";
 import { appConfig } from "../config/appConfig";
+import { ApiService } from "./ApiService";
 
 export class LogService {
 

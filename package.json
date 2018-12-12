@@ -13,6 +13,7 @@
     "deploy:web": "gulp deploy:web"
   },
   "dependencies": {
+    "@vesta/components": "^0.1.0",
     "@vesta/core": "^2.0.5",
     "@vesta/culture-ir": "^1.0.2",
     "@vesta/culture-us": "^1.0.2",

@@ -1,3 +1,4 @@
+import { DateTimeInput, FileInput, FormWrapper, IFormOption, Multichoice, Select, TextInput } from "@vesta/components";
 import { IValidationError } from "@vesta/core";
 import React from "react";
 import { Status } from "../../../cmn/enum/Status";
@@ -6,12 +7,6 @@ import { IUser, User, UserGender, UserType } from "../../../cmn/models/User";
 import { ModelService } from "../../../service/ModelService";
 import { getFileUrl, IModelValidationMessage, validationMessage } from "../../../util/Util";
 import { IBaseComponentProps } from "../../BaseComponent";
-import { DateTimeInput } from "../../general/form/DateTimeInput";
-import { FileInput } from "../../general/form/FileInput";
-import { FormWrapper, IFormOption } from "../../general/form/FormWrapper";
-import { Multichoice } from "../../general/form/Multichoice";
-import { Select } from "../../general/form/Select";
-import { TextInput } from "../../general/form/TextInput";
 import { PageComponent } from "../../PageComponent";
 
 interface IUserFormProps extends IBaseComponentProps {
@@ -118,27 +113,27 @@ export class UserForm extends PageComponent<IUserFormProps, IUserFormState> {
             <FormWrapper name="userForm" onSubmit={this.onSubmit}>
                 <Multichoice name="type" label={this.tr("fld_type")} value={user.type}
                     error={errors.type} onChange={this.onChange} options={this.typeOptions} />
-                <Select name="role" label={this.tr("role")} options={roles} value={roleId} placeholder={true}
+                <Select name="role" label={this.tr("role")} options={roles} value={roleId}
                     error={errors.role} onChange={this.onChange} titleKey="name" valueKey="id" />
-                <TextInput name="username" label={this.tr("fld_username")} value={user.username} placeholder={true}
+                <TextInput name="username" label={this.tr("fld_username")} value={user.username}
                     error={errors.username} onChange={this.onChange} />
                 <TextInput name="firstName" label={this.tr("fld_firstname")} value={user.firstName}
-                    placeholder={true} error={errors.firstName} onChange={this.onChange} />
+                    error={errors.firstName} onChange={this.onChange} />
                 <TextInput name="lastName" label={this.tr("fld_lastname")} value={user.lastName}
-                    placeholder={true} error={errors.lastName} onChange={this.onChange} />
-                <TextInput name="email" label={this.tr("fld_email")} value={user.email} placeholder={true}
+                    error={errors.lastName} onChange={this.onChange} />
+                <TextInput name="email" label={this.tr("fld_email")} value={user.email}
                     error={errors.email} onChange={this.onChange} type="email" />
-                <TextInput name="mobile" label={this.tr("fld_mobile")} value={user.mobile} placeholder={true}
+                <TextInput name="mobile" label={this.tr("fld_mobile")} value={user.mobile}
                     error={errors.mobile} onChange={this.onChange} />
-                <TextInput name="password" label={this.tr("fld_password")} value={user.password} placeholder={true}
+                <TextInput name="password" label={this.tr("fld_password")} value={user.password}
                     error={errors.password} onChange={this.onChange} type="password" />
                 <DateTimeInput name="birthDate" label={this.tr("fld_birthDate")} value={user.birthDate}
-                    error={errors.birthDate} onChange={this.onChange} placeholder={true} />
-                <Select name="gender" label={this.tr("fld_gender")} value={user.gender} placeholder={true}
+                    error={errors.birthDate} onChange={this.onChange} />
+                <Select name="gender" label={this.tr("fld_gender")} value={user.gender}
                     error={errors.gender} onChange={this.onChange} options={this.genderOptions} />
-                <FileInput name="image" label={this.tr("fld_image")} value={user.image} placeholder={true}
+                <FileInput name="image" label={this.tr("fld_image")} value={user.image}
                     error={errors.image} onChange={this.onChange} />
-                <Select name="status" label={this.tr("fld_status")} value={user.status} placeholder={true}
+                <Select name="status" label={this.tr("fld_status")} value={user.status}
                     error={errors.status} onChange={this.onChange} options={this.statusOptions} />
                 {this.props.children}
             </FormWrapper>
