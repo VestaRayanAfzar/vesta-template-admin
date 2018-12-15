@@ -80,8 +80,8 @@ $form-error-padding: 5px;
 
 body {
     &.shrink-view {
-    .stick-btm {
-        @include scale(0);
-    }
+        .stick-btm {
+            @include scale(0);
+        }
     }
 }
